@@ -1,0 +1,77 @@
+.custom-sidebar {
+  background-color: #1e1e3f;
+  width: 100px;
+  position: fixed;
+  top: 84px; /* header yüksekliği */
+  bottom: 0;
+  padding: 1rem 0.5rem;
+  z-index: 900;
+  transition: all 0.3s ease-in-out;
+  border-right: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Nav alanı tüm boşluğu kaplasın */
+.custom-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex-grow: 1; /* boşluğu doldur */
+  overflow-y: auto; /* çok uzun olursa scroll */
+  padding-bottom: 1rem;
+}
+
+/* Logout alanı hep en altta */
+.custom-sidebar .mt-auto {
+  display: flex;
+  justify-content: center;
+}
+
+/* Butonlar aynı */
+.sidebar-btn {
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 10px;
+  width: 70px;
+  height: 70px;
+  color: #1e1e3f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.sidebar-btn span {
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.sidebar-btn:hover,
+.sidebar-btn.active {
+  background-color: #00bcd4;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .custom-sidebar {
+    width: 80px;
+  }
+
+  .sidebar-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .sidebar-btn span {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-sidebar {
+    width: 70px;
+  }
+}
