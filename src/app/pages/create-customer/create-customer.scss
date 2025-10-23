@@ -55,8 +55,8 @@
     transition: all 0.2s ease-in-out;
 
     &:focus {
-      border-color: #00bcd4;
-      box-shadow: 0 0 0 0.15rem rgba(0, 188, 212, 0.25);
+      border-color: rgb(245, 130, 32);
+      box-shadow: 0 0 0 0.15rem rgb(255, 153, 0);
     }
   }
 
@@ -66,12 +66,12 @@
   }
 
   .btn-primary {
-    background-color: #00bcd4;
-    border-color: #00bcd4;
+    background-color: rgb(245, 130, 32);
+    border-color: rgb(245, 130, 32);
 
     &:hover {
-      background-color: #009db3;
-      border-color: #009db3;
+      background-color: rgb(255, 153, 0);
+      border-color: rgb(255, 153, 0);
     }
   }
 }

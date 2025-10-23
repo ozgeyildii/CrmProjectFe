@@ -9,42 +9,42 @@
       </div>
 
       <div class="card-body">
-        <form>
+        <form [formGroup]="createCustomerForm" (submit)="createCustomer()" >
           <div class="row g-3">
             <!-- First Name -->
             <div class="col-md-4">
               <label class="form-label">First Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Enter first name" />
+              <input formControlName="firstName" type="text" class="form-control" placeholder="Enter first name" />
             </div>
 
             <!-- Middle Name -->
             <div class="col-md-4">
               <label class="form-label">Middle Name</label>
-              <input type="text" class="form-control" placeholder="Enter middle name" />
+              <input formControlName="middleName" type="text" class="form-control" placeholder="Enter middle name" />
             </div>
 
             <!-- Last Name -->
             <div class="col-md-4">
               <label class="form-label">Last Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Enter last name" />
+              <input formControlName="lastName" type="text" class="form-control" placeholder="Enter last name" />
             </div>
 
             <!-- Birth Date -->
             <div class="col-md-4">
               <label class="form-label">Birth Date <span class="text-danger">*</span></label>
-              <input type="date" class="form-control" />
+              <input formControlName="dateOfBirth" type="date" class="form-control" />
             </div>
 
             <!-- Nat ID -->
             <div class="col-md-4">
               <label class="form-label">Nat ID <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Enter national ID" />
+              <input formControlName="nationalId" type="text" class="form-control" placeholder="Enter national ID" />
             </div>
 
             <!-- Gender -->
             <div class="col-md-4">
               <label class="form-label">Gender <span class="text-danger">*</span></label>
-              <select class="form-select">
+              <select class="form-select" formControlName="gender">
                 <option selected disabled>Select gender</option>
                 <option>Male</option>
                 <option>Female</option>
@@ -55,13 +55,13 @@
             <!-- Father Name -->
             <div class="col-md-6">
               <label class="form-label">Father Name</label>
-              <input type="text" class="form-control" placeholder="Enter father's name" />
+              <input formControlName="fatherName" type="text" class="form-control" placeholder="Enter father's name" />
             </div>
 
             <!-- Mother Name -->
             <div class="col-md-6">
               <label class="form-label">Mother Name</label>
-              <input type="text" class="form-control" placeholder="Enter mother's name" />
+              <input formControlName="motherName" type="text" class="form-control" placeholder="Enter mother's name" />
             </div>
           </div>
 
