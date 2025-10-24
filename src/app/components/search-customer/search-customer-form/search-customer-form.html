@@ -1,0 +1,43 @@
+<form [formGroup]="form" class="search-form">
+  <div class="row">
+    <div class="form-group">
+      <label>First Name</label>
+      <input formControlName="firstName" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>Last Name</label>
+      <input formControlName="lastName" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>Nat ID</label>
+      <input formControlName="idNumber" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>Customer ID</label>
+      <input formControlName="customerNumber" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>Account Number</label>
+      <input formControlName="accountNumber" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>GSM Number</label>
+      <input formControlName="gsmNumber" placeholder="" />
+    </div>
+    
+    <div class="form-group">
+      <label>Order Number</label>
+      <input formControlName="orderNumber" placeholder="" />
+    </div>
+  </div>
+  
+  <div class="buttons">
+    <button type="button" (click)="onClear()">Clear</button>
+    <button type="button" (click)="onSearch()">Search</button>
+  </div>
+</form>

@@ -1,0 +1,133 @@
+/* Genel Stil Tanımları */
+$primary-orange: #e88d3e; // Ana turuncu renk
+$link-blue: #007bff; // Link rengi
+
+.search-result-container {
+  // Arama sonuçlarının bulunduğu ana kapsayıcı.
+  // Ekran görüntüsündeki "Search Result" başlığı için bir yer açıyoruz.
+  
+  flex-grow: 1; // Kalan tüm yatay alanı doldur.
+  background-color: #fff; // Sonuçlar listesinin arkaplan rengi (beyaz).
+  padding: 10px 0; // Üst ve alttan boşluk bırak.
+  position: relative; // Başlık için konumlandırma bağlamı.
+  overflow-y: auto; // Gerekirse dikey kaydırma çubuğu çıksın.
+  
+  // Arama sonuçları listesi için bir başlık oluştur
+  &::before {
+    content: 'Search Result';
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    padding: 0 20px 10px 20px;
+    display: block;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+}
+
+.customer-card {
+  // Görseldeki arkaplan rengini ve yuvarlak köşeli çerçeveyi verir
+  background-color: #f0f0f0; 
+  border: 1px solid #d0d0d0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  
+  // Hover efekti ekleyerek seçilebilir olduğunu belirtir
+  &:hover {
+    background-color: #e8e8e8;
+  }
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between; // Sütunlar arasında eşit boşluk bırakır
+  gap: 20px; // Sütunlar arası boşluk
+}
+
+.card-column {
+  // Her sütunun eşit genişlikte olmasını sağlar (Örn: Üç eşit sütun)
+  flex: 1; 
+  
+  // Nat ID sütununa özel ayarlama yapabiliriz (opsiyonel)
+  &.nat-id-column {
+    // Örneğin, bu sütunun içeriği az olduğu için minimum genişliğini koruyabiliriz.
+  }
+}
+
+.card-field {
+  margin-bottom: 15px;
+  
+  label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 3px;
+  }
+  
+  .value {
+    // Alan içeriği kutusu görselini taklit eder
+    border: 1px solid #d8d8d8;
+    background-color: #fff;
+    padding: 3px 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #333;
+    height: 25px; // Görseldeki tek tip yüksekliği korumak için
+    overflow: hidden;
+
+    &.link {
+      color: $link-blue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+// İkinci satır alanları için özel düzenleme
+.last-name-field {
+  margin-top: 5px; 
+}
+
+.account-number-field {
+  margin-top: 5px;
+}
+
+.extra-info-tag {
+  // Görseldeki "Ahmet Tarık Kazan" etiketi için stil
+  background-color: #38a45c; // Yeşilimsi bir arka plan rengi
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: -10px; /* Last Name alanının altına kaydırmak için */
+}
+
+/* Sayfalama (Pagination) Stili */
+.pagination {
+  display: flex;
+  justify-content: flex-end; /* Sağ tarafa hizala */
+  align-items: center;
+  margin-top: 10px;
+  
+  .page-link, .page-number {
+    font-size: 14px;
+    color: #666;
+    margin: 0 5px;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  
+  .page-number.active {
+    color: $primary-orange;
+    font-weight: bold;
+    // Veya: border: 1px solid $primary-orange;
+  }
+  
+  .page-link {
+    font-weight: bold;
+  }
+}
