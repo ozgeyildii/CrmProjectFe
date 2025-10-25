@@ -3,70 +3,65 @@
   color: #f1f1f1;
   padding: 0.75rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  height: 84px;
+}
 
-  /* Logo */
-  .company-logo {
-    height: 72px;
-    filter: brightness(1.15) contrast(1.05);
+.header .company-logo {
+  height: 72px;
+  filter: brightness(1.15) contrast(1.05);
+}
+
+.header h5 {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.header .menu-icon {
+  color: #f1f1f1;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.header .lang-display {
+  color: #f1f1f1;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.header .lang-display i {
+  font-size: 1rem;
+}
+
+.header .user-info .avatar {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(245, 130, 32);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.header .user-info .text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+@media (max-width: 768px) {
+  .header h5 {
+    font-size: 1rem;
   }
-
-  /* Title */
-  h5 {
-    color: #ffffff;
-    font-weight: 600;
-    letter-spacing: 0.4px;
-    margin: 0;
-  }
-
-  /* Sidebar Icon */
-  .menu-icon {
-    color: #f1f1f1;
-    font-size: 1.8rem;
-    line-height: 1;
-  }
-
-  /* Language Display */
-  .lang-display {
-    color: #f1f1f1;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-
-    i {
-      font-size: 1rem;
-    }
-  }
-
-  /* User Info */
-  .user-info {
-    .avatar {
-      width: 40px;
-      height: 40px;
-      background-color: rgb(245, 130, 32);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 1.2rem;
-    }
-
-    .text-muted {
-      color: rgba(255, 255, 255, 0.6) !important;
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    h5 {
-      font-size: 1rem;
-    }
-
-    .lang-display {
-      font-size: 0.8rem;
-      padding: 0.25rem 0.4rem;
-    }
+  .header .lang-display {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.4rem;
   }
 }

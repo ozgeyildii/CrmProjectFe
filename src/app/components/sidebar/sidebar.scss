@@ -2,32 +2,30 @@
   background-color: #1e1e3f;
   width: 100px;
   position: fixed;
-  top: 84px; /* header yüksekliği */
+  top: 84px;
   bottom: 0;
+  left: 0;
   padding: 1rem 0.5rem;
   z-index: 900;
   transition: all 0.3s ease-in-out;
   border-right: 2px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Nav alanı tüm boşluğu kaplasın */
 .custom-sidebar nav {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  flex-grow: 1; /* boşluğu doldur */
-  overflow-y: auto; /* çok uzun olursa scroll */
+  flex-grow: 1;
+  overflow-y: auto;
   padding-bottom: 1rem;
 }
 
-/* Logout alanı hep en altta */
 .custom-sidebar .mt-auto {
   display: flex;
   justify-content: center;
 }
 
-/* Butonlar aynı */
 .sidebar-btn {
   background-color: #f5f5f5;
   border: none;
@@ -52,19 +50,18 @@
 .sidebar-btn.active {
   background-color: rgb(245, 130, 32);
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 130, 32, 0.3);
 }
 
-/* Responsive */
 @media (max-width: 992px) {
   .custom-sidebar {
     width: 80px;
   }
-
   .sidebar-btn {
     width: 60px;
     height: 60px;
   }
-
   .sidebar-btn span {
     display: none;
   }

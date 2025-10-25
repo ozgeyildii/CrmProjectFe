@@ -1,133 +1,137 @@
-/* Genel Stil Tanımları */
-$primary-orange: #e88d3e; // Ana turuncu renk
-$link-blue: #007bff; // Link rengi
-
 .search-result-container {
-  // Arama sonuçlarının bulunduğu ana kapsayıcı.
-  // Ekran görüntüsündeki "Search Result" başlığı için bir yer açıyoruz.
-  
-  flex-grow: 1; // Kalan tüm yatay alanı doldur.
-  background-color: #fff; // Sonuçlar listesinin arkaplan rengi (beyaz).
-  padding: 10px 0; // Üst ve alttan boşluk bırak.
-  position: relative; // Başlık için konumlandırma bağlamı.
-  overflow-y: auto; // Gerekirse dikey kaydırma çubuğu çıksın.
-  
-  // Arama sonuçları listesi için bir başlık oluştur
-  &::before {
-    content: 'Search Result';
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    padding: 0 20px 10px 20px;
-    display: block;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Kartları dikeyde aralıklı tutmaya devam */
+.results-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .customer-card {
-  // Görseldeki arkaplan rengini ve yuvarlak köşeli çerçeveyi verir
-  background-color: #f0f0f0; 
-  border: 1px solid #d0d0d0;
-  border-radius: 5px;
-  padding: 10px 15px;
-  margin-bottom: 15px;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
   cursor: pointer;
-  
-  // Hover efekti ekleyerek seçilebilir olduğunu belirtir
-  &:hover {
-    background-color: #e8e8e8;
-  }
 }
-
-.card-row {
+.customer-card:hover {
+  border-color: rgb(245, 130, 32);
+  box-shadow: 0 4px 12px rgba(245, 130, 32, 0.15);
+  transform: translateY(-2px);
+}
+.customer-card .card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+.customer-card .card-column {
   display: flex;
-  justify-content: space-between; // Sütunlar arasında eşit boşluk bırakır
-  gap: 20px; // Sütunlar arası boşluk
+  flex-direction: column;
+  gap: 0.75rem;
 }
-
-.card-column {
-  // Her sütunun eşit genişlikte olmasını sağlar (Örn: Üç eşit sütun)
-  flex: 1; 
-  
-  // Nat ID sütununa özel ayarlama yapabiliriz (opsiyonel)
-  &.nat-id-column {
-    // Örneğin, bu sütunun içeriği az olduğu için minimum genişliğini koruyabiliriz.
-  }
+.customer-card .card-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
+.customer-card .card-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.customer-card .card-field .value {
+  font-size: 0.95rem;
+  color: #212529;
+  font-weight: 500;
+}
+.customer-card .card-field .value.link {
+  color: rgb(245, 130, 32);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.customer-card .card-field .value.link:hover {
+  color: rgb(225, 110, 12);
+}.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.75rem;
+  gap: 1rem;
+  font-family: 'Poppins', sans-serif;
 
-.card-field {
-  margin-bottom: 15px;
-  
-  label {
-    display: block;
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 3px;
-  }
-  
-  .value {
-    // Alan içeriği kutusu görselini taklit eder
-    border: 1px solid #d8d8d8;
-    background-color: #fff;
-    padding: 3px 5px;
-    border-radius: 3px;
-    font-size: 14px;
-    color: #333;
-    height: 25px; // Görseldeki tek tip yüksekliği korumak için
-    overflow: hidden;
+  button {
+    background-color: rgb(245, 130, 32); /* ETIYA turuncusu */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(245, 130, 32, 0.25);
 
-    &.link {
-      color: $link-blue;
-      text-decoration: underline;
-      cursor: pointer;
+    &:hover {
+      background-color: rgb(225, 110, 12);
+      box-shadow: 0 3px 10px rgba(245, 130, 32, 0.35);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      background-color: #f0f0f0;
+      color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
   }
-}
 
-// İkinci satır alanları için özel düzenleme
-.last-name-field {
-  margin-top: 5px; 
-}
-
-.account-number-field {
-  margin-top: 5px;
-}
-
-.extra-info-tag {
-  // Görseldeki "Ahmet Tarık Kazan" etiketi için stil
-  background-color: #38a45c; // Yeşilimsi bir arka plan rengi
-  color: white;
-  font-size: 10px;
-  padding: 2px 5px;
-  border-radius: 3px;
-  display: inline-block;
-  margin-top: -10px; /* Last Name alanının altına kaydırmak için */
-}
-
-/* Sayfalama (Pagination) Stili */
-.pagination {
-  display: flex;
-  justify-content: flex-end; /* Sağ tarafa hizala */
-  align-items: center;
-  margin-top: 10px;
-  
-  .page-link, .page-number {
-    font-size: 14px;
-    color: #666;
-    margin: 0 5px;
-    cursor: pointer;
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-  
-  .page-number.active {
-    color: $primary-orange;
-    font-weight: bold;
-    // Veya: border: 1px solid $primary-orange;
-  }
-  
-  .page-link {
-    font-weight: bold;
+  span {
+    font-weight: 600;
+    color: #f58220; /* turuncu vurgu */
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
   }
 }
+
+/* Responsive uyum */
+@media (max-width: 768px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .pagination button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .customer-card .card-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .pagination {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  
+  .pagination .page-link,
+  .pagination .page-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+}
+

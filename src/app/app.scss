@@ -1,29 +1,22 @@
-.app-container {
+.layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-.app-body {
+.layout-body {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* Sidebar solda sabit */
-app-sidebar {
-  width: 100px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 2;
-}
-
-/* Router-outlet alanı */
-.content-area {
+.page-content {
   flex: 1;
-  overflow-y: auto;
-  background-color: #f7f8fa;
+  margin-left: 100px; /* sidebar genişliği */
+  margin-top: 84px; /* header yüksekliği */
+  background-color: #f8f9fa;
   padding: 1.5rem;
-  position: relative;
-  z-index: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }

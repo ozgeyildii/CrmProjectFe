@@ -10,7 +10,22 @@ import { CommonModule } from '@angular/common';
 })
 export class SearchCustomerResults {
   @Input() customers: SearchCustomerList = [];
+  @Input() page = 0;
+  @Input() hasMore = false;
+
   @Output() select = new EventEmitter<string>();
- 
-  onSelect(customerId: string) { this.select.emit(customerId); }
+  @Output() next = new EventEmitter<void>();
+  @Output() prev = new EventEmitter<void>();
+
+  onSelect(customerId: string) {
+    this.select.emit(customerId);
+  }
+
+  nextPage() {
+    this.next.emit();
+  }
+
+  previousPage() {
+    this.prev.emit();
+  }
 }

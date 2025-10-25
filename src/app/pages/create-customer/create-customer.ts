@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { CreateCustomerService } from '../../services/create-customer-service';
 import { CreateIndividualCustomerRequest } from '../../models/requests/createIndividualCustomerRequest';
 import { PopupComponent } from '../../components/popup/popup';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-customer',
@@ -29,7 +30,7 @@ export class CreateCustomer implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private createCustomerService: CreateCustomerService
+    private createCustomerService: CreateCustomerService, public router:Router
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +99,10 @@ export class CreateCustomer implements OnInit {
         }
       },
     });
+  }
+
+  onCancel(){
+      this.router.navigate(['customers/search'])
   }
 
   closePopup() {

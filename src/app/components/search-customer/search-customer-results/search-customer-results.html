@@ -1,46 +1,48 @@
-<div *ngIf="customers.length > 0" class="search-result-container">
-  <div class="customer-card" *ngFor="let c of customers" (click)="onSelect(c.id)">
-    
-    <div class="card-row">
-      
-      <div class="card-column">
-        <div class="card-field">
-          <label>First Name</label>
-          <div class="value">{{ c.firstName }}</div>
-        </div>
-        
-        <div class="card-field last-name-field">
-          <label>Last Name</label>
-          <div class="value">{{ c.lastName }}</div>
-        </div>
-      </div>
-      
-      <div class="card-column">
-        <div class="card-field">
-          <label>Customer ID</label>
-          <div class="value link">{{ c.customerNumber }}</div> 
-        </div>
-        
-        <div class="card-field account-number-field">
-          <label>Costumer Number</label>
-          <div class="value">{{ c.customerNumber }}</div> 
-        </div>
-      </div>
-      
-      <div class="card-column nat-id-column">
-        <div class="card-field">
-          <label>Nat ID</label>
-          <div class="value">{{ c.nationalId }}</div>
-        </div>
-        </div>
 
+<div *ngIf="customers.length > 0" class="search-result-container">
+  <div class="results-wrapper">
+    <div class="customer-card" *ngFor="let c of customers" (click)="onSelect(c.id)">
+      
+      <div class="card-row">
+        
+        <div class="card-column">
+          <div class="card-field">
+            <label>First Name</label>
+            <div class="value">{{ c.firstName }}</div>
+          </div>
+          
+          <div class="card-field">
+            <label>Last Name</label>
+            <div class="value">{{ c.lastName }}</div>
+          </div>
+        </div>
+        
+        <div class="card-column">
+          <div class="card-field">
+            <label>Customer ID</label>
+            <div class="value link">{{ c.customerNumber }}</div> 
+          </div>
+          
+          <div class="card-field">
+            <label>Account Number</label>
+            <div class="value">{{ c.customerNumber }}</div> 
+          </div>
+        </div>
+        
+        <div class="card-column">
+          <div class="card-field">
+            <label>Nat ID</label>
+            <div class="value">{{ c.nationalId }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+   <div class="pagination">
+      <button (click)="previousPage()" [disabled]="page === 0">&lt;</button>
+      <span>Page {{ page + 1 }}</span>
+      <button (click)="nextPage()" [disabled]="!hasMore">&gt;</button>
     </div>
   </div>
-  <div class="pagination">
-    <span class="page-link">&lt;</span>
-    <span class="page-number active">1</span>
-    <span class="page-number">2</span>
-    <span class="page-number">3</span>
-    <span class="page-link">&gt;</span>
-  </div>
 </div>
+

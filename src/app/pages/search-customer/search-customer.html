@@ -1,17 +1,26 @@
-<div class="main">
-  <div class="container">
-    <div class="row">
-      <h3>Customer Search</h3>
+<div class="container-fluid">
+  <div class="row min-vh-100 align-items-stretch">
+    <!-- Sol panel -->
+    <div class="col-md-4 col-lg-3 bg-dark rounded-3 shadow-sm p-3">
       <app-search-customer-form
         (search)="onSearch($event)"
         (clear)="onClear()"
         (create)="onCreateCustomer()"
       >
       </app-search-customer-form>
+    </div>
 
-      <div *ngIf="loading">Loading...</div>
-
-      <app-search-customer-results [customers]="customers" (select)="onSelectCustomer($event)">
+    <!-- Sağ panel -->
+    <div class="col-md-8 col-lg-9 bg-white rounded-3 shadow-sm p-3">
+      <app-loader *ngIf="loaderService.isLoading()"></app-loader>
+      <app-search-customer-results
+        [customers]="customers"
+        [page]="page"
+        [hasMore]="hasMore"
+        (next)="nextPage()"
+        (prev)="previousPage()"
+        (select)="onSelectCustomer($event)"
+      >
       </app-search-customer-results>
     </div>
   </div>
