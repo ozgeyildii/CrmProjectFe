@@ -8,17 +8,10 @@ import { CreateIndividualCustomerRequest } from '../models/requests/createIndivi
   providedIn: 'root'
 })
 export class CreateCustomerService {
-  private baseUrl = 'http://localhost:8091/customerservice/api/individual-customers';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient){}
 
-  // 🔹 createIndividualCustomer artık dryRun parametresi alıyor
-  createIndividualCustomer(
-    request: CreateIndividualCustomerRequest,
-    dryRun: boolean = false
-  ): Observable<CreateIndividualCustomerResponse> {
-
-    const url = `${this.baseUrl}?dryRun=${dryRun}`;
-    return this.httpClient.post<CreateIndividualCustomerResponse>(url, request);
+  createIndividualCustomer(createIndividualCustomerRequest:CreateIndividualCustomerRequest): Observable<CreateIndividualCustomerResponse>{
+    return this.httpClient.post<CreateIndividualCustomerResponse>("http://localhost:8091/customerservice/api/individual-customers", createIndividualCustomerRequest);
   }
 }

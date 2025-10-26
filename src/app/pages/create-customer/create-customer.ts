@@ -85,7 +85,7 @@ export class CreateCustomer implements OnInit {
     const formValue = this.createCustomerForm.value;
     const newCustomerRequest: CreateIndividualCustomerRequest = formValue;
 
-    this.createCustomerService.createIndividualCustomer(newCustomerRequest, true).subscribe({
+    this.createCustomerService.createIndividualCustomer(newCustomerRequest).subscribe({
       next: (res) => {
         this.title.set('Customer Created');
         this.successMessage.set('Customer created successfully!');
