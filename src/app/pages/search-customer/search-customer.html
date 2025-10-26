@@ -10,6 +10,8 @@
       </app-search-customer-form>
     </div>
 
+    
+
     <!-- Sağ panel -->
     <div class="col-md-8 col-lg-9 bg-white rounded-3 shadow-sm p-3">
       <app-loader *ngIf="loaderService.isLoading()"></app-loader>
@@ -24,4 +26,12 @@
       </app-search-customer-results>
     </div>
   </div>
+  <app-popup
+      [visible]="showPopup()"
+      [title]="popupTitle()"
+      [message]="popupMessage()"
+      [type]="popupType()"
+      (close)="onClosePopup()"
+    >
+    </app-popup>
 </div>

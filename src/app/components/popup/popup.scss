@@ -88,6 +88,35 @@
       }
     }
   }
+
+   /* ⚠️ WARNING MODAL THEME */
+  &.warning {
+    border-left-color: #f59e0b; // amber-500
+
+    .modal-header {
+      background-color: #fffbeb; // amber-50
+      border-bottom-color: #fde68a; // amber-200
+    }
+
+    .icon-wrapper {
+      background-color: #f59e0b; // amber-500
+    }
+
+    .modal-title {
+      color: #92400e; // amber-800
+    }
+
+    .btn-okay {
+      background-color: #f59e0b;
+      border-color: #f59e0b;
+      color: white;
+
+      &:hover {
+        background-color: #d97706; // amber-600
+        border-color: #d97706;
+      }
+    }
+  }
 }
 
 .modal-header {
@@ -185,6 +214,7 @@
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
   }
 }
+
 
 // Animations
 @keyframes fadeIn {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchCustomerList } from '../../models/responses/searchCustomersResponse';
 import { SearchCustomerService } from '../../services/search-customer-service';
@@ -7,19 +7,24 @@ import { SearchCustomerResults } from '../../components/search-customer/search-c
 import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../services/loader-service';
 import { Loader } from '../../components/loader/loader';
+import { PopupComponent } from '../../components/popup/popup';
 
 @Component({
   selector: 'app-customer-search',
   templateUrl: './search-customer.html',
-  imports: [SearchCustomerForm, SearchCustomerResults, CommonModule, Loader],
+  imports: [SearchCustomerForm, SearchCustomerResults, CommonModule, Loader, PopupComponent],
 })
 export class SearchCustomer {
   customers: SearchCustomerList = [];
   filters: any = {};
   loading = false;
   page = 0;
-  size = 3;
+  size = 20;
   hasMore = false;
+  showPopup = signal(false);
+  popupTitle = signal('');
+  popupMessage = signal('');
+  popupType = signal<'success' | 'error' | 'warning'>('warning');
 
   constructor(
     private searchCustomerService: SearchCustomerService,
@@ -41,6 +46,12 @@ loadCustomers() {
 
       // Eğer gelen veri sayısı size'dan küçükse → bu son sayfa
       this.hasMore = res && res.length === this.size;
+
+      if(this.customers.length === 0 && this.page === 0) {
+          this.popupMessage.set('No customer found.');
+          this.popupType.set('warning');
+          this.showPopup.set(true);
+      }
 
       // Eğer son sayfadaysak ama boş geldiyse (örneğin fazla tıklama olmuşsa)
       if (res.length === 0 && this.page > 0) {
@@ -81,5 +92,9 @@ previousPage() {
 
   onCreateCustomer() {
     this.router.navigate(['/customers/create']);
+  }
+
+  onClosePopup() {
+    this.showPopup.set(false);
   }
 }

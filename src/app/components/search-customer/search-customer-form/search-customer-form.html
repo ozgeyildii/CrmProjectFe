@@ -8,43 +8,43 @@
 </div>
 
     <div class="form-group">
-      <label>First Name</label>
-      <input formControlName="firstName" placeholder="" />
-    </div>
-    
-    <div class="form-group">
-      <label>Last Name</label>
-      <input formControlName="lastName" placeholder="" />
-    </div>
-    
-    <div class="form-group">
       <label>Nat ID</label>
-      <input formControlName="nationalId" placeholder="" />
+      <input formControlName="nationalId" placeholder="" maxlength="11"/>
     </div>
-    
+
     <div class="form-group">
       <label>Customer ID</label>
-      <input formControlName="customerNumber" placeholder="" />
+      <input formControlName="customerNumber" placeholder="" maxlength="17" />
     </div>
     
     <div class="form-group">
       <label>Account Number</label>
-      <input formControlName="accountNumber" placeholder="" />
+      <input formControlName="accountNumber" placeholder="" maxlength="9" />
     </div>
     
     <div class="form-group">
       <label>GSM Number</label>
-      <input formControlName="gsmNumber" placeholder="" />
+      <input formControlName="value" placeholder="" maxlength="12" />
+    </div>
+
+    <div class="form-group">
+      <label>First Name</label>
+      <input formControlName="firstName" placeholder="" maxlength="30"/>
+    </div>
+    
+    <div class="form-group">
+      <label>Last Name</label>
+      <input formControlName="lastName" placeholder="" maxlength="45"/>
     </div>
     
     <div class="form-group">
       <label>Order Number</label>
-      <input formControlName="orderNumber" placeholder="" />
+      <input formControlName="orderNumber" placeholder="" maxlength="9"/>
     </div>
   </div>
   
   <div class="buttons">
     <button type="button" (click)="onClear()">Clear</button>
-    <button type="submit">Search</button>
+    <button type="submit" [disabled]="isSearchDisabled()">Search</button>
   </div>
 </form>
