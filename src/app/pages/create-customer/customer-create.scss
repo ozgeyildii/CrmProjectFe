@@ -1,0 +1,42 @@
+.content-area {
+  margin-left: 0px; // sidebar genişliği
+  margin-top: 0px;   // header yüksekliği
+  min-height: calc(100vh - 84px);
+  background-color: #f7f8fa;
+  transition: all 0.3s ease;
+
+  @media (max-width: 992px) {
+    margin-left: 0px;
+  }
+
+  @media (max-width: 576px) {
+    margin-left: 0px;
+  }
+}
+
+.customer-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .card-header {
+    background-color: #f0f2f6;
+    border-bottom: 1px solid #e1e3e8;
+    padding: 1rem 1.5rem;
+
+    h5 {
+      font-weight: 600;
+      color: #242441;
+    }
+
+    small {
+      font-size: 0.85rem;
+      color: #666;
+    }
+  }
+
+  .card-body {
+    background-color: #f7f8fa;
+    padding: 2rem;
+  }
+}

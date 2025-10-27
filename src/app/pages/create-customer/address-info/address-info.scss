@@ -1,0 +1,108 @@
+.address-step-container {
+  background-color: #d9d9d9;
+  border: 2px solid orange;
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-height: 600px;
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: orange;
+    font-weight: 600;
+  }
+
+  .address-list {
+    margin-bottom: 1rem;
+  }
+
+  .address-card {
+    border: 1px solid orange;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    p {
+      margin: 0.25rem 0;
+    }
+
+    .primary-btn {
+      background: orange;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .primary-btn[disabled] {
+      background: gray;
+      cursor: not-allowed;
+    }
+  }
+
+  .add-btn {
+    border: 2px solid orange;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+      background: orange;
+      color: white;
+    }
+  }
+
+  .address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    label {
+      font-weight: bold;
+      margin-top: 0.3rem;
+    }
+    input,
+    textarea {
+      border: 1px solid orange;
+      border-radius: 6px;
+      padding: 0.4rem;
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .bottom-buttons {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    button {
+      border: 2px solid orange;
+      background: transparent;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover {
+        background: orange;
+        color: white;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

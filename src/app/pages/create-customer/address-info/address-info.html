@@ -1,0 +1,84 @@
+<div class="address-step-container">
+  <h2>Create Customer</h2>
+  <h4>Address info</h4>
+
+  <!-- Eğer form kapalıysa adres listesi ve Add New Address görünür -->
+  <div *ngIf="!showForm()">
+    <!-- Adres listesi -->
+    <div *ngIf="addresses().length > 0" class="address-list">
+      <div *ngFor="let addr of addresses(); let i = index" class="address-card">
+        <div class="address-row">
+          <p><strong>City:</strong> {{ addr.city }}</p>
+          <p><strong>District:</strong> {{ addr.district }}</p>
+          <p><strong>Street:</strong> {{ addr.street }}</p>
+        </div>
+        <div class="address-row">
+          <p><strong>House/Flat No:</strong> {{ addr.houseNumber }}</p>
+        </div>
+        <p><strong>Description:</strong> {{ addr.description }}</p>
+
+        <button
+          class="primary-btn"
+          [disabled]="addr.isPrimary"
+          (click)="onSelectPrimary(i)"
+        >
+          {{ addr.isPrimary ? 'Primary Address' : 'Select as Primary Address' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Add New Address butonu -->
+    <div class="add-btn-container">
+      <button class="add-btn" (click)="onAddNewAddress()">Add New Address</button>
+    </div>
+  </div>
+
+  <!-- Yeni adres formu -->
+  <form *ngIf="showForm()" [formGroup]="addressForm" class="address-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>City*</label>
+        <input formControlName="city" maxlength="20" />
+      </div>
+
+      <div class="form-group">
+        <label>District*</label>
+        <input formControlName="district" maxlength="20" />
+      </div>
+
+      <div class="form-group">
+        <label>Street*</label>
+        <input formControlName="street" maxlength="20" />
+      </div>
+
+      <div class="form-group">
+        <label>House/Flat Number*</label>
+        <input formControlName="houseNumber" maxlength="10" />
+      </div>
+
+      <div class="form-group description">
+        <label>Address Description*</label>
+        <textarea
+          formControlName="description"
+          maxlength="250"
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Form alt butonları -->
+    <div class="form-buttons">
+      <button type="button" (click)="showForm.set(false)">Cancel</button>
+      <button type="button" [disabled]="!addressForm.valid" (click)="onSave()">
+        Save
+      </button>
+    </div>
+  </form>
+
+  <!-- Alt navigation -->
+  <div class="bottom-buttons">
+    <button (click)="onCancel()">Cancel</button>
+    <button (click)="onPrevious()">Previous</button>
+    <button [disabled]="addresses().length === 0" (click)="onNext()">Next</button>
+  </div>
+</div>
