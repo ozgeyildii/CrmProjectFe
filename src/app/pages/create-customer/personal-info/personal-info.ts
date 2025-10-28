@@ -22,7 +22,6 @@ import { CreateCustomerService } from '../../../services/create-customer-service
 export class PersonalInfo implements OnInit {
   createPersonalInfoForm!: FormGroup;
 
-  // ✅ Signals ile reaktif state yönetimi
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   title = signal<string | null>(null);
@@ -37,21 +36,19 @@ export class PersonalInfo implements OnInit {
   }
 
   buildForm() {
-    this.createPersonalInfoForm = this.formBuilder.group({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
-      middleName: new FormControl(''),
-      nationalId: new FormControl('', [
-        Validators.required,
-        Validators.minLength(11),
-        Validators.maxLength(11),
-      ]),
-      dateOfBirth: new FormControl('', [Validators.required]),
-      gender: new FormControl('', [Validators.required]),
-      motherName: new FormControl(''),
-      fatherName: new FormControl(''),
-    });
-  }
+   this.createPersonalInfoForm = this.formBuilder.group({
+  firstName: [this.createCustomerService.state().firstName ?? "", [Validators.required]],
+  lastName: [this.createCustomerService.state().lastName ?? "", [Validators.required]],
+  middleName: [this.createCustomerService.state().middleName ?? ""],
+  nationalId: [
+    this.createCustomerService.state().nationalId ?? "",
+    [Validators.required, Validators.minLength(11), Validators.maxLength(11)],
+  ],
+  dateOfBirth: [this.createCustomerService.state().dateOfBirth ?? "", [Validators.required]],
+  gender: [this.createCustomerService.state().gender ?? "", [Validators.required]],
+  motherName: [this.createCustomerService.state().motherName ?? ""],
+  fatherName: [this.createCustomerService.state().fatherName ?? ""],
+}) }
 
   isInvalid(controlName: string): boolean {
     const control = this.createPersonalInfoForm.get(controlName);

@@ -10,6 +10,11 @@
           (close)="closePopup()"
         ></app-popup>
 
+         <p class="form-hint mb-4">
+          <strong>To continue, please fill in all the necessary fields below.</strong>
+        </p>
+
+
         <form [formGroup]="createPersonalInfoForm" (ngSubmit)="checkNationalIdBeforeCreate()">
           <div class="row g-3">
             <!-- First Name -->

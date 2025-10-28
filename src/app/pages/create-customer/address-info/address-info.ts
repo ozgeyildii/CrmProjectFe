@@ -1,38 +1,53 @@
-import { Component, OnInit, signal, effect } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { CreateCustomerService } from '../../../services/create-customer-service';
+import { Component, OnInit, signal } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Router} from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { CreateCustomerService } from '../../../services/create-customer-service';
 
 @Component({
   selector: 'app-address-info',
- imports: [CommonModule,RouterLink,FormsModule,ReactiveFormsModule],
-   templateUrl: './address-info.html',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './address-info.html',
   styleUrls: ['./address-info.scss'],
 })
 export class AddressInfo implements OnInit {
   addressForm!: FormGroup;
+
+  private addressListForm!: FormGroup;
+
   addresses = signal<any[]>([]);
   showForm = signal(false);
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private customerService: CreateCustomerService
-  ) {
-    // Debug için state’i console’da izleyelim
-    effect(() => {
-      console.log('📦 Address list changed:', this.addresses());
-      console.log('📦 Customer state:', this.customerService.state());
-    });
-  }
+    private createCustomerService: CreateCustomerService
+  ) {}
 
   ngOnInit(): void {
-    this.buildForm();
+    this.buildForms();
+
+    const saved = this.createCustomerService.state().addresses ?? [];
+    if (saved.length > 0) {
+      this.addresses.set(saved);
+      saved.forEach((addr: any) => this.addAddress(addr)); // ✅ Artık tanımlı
+    }
   }
 
-  buildForm(): void {
+  private buildForms(): void {
+    this.addressListForm = this.fb.group({
+      addresses: this.fb.array([]),
+    });
+
     this.addressForm = this.fb.group({
       city: ['', [Validators.required, Validators.maxLength(20)]],
       district: ['', [Validators.required, Validators.maxLength(20)]],
@@ -43,54 +58,87 @@ export class AddressInfo implements OnInit {
     });
   }
 
+  private get addressesFormArray(): FormArray {
+    return this.addressListForm.get('addresses') as FormArray;
+  }
+
+  private newAddress(address?: any): FormGroup {
+    return this.fb.group({
+      city: new FormControl(address?.city ?? '', [Validators.required, Validators.maxLength(20)]),
+      district: new FormControl(address?.district ?? '', [Validators.required, Validators.maxLength(20)]),
+      street: new FormControl(address?.street ?? '', [Validators.required, Validators.maxLength(20)]),
+      houseNumber: new FormControl(address?.houseNumber ?? '', [Validators.required, Validators.maxLength(10)]),
+      description: new FormControl(address?.description ?? '', [Validators.required, Validators.maxLength(250)]),
+      isPrimary: new FormControl(address?.isPrimary ?? false),
+    });
+  }
+
+  private addAddress(address?: any): void {
+    this.addressesFormArray.push(this.newAddress(address));
+  }
+
   onAddNewAddress(): void {
+    this.addressForm.reset({
+      city: '',
+      district: '',
+      street: '',
+      houseNumber: '',
+      description: '',
+      isPrimary: false,
+    });
     this.showForm.set(true);
   }
 
   onSave(): void {
-    if (this.addressForm.valid) {
-      const newAddress = { ...this.addressForm.value };
-
-      // Eğer ilk adresse giriliyorsa primary yap
-      if (this.addresses().length === 0) {
-        newAddress.isPrimary = true;
-      }
-
-      this.addresses.update((prev) => [...prev, newAddress]);
-      this.showForm.set(false);
-      this.addressForm.reset();
-
-      // Customer state’e adresleri kaydet
-      this.customerService.state.update((prev) => ({
-        ...prev,
-        addresses: this.addresses(),
-      }));
+    if (this.addressForm.invalid) {
+      this.addressForm.markAllAsTouched();
+      return;
     }
+
+    const newAddr = { ...this.addressForm.value };
+
+    if (this.addresses().length === 0) {
+      newAddr.isPrimary = true;
+    }
+
+    const updatedList = [...this.addresses(), newAddr];
+    this.addresses.set(updatedList);
+
+    this.createCustomerService.state.update(prev => ({
+      ...prev,
+      addresses: updatedList,
+    }));
+
+    this.addAddress(newAddr);
+
+    this.showForm.set(false);
   }
 
   onSelectPrimary(index: number): void {
-    this.addresses.update((list) =>
-      list.map((a, i) => ({ ...a, isPrimary: i === index }))
-    );
+    const updated = this.addresses().map((a, i) => ({ ...a, isPrimary: i === index }));
+    this.addresses.set(updated);
 
-    this.customerService.state.update((prev) => ({
+    this.createCustomerService.state.update(prev => ({
       ...prev,
-      addresses: this.addresses(),
+      addresses: updated,
     }));
+
+    this.addressesFormArray.controls.forEach((grp, i) =>
+      grp.get('isPrimary')?.setValue(i === index)
+    );
   }
 
-  onCancel(): void {
-    this.router.navigate(['/customers/search']);
-  }
-
-  // "Previous" sadece router ile geri gider, state’i etkilemez
   onPrevious(): void {
     this.router.navigate(['/customers/create/personal-info']);
   }
 
   onNext(): void {
     if (this.addresses().length > 0) {
-      this.router.navigate(['/customers/create/contact-medium']);
+      this.router.navigate(['/customers/create/contact-info']);
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/customers/search']);
   }
 }

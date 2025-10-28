@@ -1,108 +1,71 @@
-.address-step-container {
-  background-color: #d9d9d9;
-  border: 2px solid orange;
-  border-radius: 8px;
-  padding: 1.5rem;
-  min-height: 600px;
-  position: relative;
-  font-family: 'Segoe UI', sans-serif;
+.content-area {
+  margin-left: 0;
+  margin-top: 0;
+  min-height: calc(100vh - 84px);
+  background-color: #f7f8fa;
+  transition: all 0.3s ease;
+}
 
-  h2 {
-    margin-bottom: 1rem;
-    color: orange;
-    font-weight: 600;
-  }
+.customer-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
 
-  .address-list {
-    margin-bottom: 1rem;
-  }
-
-  .address-card {
-    border: 1px solid orange;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
+  .card-body {
     background-color: #fff;
-    p {
-      margin: 0.25rem 0;
-    }
+    padding: 2rem;
+  }
 
-    .primary-btn {
-      background: orange;
-      border: none;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      margin-top: 0.5rem;
-      cursor: pointer;
-    }
+  .text-orange {
+    color: rgb(245, 130, 32);
+  }
 
-    .primary-btn[disabled] {
-      background: gray;
-      cursor: not-allowed;
+  .form-label {
+    font-weight: 500;
+    color: #242441;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+
+    &:focus {
+      border-color: rgb(245, 130, 32);
+      box-shadow: 0 0 0 0.15rem rgba(245, 130, 32, 0.25);
     }
   }
 
-  .add-btn {
-    border: 2px solid orange;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    background: transparent;
-    font-weight: 600;
-    cursor: pointer;
+  .btn {
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .btn-warning {
+    background-color: rgb(245, 130, 32);
+    border-color: rgb(245, 130, 32);
+
     &:hover {
-      background: orange;
-      color: white;
+      background-color: rgb(255, 153, 0);
+      border-color: rgb(255, 153, 0);
     }
   }
 
-  .address-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    label {
-      font-weight: bold;
-      margin-top: 0.3rem;
-    }
-    input,
-    textarea {
-      border: 1px solid orange;
-      border-radius: 6px;
-      padding: 0.4rem;
+  .btn-outline-warning {
+    color: rgb(245, 130, 32);
+    border-color: rgb(245, 130, 32);
+
+    &:hover {
+      background-color: rgb(245, 130, 32);
+      color: #fff;
     }
   }
 
-  .form-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .bottom-buttons {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 1rem;
-
-    button {
-      border: 2px solid orange;
-      background: transparent;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-
-      &:hover {
-        background: orange;
-        color: white;
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
+  .bg-light {
+    background-color: #f8f9fa !important;
   }
 }

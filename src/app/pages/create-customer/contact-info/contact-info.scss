@@ -1,0 +1,41 @@
+.customer-card {
+  background-color: #ffffff; /* beyaz arka plan */
+  border: 1px solid #f7b46b;
+  border-radius: 10px;
+  padding: 1.5rem 2rem;
+}
+
+.form-control {
+  border: 1px solid #f7b46b;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #f58220;
+}
+
+.btn-warning {
+  background-color: #f58220;
+  border-color: #f58220;
+}
+
+.btn-warning:hover {
+  background-color: #e57300;
+  border-color: #e57300;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.85rem;
+}
+
+.text-orange {
+  color: #f58220;
+}

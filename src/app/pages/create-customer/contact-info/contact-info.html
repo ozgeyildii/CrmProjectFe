@@ -1,0 +1,89 @@
+<main class="content-area">
+  <div class="container-fluid py-4">
+    <div class="card shadow-sm customer-card bg-white border-0">
+      <div class="card-body">
+        <h4 class="mb-4 fw-semibold text-orange">Contact Medium</h4>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onCreate()" novalidate>
+          <div class="row g-3">
+            <!-- Email -->
+            <div class="col-md-6">
+              <label class="form-label">E-Mail <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="example@etiya.com"
+                formControlName="email"
+                [ngClass]="{ 'is-invalid': isInvalid('email') }"
+              />
+              <div *ngIf="isInvalid('email')" class="invalid-feedback">
+                Please enter a valid e-mail address.
+              </div>
+            </div>
+
+            <!-- Home Phone -->
+            <div class="col-md-6">
+              <label class="form-label">Home Phone</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="10 digits"
+                maxlength="10"
+                formControlName="homePhone"
+                [ngClass]="{ 'is-invalid': isInvalid('homePhone') }"
+              />
+              <div *ngIf="isInvalid('homePhone')" class="invalid-feedback">
+                Home phone must be 10 digits.
+              </div>
+            </div>
+
+            <!-- Mobile Phone -->
+            <div class="col-md-6">
+              <label class="form-label">Mobile Phone <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="+905XXXXXXXXX"
+                maxlength="12"
+                formControlName="mobilePhone"
+                [ngClass]="{ 'is-invalid': isInvalid('mobilePhone') }"
+              />
+              <div *ngIf="isInvalid('mobilePhone')" class="invalid-feedback">
+                Mobile phone is required and must be 12 digits.
+              </div>
+            </div>
+
+            <!-- Fax -->
+            <div class="col-md-6">
+              <label class="form-label">Fax</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="internal: 4 chars, external: 13 chars"
+                maxlength="13"
+                formControlName="fax"
+                [ngClass]="{ 'is-invalid': isInvalid('fax') }"
+              />
+              <div *ngIf="isInvalid('fax')" class="invalid-feedback">
+                Fax must be either 4 or 13 digits.
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Buttons -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">Cancel</button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="onPrevious()">Previous</button>
+            <button
+              type="submit"
+              class="btn btn-warning text-white px-4"
+              [disabled]="!contactForm.valid"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
