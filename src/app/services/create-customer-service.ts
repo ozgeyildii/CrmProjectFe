@@ -10,7 +10,7 @@ import { CreateIndividualCustomerResponse } from '../models/responses/createIndi
 export class CreateCustomerService {
   public state = signal<CreateIndividualCustomerState>({});
 
-  private baseUrl = 'http://localhost:8091/customerservice/api/individual-customers';
+  private baseUrl = 'http://localhost:8091/customerservice/api/orchestrator/full-individual-customers';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -23,6 +23,7 @@ export class CreateCustomerService {
 
   createCustomer(): Observable<CreateIndividualCustomerResponse> {
     const payload = this.state();
+    console.log('Creating customer with payload:', payload);
     return this.httpClient.post<CreateIndividualCustomerResponse>(this.baseUrl, payload);
   }
 }
