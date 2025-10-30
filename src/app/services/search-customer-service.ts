@@ -9,14 +9,12 @@ export class SearchCustomerService {
 
   constructor(private http: HttpClient) {}
 
-  // filters: formdaki değerler
-  // page ve size: pagination için
+
   searchCustomers(filters: any, page: number, size: number): Observable<SearchCustomerList> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size);
 
-    // sadece dolu filtreleri gönder
     Object.keys(filters).forEach(key => {
       const value = filters[key];
       if (value !== null && value !== undefined && value !== '') {
@@ -26,7 +24,6 @@ export class SearchCustomerService {
 
     console.log('Frontend → Backend params:', params.toString());
 
-    // /search endpoint’ine isteği gönder
     return this.http.get<SearchCustomerList>(`${this.baseUrl}/search`, { params });
   }
 }

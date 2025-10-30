@@ -24,6 +24,7 @@
                 formControlName="firstName"
                 type="text"
                 class="form-control"
+                maxlength="30"
                 placeholder="Enter first name"
                 [ngClass]="{ 'is-invalid': isInvalid('firstName') }"
               />
@@ -38,6 +39,7 @@
               <input
                 formControlName="middleName"
                 type="text"
+                maxlength="30"
                 class="form-control"
                 placeholder="Enter middle name"
               />
@@ -49,6 +51,7 @@
               <input
                 formControlName="lastName"
                 type="text"
+                maxlength="45"
                 class="form-control"
                 placeholder="Enter last name"
                 [ngClass]="{ 'is-invalid': isInvalid('lastName') }"
@@ -62,6 +65,7 @@
             <div class="col-md-4">
               <label class="form-label">Birth Date <span class="text-danger">*</span></label>
               <input
+               [max]="today"
                 formControlName="dateOfBirth"
                 type="date"
                 class="form-control"
@@ -78,6 +82,7 @@
               <input
                 formControlName="nationalId"
                 type="text"
+                maxlength="11"
                 class="form-control"
                 placeholder="Enter national ID"
                 [ngClass]="{ 'is-invalid': isInvalid('nationalId') }"
@@ -111,6 +116,7 @@
               <input
                 formControlName="fatherName"
                 type="text"
+                maxlength="30"
                 class="form-control"
                 placeholder="Enter father's name"
               />
@@ -122,6 +128,7 @@
               <input
                 formControlName="motherName"
                 type="text"
+                maxlength="30"
                 class="form-control"
                 placeholder="Enter mother's name"
               />

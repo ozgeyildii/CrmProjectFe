@@ -10,11 +10,13 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CreateCustomerService } from '../../../services/create-customer-service';
+import { Loader } from '../../../components/loader/loader';
+import { LoaderService } from '../../../services/loader-service';
 
 @Component({
   selector: 'app-contact-info',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, Loader],
   templateUrl: './contact-info.html',
   styleUrls: ['./contact-info.scss'],
 })
@@ -24,7 +26,8 @@ export class ContactInfo implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private createCustomerService: CreateCustomerService
+    private createCustomerService: CreateCustomerService,
+    public loaderService:LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +64,7 @@ export class ContactInfo implements OnInit, OnDestroy {
   }
 
   loadStateValues(): void {
-    const mediums = this.createCustomerService.state().contactMediums; // ✅ düzeltildi
+    const mediums = this.createCustomerService.state().contactMediums; 
     if (mediums && Array.isArray(mediums)) {
       this.contactForm.patchValue({
         email: mediums.find((m) => m.type === 'EMAIL')?.value || '',
@@ -87,12 +90,11 @@ export class ContactInfo implements OnInit, OnDestroy {
 
     this.createCustomerService.createCustomer().subscribe({
       next: (response) => {
-        console.log('✅ Customer created successfully:', response);
+        console.log('Customer created successfully:', response);
         //this.router.navigate(['/customers/create/customer-info']);
       },
       error: (err) => {
-        console.error('❌ Customer creation failed:', err);
-        alert('Customer creation failed. Please try again.');
+        console.error('Customer creation failed:', err);
       },
     });
   }

@@ -1,4 +1,5 @@
 <main class="content-area">
+    <app-loader *ngIf="loaderService.isLoading()"></app-loader>
   <div class="container-fluid py-4">
     <div class="card shadow-sm customer-card bg-white border-0">
       <div class="card-body">

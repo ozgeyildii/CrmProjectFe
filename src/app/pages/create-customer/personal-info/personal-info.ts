@@ -26,6 +26,8 @@ export class PersonalInfo implements OnInit {
   successMessage = signal<string | null>(null);
   title = signal<string | null>(null);
 
+today = new Date().toISOString().split('T')[0];
+
   constructor(
     private formBuilder: FormBuilder,
     private createCustomerService: CreateCustomerService, public router:Router,  private customerCreationService:CreateCustomerService
@@ -33,8 +35,37 @@ export class PersonalInfo implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+
+    const dateControl = this.createPersonalInfoForm.get('dateOfBirth');
+    const today = this.today;
+
+    dateControl?.valueChanges.subscribe((value) => {
+      if (value && value > today) {
+        dateControl.setErrors({ futureDate: true });
+      } else if (dateControl?.hasError('futureDate')) {
+        dateControl.setErrors(null);
+      }
+    });
   }
 
+  private minimumAgeValidator(minAge: number) {
+  return (control: any) => {
+    if (!control.value) return null;
+
+    const today = new Date();
+    const birthDate = new Date(control.value);
+
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+
+    const actualAge = m < 0 || (m === 0 && today.getDate() < birthDate.getDate())
+      ? age - 1
+      : age;
+
+    return actualAge < minAge ? { underage: true } : null;
+  };
+}
+  
   buildForm() {
    this.createPersonalInfoForm = this.formBuilder.group({
   firstName: [this.createCustomerService.state().firstName ?? "", [Validators.required]],
@@ -42,13 +73,17 @@ export class PersonalInfo implements OnInit {
   middleName: [this.createCustomerService.state().middleName ?? ""],
   nationalId: [
     this.createCustomerService.state().nationalId ?? "",
-    [Validators.required, Validators.minLength(11), Validators.maxLength(11)],
+    [Validators.required],
   ],
-  dateOfBirth: [this.createCustomerService.state().dateOfBirth ?? "", [Validators.required]],
+  dateOfBirth: [this.createCustomerService.state().dateOfBirth ?? "", [Validators.required , this.minimumAgeValidator(18)]],
   gender: [this.createCustomerService.state().gender ?? "", [Validators.required]],
   motherName: [this.createCustomerService.state().motherName ?? ""],
   fatherName: [this.createCustomerService.state().fatherName ?? ""],
-}) }
+}) 
+
+}
+
+
 
   isInvalid(controlName: string): boolean {
     const control = this.createPersonalInfoForm.get(controlName);
@@ -64,7 +99,10 @@ export class PersonalInfo implements OnInit {
       return `Minimum ${control.errors['minlength'].requiredLength} characters required.`;
     if (control.errors['maxlength'])
       return `Maximum ${control.errors['maxlength'].requiredLength} characters allowed.`;
-
+    if (control.errors['futureDate'])
+      return 'Date of Birth cannot be in the future.';
+    if (control.errors['underage'])
+      return 'You must be at least 18 years old.';
     return 'Invalid field.';
   }
 

@@ -35,7 +35,6 @@ export class SearchCustomerForm {
   updateFormState() {
     const formValue = this.form.getRawValue();
 
-    // Kullanıcı unique alanlardan birine yazmaya başlamış mı?
     const anyUniqueStarted = this.uniqueFields.some(
       f => (formValue[f] || '').trim().length > 0
     );
@@ -43,7 +42,6 @@ export class SearchCustomerForm {
     const nameFilled = this.nameFields.some(f => (formValue[f] || '').trim().length > 0);
 
     if (anyUniqueStarted) {
-      // Hangi unique alan doluysa sadece o açık kalsın, diğerleri disable
       this.uniqueFields.forEach(f => {
         const val = (formValue[f] || '').trim();
         if (val.length > 0) {
@@ -53,14 +51,11 @@ export class SearchCustomerForm {
         }
       });
 
-      // İsim alanlarını disable et
       this.nameFields.forEach(f => this.form.get(f)?.disable({ emitEvent: false }));
     } else if (nameFilled) {
-      // İsim alanları doluysa sadece firstName ve lastName aktif
       this.nameFields.forEach(f => this.form.get(f)?.enable({ emitEvent: false }));
       this.uniqueFields.forEach(f => this.form.get(f)?.disable({ emitEvent: false }));
     } else {
-      // Hiçbir alan dolu değilse tüm alanlar aktif
       [...this.uniqueFields, ...this.nameFields].forEach(f =>
         this.form.get(f)?.enable({ emitEvent: false })
       );
@@ -70,7 +65,6 @@ export class SearchCustomerForm {
   isSearchDisabled(): boolean {
     const formValue = this.form.getRawValue();
 
-    // Önce unique alanların tamamlanma durumlarını kontrol et
     for (const field of this.uniqueFields) {
       const val = (formValue[field] || '').trim();
       if (val) {
@@ -78,12 +72,10 @@ export class SearchCustomerForm {
         if (field === 'customerNumber' && val.length === 17) return false;
         if (field === 'value' && val.length === 12) return false;
         if (!['nationalId', 'customerNumber', 'value'].includes(field)) return false;
-        // yazmaya başladı ama tamamlanmadı => search kapalı
         return true;
       }
     }
 
-    // Eğer isim alanlarından biri doluysa search aktif
     const nameFilled = this.nameFields.some(f => (formValue[f] || '').trim().length > 0);
     return !nameFilled;
   }

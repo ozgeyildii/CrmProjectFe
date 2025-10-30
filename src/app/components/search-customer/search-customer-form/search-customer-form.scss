@@ -82,9 +82,14 @@
 /* buttons */
 .search-form .buttons {
   display: flex;
+  justify-content: space-between; 
   gap: 0.75rem;
   margin-top: 1.5rem;
+  width: 100%;
+  flex-wrap: wrap; 
+  box-sizing: border-box;
 }
+
 /* button */
 .search-form button {
   display: flex;

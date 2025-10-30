@@ -54,7 +54,7 @@ export class AddressInfo implements OnInit {
       street: ['', [Validators.required, Validators.maxLength(20)]],
       houseNumber: ['', [Validators.required, Validators.maxLength(10)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
-      isPrimary: [false],
+      isDefault: [false],
     });
   }
 
@@ -69,7 +69,7 @@ export class AddressInfo implements OnInit {
       street: new FormControl(address?.street ?? '', [Validators.required, Validators.maxLength(20)]),
       houseNumber: new FormControl(address?.houseNumber ?? '', [Validators.required, Validators.maxLength(10)]),
       description: new FormControl(address?.description ?? '', [Validators.required, Validators.maxLength(250)]),
-      isPrimary: new FormControl(address?.isPrimary ?? false),
+      isDefault: new FormControl(address?.isDefault ?? false),
     });
   }
 
@@ -84,7 +84,7 @@ export class AddressInfo implements OnInit {
       street: '',
       houseNumber: '',
       description: '',
-      isPrimary: false,
+      isDefault: false,
     });
     this.showForm.set(true);
   }
@@ -98,7 +98,7 @@ export class AddressInfo implements OnInit {
     const newAddr = { ...this.addressForm.value };
 
     if (this.addresses().length === 0) {
-      newAddr.isPrimary = true;
+      newAddr.isDefault = true;
     }
 
     const updatedList = [...this.addresses(), newAddr];
@@ -115,7 +115,7 @@ export class AddressInfo implements OnInit {
   }
 
   onSelectPrimary(index: number): void {
-    const updated = this.addresses().map((a, i) => ({ ...a, isPrimary: i === index }));
+    const updated = this.addresses().map((a, i) => ({ ...a, isDefault: i === index }));
     this.addresses.set(updated);
 
     this.createCustomerService.state.update(prev => ({
@@ -124,7 +124,7 @@ export class AddressInfo implements OnInit {
     }));
 
     this.addressesFormArray.controls.forEach((grp, i) =>
-      grp.get('isPrimary')?.setValue(i === index)
+      grp.get('isDefault')?.setValue(i === index)
     );
   }
 

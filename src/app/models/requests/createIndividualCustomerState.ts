@@ -22,5 +22,5 @@ export interface Address {
 export interface ContactMedium {
   type?: string;
   value?: string;
-  isPrimary?: boolean;
+  isDefault?: boolean;
 }
