@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
  
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required],
+      username: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
@@ -58,13 +58,11 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('token', jwt);
       
               const decodedJwt = jwtDecode<UserJwtModel>(jwt);
-              console.log(decodedJwt);
       
               this.authService.userState.set({
                 isLoggedIn: true,
                 user: { sub: decodedJwt.sub!, roles: decodedJwt.roles },
               });
-              console.log(this.authService.userState());
               this.router.navigateByUrl("customers/search");
             },
             error: (error) => {

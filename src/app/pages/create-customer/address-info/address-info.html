@@ -4,7 +4,6 @@
       <div class="card-body">
         <h4 class="mb-4 fw-semibold text-orange">Address Info</h4>
 
-        <!-- Liste Görünümü -->
         <div *ngIf="!showForm()">
           <div *ngIf="addresses().length > 0" class="mb-4">
             <div
@@ -48,7 +47,6 @@
           </div>
         </div>
 
-        <!-- Yeni Adres Formu -->
         <form
           *ngIf="showForm()"
           [formGroup]="addressForm"
@@ -115,7 +113,6 @@
             <div class="invalid-feedback">Description is required (max 250 chars).</div>
           </div>
 
-          <!-- Form Butonları -->
           <div class="d-flex justify-content-end gap-2 mt-3">
             <button
               type="button"
@@ -136,7 +133,6 @@
           </div>
         </form>
 
-        <!-- Alt Navigation -->
         <div *ngIf="!showForm()" class="d-flex justify-content-end gap-2 mt-4">
           <button
             type="button"

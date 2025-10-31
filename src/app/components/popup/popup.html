@@ -1,12 +1,8 @@
-<!-- Backdrop -->
 <div class="modal-backdrop" *ngIf="visible" (click)="onClose()"></div>
 
-<!-- Modal -->
 <div class="modal-container" *ngIf="visible">
   <div class="modal-content" [ngClass]="type">
-    <!-- Header with close icon -->
     <div class="modal-header">
-      <!-- Icon -->
       <div class="icon-wrapper">
         <svg *ngIf="type === 'success'" class="icon-success" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
@@ -32,12 +28,10 @@
       </button>
     </div>
 
-    <!-- Body -->
     <div class="modal-body">
       <p class="modal-message">{{ message }}</p>
     </div>
 
-    <!-- Footer -->
     <div class="modal-footer">
       <button type="button" class="btn-okay" (click)="onClose()">
         OKAY

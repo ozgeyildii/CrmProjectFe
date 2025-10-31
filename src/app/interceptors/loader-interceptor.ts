@@ -8,7 +8,6 @@ export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   loadingService.addRequest();
   console.log("istek başlıyor..")
 
-  // RxJs pipe
   return next(req).pipe(
     finalize(() => {
       console.log("istek bitti..")

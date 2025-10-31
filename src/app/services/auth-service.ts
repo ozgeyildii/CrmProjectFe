@@ -33,7 +33,9 @@ export class AuthService {
     }
   }
 
+  
   sendLoginRequest(loginRequest: LoginRequest): Observable<{ token: string }> {
+    console.log("Request gönderiliyor:", loginRequest);
     return this.httpClient.post<{ token: string }>(
       `http://localhost:8091/authservice/api/auth/login`,
       loginRequest

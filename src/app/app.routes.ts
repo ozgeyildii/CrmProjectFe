@@ -7,7 +7,7 @@ import { AddressInfo } from './pages/create-customer/address-info/address-info';
 import { ContactInfo } from './pages/create-customer/contact-info/contact-info';
 import { LoginComponent } from './pages/login/login';
 import { MainLayout } from './layouts/main-layout/main-layout';
-import { authGuard } from './guards/auth-guard-guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo:'login', pathMatch:'full' },
