@@ -1,0 +1,62 @@
+<div class="login-page d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row align-items-center justify-content-center">
+      <!-- Logo Alanı -->
+      <div class="col-lg-6 col-md-12 text-center text-lg-start mb-5 mb-lg-0">
+        <img src="assets/logo.png" alt="ETIYA Logo" class="logo" />
+      </div>
+
+      <!-- Form Alanı -->
+      <div class="col-lg-4 col-md-8">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="p-4 rounded login-form shadow">
+          <div class="mb-3">
+            <label class="form-label text-light">Email</label>
+            <input
+              type="text"
+              formControlName="email"
+              class="form-control form-control-lg"
+              placeholder="Enter email"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label text-light">Password</label>
+            <div class="input-group">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                class="form-control form-control-lg"
+                placeholder="Enter password"
+              />
+              <button
+                type="button"
+                class="btn btn-outline-secondary toggle-btn"
+                (click)="showPassword = !showPassword"
+              >
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-orange w-100 py-2 fw-semibold"
+            [disabled]="loginForm.invalid"
+          >
+            Log In
+          </button>
+
+          <!-- Hata veya Başarı Mesajı -->
+          <div *ngIf="loginStatus" class="alert alert-warning mt-3 py-2">
+            <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+            <p>Wrong email or password. Please try again</p>
+          </div>
+          <div *ngIf="loginStatus === 'success'" class="alert alert-success mt-3 py-2">
+            <i class="bi bi-check-circle-fill text-success"></i>
+             <p>Successful.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

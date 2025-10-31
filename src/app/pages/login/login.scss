@@ -1,0 +1,73 @@
+.login-page {
+  min-height: 100vh;
+  background-color: #242441;
+}
+ 
+.logo {
+  width: 360px;
+  height: auto;
+}
+ 
+.login-form {
+  background-color: #242441;
+  border: none;
+  border-radius: 12px;
+}
+ 
+.form-control {
+  background-color: #2a2a4e;
+  color: #fff;
+  border: 1px solid #3b3b65;
+ 
+  &::placeholder {
+    color: #aaa;
+  }
+ 
+  &:focus {
+    border-color: #f58220;
+    box-shadow: 0 0 0 0.2rem rgba(245, 130, 32, 0.25);
+  }
+}
+ 
+.text-light {
+  color: #ddd !important;
+}
+ 
+.btn-orange {
+  background-color: #f58220;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: 0.3s ease;
+ 
+  &:hover:not(:disabled) {
+    background-color: #ff9f50;
+  }
+ 
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+ 
+.toggle-btn {
+  border: 1px solid #3b3b65;
+  background-color: #2a2a4e;
+  color: #fff;
+ 
+  &:hover {
+    background-color: #3a3a5e;
+  }
+}
+ 
+/* Responsive Düzen */
+@media (max-width: 768px) {
+  .logo {
+    width: 200px;
+    margin-bottom: 2rem;
+  }
+ 
+  .login-form {
+    width: 100%;
+  }
+}
