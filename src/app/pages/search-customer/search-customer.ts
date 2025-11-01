@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SearchCustomerList } from '../../models/responses/searchCustomersResponse';
 import { SearchCustomerService } from '../../services/search-customer-service';
 import { SearchCustomerForm } from '../../components/search-customer/search-customer-form/search-customer-form';
-import { SearchCustomerResults } from '../../components/search-customer/search-customer-results/search-customer-results';
+import { SearchCustomerResults } from './search-customer-results/search-customer-results';
 import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../services/loader-service';
 import { Loader } from '../../components/loader/loader';

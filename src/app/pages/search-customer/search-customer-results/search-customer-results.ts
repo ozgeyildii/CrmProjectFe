@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchCustomerList } from '../../../models/responses/searchCustomersResponse';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-customer-results',
@@ -17,9 +18,16 @@ export class SearchCustomerResults {
   @Output() next = new EventEmitter<void>();
   @Output() prev = new EventEmitter<void>();
 
+  constructor(private router: Router){
+  }
+
   onSelect(customerId: string) {
     this.select.emit(customerId);
   }
+
+onClick(id:string){
+  this.router.navigate(['customers/update', id]);
+}
 
   nextPage() {
     this.next.emit();

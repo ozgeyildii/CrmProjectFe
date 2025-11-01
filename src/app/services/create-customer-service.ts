@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateIndividualCustomerState } from '../models/requests/createIndividualCustomerState';
+import { CreateIndividualCustomerState } from '../models/states/createIndividualCustomerState';
 import { CreateIndividualCustomerResponse } from '../models/responses/createIndividualCustomerResponse';
 
 @Injectable({

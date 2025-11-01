@@ -1,0 +1,65 @@
+.update-customer-page {
+  background-color: #f4f5fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+  .row {
+    margin: 0;
+  }
+
+  .search-panel {
+    background: linear-gradient(135deg, #242441 0%, #1e1e3f 100%);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+
+    app-search-customer-form {
+      display: block;
+      height: 100%;
+    }
+  }
+
+  .form-panel {
+    background-color: #fff;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.05);
+
+    .tab-header {
+      display: flex;
+      justify-content: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+
+      .tab-btn {
+        background-color: #e8e8e8;
+        border: 1px solid #ccc;
+        color: #242441;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.4rem 1.2rem;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: #f58220;
+          color: #fff;
+          border-color: #f58220;
+        }
+
+        &:hover:not(.active) {
+          background-color: #f58220;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  app-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+}

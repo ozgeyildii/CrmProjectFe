@@ -1,0 +1,28 @@
+<div class="container-fluid update-customer-page">
+  <div class="row min-vh-100 align-items-stretch">
+    <!-- Sol panel -->
+    <div class="col-md-4 col-lg-3 bg-dark rounded-start p-3 search-panel">
+      <app-search-customer-form></app-search-customer-form>
+    </div>
+
+    <!-- Sağ panel -->
+    <div class="col-md-8 col-lg-9 bg-white rounded-end p-4 form-panel">
+
+      <div class="tab-header d-flex align-items-center mb-3">
+        <button class="tab-btn active">Customer Info</button>
+        <button class="tab-btn">Customer Account</button>
+        <button class="tab-btn">Address</button>
+        <button class="tab-btn">Contact Medium</button>
+      </div>
+
+      <app-loader *ngIf="isLoading()"></app-loader>
+
+      <app-update-personal-info
+        *ngIf="!isLoading()"
+        [customer]="customerService.state()"
+        (save)="onSave($event)"
+        (cancel)="onCancel()"
+      ></app-update-personal-info>
+    </div>
+  </div>
+</div>

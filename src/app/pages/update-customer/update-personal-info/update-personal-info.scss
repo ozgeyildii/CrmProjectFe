@@ -1,0 +1,46 @@
+.update-customer-form {
+  background-color: #f8f9fa;
+  border: 1px solid #f58220;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  label {
+    font-weight: 500;
+    color: #242441;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  input,
+  select {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+    width: 100%;
+    font-size: 0.9rem;
+
+    &:focus {
+      border-color: #f58220;
+      box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.2);
+      outline: none;
+    }
+  }
+
+  .btn-orange {
+    background-color: #f58220;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+
+    &:hover {
+      background-color: #ff9f50;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
