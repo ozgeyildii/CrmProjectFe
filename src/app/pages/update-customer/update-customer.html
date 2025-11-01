@@ -2,23 +2,38 @@
   <div class="row min-vh-100 align-items-stretch">
     <!-- Sol panel -->
     <div class="col-md-4 col-lg-3 bg-dark rounded-start p-3 search-panel">
-      <app-search-customer-form></app-search-customer-form>
+      <app-search-customer-form
+        (search)="onSearch($event)"
+        (clear)="onClear()"
+      ></app-search-customer-form>
     </div>
 
     <!-- Sağ panel -->
     <div class="col-md-8 col-lg-9 bg-white rounded-end p-4 form-panel">
 
-      <div class="tab-header d-flex align-items-center mb-3">
+      <!-- Üst tab header -->
+      <div class="tab-header d-flex align-items-center mb-3" *ngIf="!showResults">
         <button class="tab-btn active">Customer Info</button>
         <button class="tab-btn">Customer Account</button>
         <button class="tab-btn">Address</button>
         <button class="tab-btn">Contact Medium</button>
       </div>
 
+      <!-- Loader -->
       <app-loader *ngIf="isLoading()"></app-loader>
 
+      <!-- Arama sonuçları -->
+      <app-search-customer-results
+        *ngIf="showResults && !isLoading()"
+        [customers]="customers"
+        (select)="onSelectCustomer($event)"
+        (next)="nextPage()"
+        (prev)="previousPage()"
+      ></app-search-customer-results>
+
+      <!-- Güncelleme formu -->
       <app-update-personal-info
-        *ngIf="!isLoading()"
+        *ngIf="!showResults && !isLoading()"
         [customer]="customerService.state()"
         (save)="onSave($event)"
         (cancel)="onCancel()"

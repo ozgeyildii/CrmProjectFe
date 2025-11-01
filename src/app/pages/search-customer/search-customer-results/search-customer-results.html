@@ -1,7 +1,7 @@
 
 <div *ngIf="customers.length > 0" class="search-result-container">
   <div class="results-wrapper">
-    <div class="customer-card" *ngFor="let c of customers" (click)="onSelect(c.id)">
+    <div class="customer-card" *ngFor="let c of customers" (click)="onSelect(c)">
       
       <div class="card-row">
         

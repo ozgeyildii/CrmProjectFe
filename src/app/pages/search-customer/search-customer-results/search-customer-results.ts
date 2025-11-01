@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchCustomerList } from '../../../models/responses/searchCustomersResponse';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { GetCustomerResponse } from '../../../models/responses/getCustomerResponse';
 
 @Component({
   selector: 'app-search-customer-results',
@@ -14,15 +15,15 @@ export class SearchCustomerResults {
   @Input() page = 0;
   @Input() hasMore = false;
 
-  @Output() select = new EventEmitter<string>();
+  @Output() select = new EventEmitter<GetCustomerResponse>();
   @Output() next = new EventEmitter<void>();
   @Output() prev = new EventEmitter<void>();
 
   constructor(private router: Router){
   }
 
-  onSelect(customerId: string) {
-    this.select.emit(customerId);
+  onSelect(customer: GetCustomerResponse) {
+    this.select.emit(customer);
   }
 
 onClick(id:string){

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../services/loader-service';
 import { Loader } from '../../components/loader/loader';
 import { PopupComponent } from '../../components/popup/popup';
+import { GetCustomerResponse } from '../../models/responses/getCustomerResponse';
 
 @Component({
   selector: 'app-customer-search',
@@ -86,8 +87,8 @@ previousPage() {
     this.page = 0;
   }
 
-  onSelectCustomer(customerId: string) {
-    this.router.navigate(['/customers/detail', customerId]);
+  onSelectCustomer(customer: GetCustomerResponse) {
+    this.router.navigate(['/customers/detail', customer.customerNumber]);
   }
 
   onCreateCustomer() {
