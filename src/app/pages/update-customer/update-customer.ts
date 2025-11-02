@@ -10,6 +10,7 @@ import { CustomerService } from '../../services/customer-service';
 import { SearchCustomerService } from '../../services/search-customer-service';
 import { GetCustomerResponse } from '../../models/responses/getCustomerResponse';
 import { SearchCustomerList } from '../../models/responses/searchCustomersResponse';
+import { UpdateCustomerState } from '../../models/states/updateCustomerState';
 
 @Component({
   selector: 'app-update-customer',
@@ -41,7 +42,6 @@ export class UpdateCustomer {
     }
   }
 
-  /** 🔹 Belirli bir ID ile müşteri detayını getirir */
   loadCustomer(id: string): void {
     this.isLoading.set(true);
     this.customerService.getCustomerById(id).subscribe({
@@ -56,14 +56,12 @@ export class UpdateCustomer {
     });
   }
 
-  /** 🔹 Arama tetiklenince çalışır */
   onSearch(filters: any) {
     this.filters = filters;
     this.page = 0;
     this.loadCustomers();
   }
 
-  /** 🔹 Arama sonuçlarını backend’den getirir */
   loadCustomers() {
     this.isLoading.set(true);
     this.showResults = false;
@@ -97,26 +95,15 @@ export class UpdateCustomer {
     }
   }
 
-  /** 🔹 Sonuçlardan bir müşteri seçilirse */
   onSelectCustomer(customer: GetCustomerResponse) {
     this.customerService.state.set(customer);
-    this.showResults = false; // sonuçları kapat, formu aç
+    this.showResults = false;
   }
 
-  /** 🔹 Arama temizlenirse */
   onClear() {
     this.filters = {};
     this.customers = [];
     this.showResults = false;
   }
 
-  /** 🔹 Güncelleme işlemi (mock) */
-  onSave(updatedCustomer: GetCustomerResponse) {
-    console.log('Updated:', updatedCustomer);
-    alert('Customer updated successfully (mock)');
-  }
-
-  onCancel() {
-    history.back();
-  }
 }

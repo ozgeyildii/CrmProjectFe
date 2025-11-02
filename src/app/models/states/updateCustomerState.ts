@@ -1,4 +1,5 @@
 export interface UpdateCustomerState {
+  id?: string;
   firstName?: string;
   lastName?: string;
   middleName?: string;
@@ -6,6 +7,7 @@ export interface UpdateCustomerState {
   dateOfBirth?: string;
   motherName?: string;
   fatherName?: string;
+  customerNumber?: string;
   gender?: string;
   addresses?: Address[];
   contactMediums?: ContactMedium[]; 
@@ -17,10 +19,12 @@ export interface Address {
   street?: string;
   houseNumber?: string;
   description?: string;
+  customerId: string;
 }
 
 export interface ContactMedium {
   type?: string;
   value?: string;
   isDefault?: boolean;
+  customerId: string;
 }
