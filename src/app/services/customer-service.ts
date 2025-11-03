@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { UpdateCustomerState } from '../models/states/updateCustomerState';
+import { ContactMedium, UpdateCustomerState } from '../models/states/updateCustomerState';
 import { GetCustomerResponse} from '../models/responses/getCustomerResponse';
 import { Observable } from 'rxjs';
 import { UpdatedPersonalInfo } from '../models/responses/updatedPersonalInfo';
+import { UpdateContactMediumRequest } from '../models/requests/updateContactMediumRequest';
+import { UpdateContactMediumResponse } from '../models/responses/updatedContactMediumResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class CustomerService {
 
 
   private baseUrl = 'http://localhost:8091/searchservice/api/customer-search';
-  private serviceBaseUrl = 'http://localhost:8091/customerservice/api/individual-customers';
+  private serviceBaseUrl = 'http://localhost:8091/customerservice/api';
 
   constructor(private http: HttpClient) {}
 
@@ -23,9 +25,15 @@ export class CustomerService {
   }
 
    updateCustomer(request: UpdateCustomerState): Observable<UpdatedPersonalInfo> {
-    return this.http.put<UpdatedPersonalInfo>(`${this.serviceBaseUrl}`, request);
+    return this.http.put<UpdatedPersonalInfo>(`${this.serviceBaseUrl}/individual-customers`, request);
   }
 
+  updateMultipleContactMediums(requests: UpdateContactMediumRequest[]): Observable<UpdateContactMediumResponse[]> {
+    return this.http.put<UpdateContactMediumResponse[]>(
+      `${this.serviceBaseUrl}/contactmediums/multiple`,
+      requests
+    );
+  }
 
   checkNationalId(nationalId: string): Observable<{ exists: boolean }> {
     return this.http.get<{ exists: boolean }>(
@@ -34,7 +42,7 @@ export class CustomerService {
   }
 
   deleteCustomer(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.serviceBaseUrl}/${id}`);
+    return this.http.delete<void>(`${this.serviceBaseUrl}/individual-customers/${id}`);
   }
 }
   

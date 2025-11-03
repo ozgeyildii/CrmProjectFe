@@ -11,11 +11,22 @@
     <!-- Sağ panel -->
     <div class="col-md-8 col-lg-9 bg-white rounded-end p-4 form-panel">
       <!-- Üst tab header -->
-      <div class="tab-header d-flex justify-content-between gap-3 mb-3" *ngIf="!showResults">
-        <button class="tab-btn flex-fill active">Customer Info</button>
-        <button class="tab-btn flex-fill">Customer Account</button>
-        <button class="tab-btn flex-fill">Address</button>
-        <button class="tab-btn flex-fill">Contact Medium</button>
+      <div class="tab-header d-flex align-items-center mb-3" *ngIf="!showResults">
+        <button class="tab-btn" routerLink="update-personal-info" routerLinkActive="active">
+          Customer Info
+        </button>
+
+        <button class="tab-btn">
+          Customer Account
+        </button>
+
+        <button class="tab-btn" routerLink="update-address" routerLinkActive="active">
+          Address
+        </button>
+
+        <button class="tab-btn" [routerLink]="['update-contact-medium']" routerLinkActive="active">
+          Contact Medium
+        </button>
       </div>
 
       <!-- Loader -->
@@ -30,11 +41,8 @@
         (prev)="previousPage()"
       ></app-search-customer-results>
 
-      <!-- Güncelleme formu -->
-      <app-update-personal-info
-        *ngIf="!showResults && !isLoading()"
-        [customer]="customerService.state()"
-      ></app-update-personal-info>
+      <!-- Router outlet (her tab kendi component'ini getirir) -->
+      <router-outlet *ngIf="!showResults && !isLoading()"></router-outlet>
     </div>
   </div>
 </div>

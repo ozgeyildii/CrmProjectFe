@@ -1,0 +1,98 @@
+<main class="content-area">
+  <div class="container-fluid py-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <!-- Popup -->
+        <app-popup
+          [title]="title() || ''"
+          [message]="successMessage() || errorMessage() || ''"
+          [type]="successMessage() ? 'success' : 'error'"
+          [visible]="!!(successMessage() || errorMessage())"
+          (close)="closePopup()"
+        ></app-popup>
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-semibold text-orange mb-0">Contact Medium</h4>
+          <button
+            class="btn btn-sm btn-outline-warning"
+            *ngIf="!editMode()"
+            (click)="toggleEdit()"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">E-Mail *</label>
+              <input
+                type="email"
+                formControlName="email"
+                class="form-control"
+                [readonly]="!editMode()"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+                placeholder="etiug@etiug.com"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Home Phone</label>
+              <input
+                type="tel"
+                formControlName="homePhone"
+                class="form-control"
+                [readonly]="!editMode()"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Mobile Phone *</label>
+              <input
+                type="tel"
+                formControlName="mobilePhone"
+                class="form-control"
+                [readonly]="!editMode()"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+                placeholder="+9055003332"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Fax</label>
+              <input
+                type="tel"
+                formControlName="fax"
+                class="form-control"
+                [readonly]="!editMode()"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+              />
+            </div>
+          </div>
+
+          <div
+            class="d-flex justify-content-end mt-4 gap-3"
+            *ngIf="editMode()"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="cancelEdit()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-orange px-4"
+              [disabled]="form.invalid || isSaving()"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>

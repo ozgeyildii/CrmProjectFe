@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Loader } from '../../components/loader/loader';
 import { SearchCustomerForm } from '../../components/search-customer/search-customer-form/search-customer-form';
@@ -8,18 +8,19 @@ import { UpdatePersonalInfo } from './update-personal-info/update-personal-info'
 
 import { CustomerService } from '../../services/customer-service';
 import { SearchCustomerService } from '../../services/search-customer-service';
-import { GetCustomerResponse } from '../../models/responses/getCustomerResponse';
 import { SearchCustomerList } from '../../models/responses/searchCustomersResponse';
-import { UpdateCustomerState } from '../../models/states/updateCustomerState';
+import { UpdateContactMedium } from './update-contact-medium/update-contact-medium';
+import { GetCustomerResponse } from '../../models/responses/getCustomerResponse';
 
 @Component({
   selector: 'app-update-customer',
   standalone: true,
-  imports: [CommonModule, Loader, UpdatePersonalInfo, SearchCustomerForm, SearchCustomerResults],
+  imports: [CommonModule, Loader, SearchCustomerForm, SearchCustomerResults, RouterOutlet, RouterModule],
   templateUrl: './update-customer.html',
   styleUrls: ['./update-customer.scss']
 })
 export class UpdateCustomer {
+  activeTab: string = 'info';
   isLoading = signal(false);
   showResults = false;
 
@@ -80,6 +81,10 @@ export class UpdateCustomer {
         this.showResults = false;
       }
     });
+  }
+
+  setActiveTab(tab: string) {
+    this.activeTab = tab;
   }
 
   nextPage() {

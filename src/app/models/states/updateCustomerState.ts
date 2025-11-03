@@ -23,6 +23,7 @@ export interface Address {
 }
 
 export interface ContactMedium {
+  id?: string;
   type?: string;
   value?: string;
   isDefault?: boolean;

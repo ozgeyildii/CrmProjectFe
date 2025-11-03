@@ -28,8 +28,6 @@ import { PopupComponent } from '../../../components/popup/popup';
 })
 export class UpdatePersonalInfo implements OnInit, OnChanges {
   @Input() customer!: UpdateCustomerState;
-  @Output() save = new EventEmitter<UpdateCustomerState>();
-  @Output() delete = new EventEmitter<void>();
 
   form!: FormGroup;
   today = new Date().toISOString().split('T')[0];
@@ -133,7 +131,6 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
         this.title.set('Success');
         this.successMessage.set('Customer updated successfully.');
         this.errorMessage.set(null);
-        this.save.emit(updated);
       },
       error: (err) => {
         this.isSaving.set(false);
@@ -164,7 +161,6 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
         this.title.set('Deleted');
         this.successMessage.set('Customer deleted successfully.');
         this.errorMessage.set(null);
-        this.delete.emit();
       },
       error: (err) => {
         this.successMessage.set(null);
