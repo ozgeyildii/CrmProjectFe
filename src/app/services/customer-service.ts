@@ -3,9 +3,13 @@ import { Injectable, signal } from '@angular/core';
 import { ContactMedium, UpdateCustomerState } from '../models/states/updateCustomerState';
 import { GetCustomerResponse} from '../models/responses/getCustomerResponse';
 import { Observable } from 'rxjs';
-import { UpdatedPersonalInfo } from '../models/responses/updatedPersonalInfo';
 import { UpdateContactMediumRequest } from '../models/requests/updateContactMediumRequest';
 import { UpdateContactMediumResponse } from '../models/responses/updatedContactMediumResponse';
+import { UpdatedPersonalInfoResponse } from '../models/responses/updatedPersonalInfo';
+import { UpdatePersonalInfoRequest } from '../models/requests/updatePersonalInfoRequest';
+import { UpdatedAddressResponse } from '../models/responses/updatedAddressResponse';
+import { UpdateAddressRequest } from '../models/requests/updateAddressRequest';
+import { NumberSymbol } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +25,12 @@ export class CustomerService {
   constructor(private http: HttpClient) {}
 
   getCustomerById(id: string) {
+    console.log('Fetching customer with ID:', id);
     return this.http.get<GetCustomerResponse>(`${this.baseUrl}/get-customer-by-id`,{params: {id}});
   }
 
-   updateCustomer(request: UpdateCustomerState): Observable<UpdatedPersonalInfo> {
-    return this.http.put<UpdatedPersonalInfo>(`${this.serviceBaseUrl}/individual-customers`, request);
+   updateCustomer(request: UpdatePersonalInfoRequest): Observable<UpdatedPersonalInfoResponse> {
+    return this.http.put<UpdatedPersonalInfoResponse>(`${this.serviceBaseUrl}/individual-customers`, request);
   }
 
   updateMultipleContactMediums(requests: UpdateContactMediumRequest[]): Observable<UpdateContactMediumResponse[]> {
@@ -41,9 +46,34 @@ export class CustomerService {
     );
   }
 
-  deleteCustomer(id: string): Observable<void> {
+  deleteCustomer(id: number): Observable<void> {
     return this.http.delete<void>(`${this.serviceBaseUrl}/individual-customers/${id}`);
   }
+
+  updateAddress(request: UpdateAddressRequest): Observable<UpdatedAddressResponse> {
+  return this.http.put<UpdatedAddressResponse>(
+    `${this.serviceBaseUrl}/addresses/${request.id}`,
+    request
+  );
 }
+
+createAddress(request: UpdateAddressRequest): Observable<UpdatedAddressResponse> {
+  return this.http.post<UpdatedAddressResponse>(
+    `${this.serviceBaseUrl}/addresses?customerId=${request.id}`,
+    request
+  );
+}
+
+deleteAddress(addressId: number): Observable<void> {
+  return this.http.delete<void>(`${this.serviceBaseUrl}/addresses/${addressId}`);
+}
+
+updatePrimaryAddress(addressId: number): Observable<void> {
+  return this.http.patch<void>(`${this.serviceBaseUrl}/addresses/${addressId}/set-primary`, {});
+}
+
+}
+
+
   
 

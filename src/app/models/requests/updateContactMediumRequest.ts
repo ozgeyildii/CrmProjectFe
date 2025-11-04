@@ -1,6 +1,6 @@
 
 export interface UpdateContactMediumRequest {
-  id: string;
+  id: number;
   type: string;
   value: string;
   isPrimary: boolean;

@@ -14,8 +14,7 @@ export class Header {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-     console.log("Role var:", this.authService.userState().user?.roles);
-    console.log("Burdayım");
+  
     this.name = this.authService.userState().user?.sub || 'Guest';
     this.role = this.authService.userState().user?.roles || ['User'];
   }

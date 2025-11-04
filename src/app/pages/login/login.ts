@@ -41,35 +41,33 @@ export class LoginComponent implements OnInit {
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
- 
-  onLogin(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    if(this.loginForm.valid)
-    {
-      console.log("Validasyonlar başarılı, istek gönderiliyor...")
-      console.log(this.loginForm.value);
-      this.authService.sendLoginRequest(this.loginForm.value).subscribe({
-            next: (response) => {
-              const jwt = response.token;
-              localStorage.setItem('token', jwt);
-      
-              const decodedJwt = jwtDecode<UserJwtModel>(jwt);
-      
-              this.authService.userState.set({
-                isLoggedIn: true,
-                user: { sub: decodedJwt.sub!, roles: decodedJwt.roles },
-              });
-              this.router.navigateByUrl("customers/search");
-            },
-            error: (error) => {
-              console.error('Login failed:', error);
-            },
-          });
-    }
-    setTimeout(() => (this.loginStatus = null), 3000);
+ onLogin(): void {
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  console.log('%c[LOGIN] Sending login request...', 'color: #3498db');
+
+  this.authService.sendLoginRequest(this.loginForm.value).subscribe({
+    next: (response) => {
+      console.log('%c[LOGIN] Login response received', 'color: #2ecc71', response);
+      const jwt = response.token;
+      localStorage.setItem('token', jwt);
+      console.log('%c[LOGIN] Token saved to localStorage:', 'color: #f39c12', jwt);
+
+      const decodedJwt = jwtDecode<UserJwtModel>(jwt);
+      this.authService.userState.set({
+        isLoggedIn: true,
+        user: { sub: decodedJwt.sub!, roles: decodedJwt.roles },
+      });
+
+      console.log('%c[LOGIN] Navigating to customers/search', 'color: #9b59b6');
+      this.router.navigateByUrl('customers/search');
+    },
+    error: (error) => {
+      console.error('%c[LOGIN] Login failed:', 'color: #e74c3c', error);
+    },
+  });
+}
 }

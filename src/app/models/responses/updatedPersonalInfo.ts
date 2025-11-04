@@ -1,4 +1,4 @@
-export interface UpdatedPersonalInfo {
+export interface UpdatedPersonalInfoResponse {
   id?: string;
   firstName?: string;
   lastName?: string;
@@ -13,17 +13,21 @@ export interface UpdatedPersonalInfo {
 }
 
 export interface Address {
-  city?: string;
-  district?: string;
+  id?: number;
+  cityId?: number;
+  cityName?: string;
+  districtId?: number;
+  districtName?: string;
   street?: string;
   houseNumber?: string;
   description?: string;
- customerId: string
+  customerId: string;
+  isDefault?: boolean;
 }
 
 export interface ContactMedium {
   type?: string;
   value?: string;
-  isDefault?: boolean;
+  isPrimary?: boolean;
   customerId: string
 }

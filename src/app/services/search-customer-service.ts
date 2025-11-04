@@ -22,7 +22,6 @@ export class SearchCustomerService {
       }
     });
 
-    console.log('Frontend → Backend params:', params.toString());
 
     return this.http.get<SearchCustomerList>(`${this.baseUrl}/search`, { params });
   }

@@ -15,14 +15,16 @@ export interface SearchCustomer {
 }
 
 export interface Address {
-  id: number
-  street: string
-  houseNumber: string
-  description: string
-  districtId: number
-  customerId: string
-  deletedDate: any
-  default: boolean
+ id: number;
+  cityId: number;
+  cityName: string;
+  districtId: number;
+  districtName: string;
+  street: string;
+  houseNumber: string;
+  description: string;
+  customerId: string;
+  isDefault: boolean;
 }
 
 export interface ContactMedium {

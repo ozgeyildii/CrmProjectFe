@@ -49,6 +49,7 @@ export class UpdateCustomer {
       next: (data: GetCustomerResponse) => {
         this.customerService.state.set(data);
         this.isLoading.set(false);
+        console.log('Customer loaded:', data);
       },
       error: (err) => {
         console.error('Error fetching customer:', err);

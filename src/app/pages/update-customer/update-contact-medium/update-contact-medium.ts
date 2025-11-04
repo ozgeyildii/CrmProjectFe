@@ -43,10 +43,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.buildForm();
-    console.log("ngOnInit çalıştı");
-    console.log('Customer data loaded:', this.customerService.state());
     const data = this.customer || this.customerService.state() || {};
-    console.log('Patching form with data:', data);
     this.patchFormFromState(data);
   }
 
@@ -73,7 +70,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     const homePhone = state.contactMediums.find(m => m.type === 'HOME_PHONE')?.value || '';
     const fax = state.contactMediums.find(m => m.type === 'FAX')?.value || '';
 
-    console.log("contactMediums verileri:", state.contactMediums);
+    
     this.customer = state;
 
     this.form.patchValue({email, homePhone, mobilePhone, fax });
@@ -96,7 +93,6 @@ export class UpdateContactMedium implements OnInit, OnChanges {
 
     const currentState = this.customerService.state();
 
-    console.log("Güncellenen form verileri:", currentState.contactMediums!.find(m => m.type === 'EMAIL')?.id);
 
     const updatedMediums: UpdateContactMediumRequest[] = [
       { id: currentState.contactMediums!.find(m => m.type === 'EMAIL')?.id!, customerId: this.customer.id!, type: 'EMAIL', value: this.form.value.email, isPrimary: true },
@@ -112,7 +108,6 @@ export class UpdateContactMedium implements OnInit, OnChanges {
 
     this.isSaving.set(true);
 
-    console.log("Güncellenen iletişim bilgileri:", updatedMediums);
 
     this.customerService.updateMultipleContactMediums(updatedMediums).subscribe({
       next: () => {

@@ -34,20 +34,17 @@
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-/* row */
 .search-form .row {
     display: flex;
   flex-direction: column;
   gap: 1rem;
 
 }
-/* form-group */
 .search-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
-/* label */
 .search-form label {
   font-size: 0.85rem;
   font-weight: 600;
@@ -55,7 +52,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-/* input */
+
 .search-form input {
   background-color: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -79,7 +76,6 @@
   background-color: rgba(255, 255, 255, 0.6);
   cursor: not-allowed;
 }
-/* buttons */
 .search-form .buttons {
   display: flex;
   justify-content: space-between; 
@@ -90,7 +86,6 @@
   box-sizing: border-box;
 }
 
-/* button */
 .search-form button {
   display: flex;
   gap: 0.75rem;
@@ -107,7 +102,6 @@
   letter-spacing: 0.5px;
   
 }
-/* clear button */
 .search-form button:first-child {
   background-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
@@ -117,7 +111,7 @@
   background-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
-/* search button */
+
 .search-form button:last-child {
   background-color: rgb(245, 130, 32);
   color: #ffffff;

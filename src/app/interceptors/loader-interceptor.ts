@@ -6,11 +6,9 @@ import { finalize } from 'rxjs';
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoaderService);
   loadingService.addRequest();
-  console.log("istek başlıyor..")
 
   return next(req).pipe(
     finalize(() => {
-      console.log("istek bitti..")
       loadingService.removeRequest();
     })
   );

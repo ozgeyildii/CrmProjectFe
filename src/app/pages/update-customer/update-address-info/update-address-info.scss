@@ -1,0 +1,37 @@
+.address-card {
+  background-color: #f8f9fa;
+  border: 1px solid #f58220;
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(245, 130, 32, 0.3);
+    background-color: #fffdf9;
+  }
+
+  .form-check-input {
+    cursor: pointer;
+
+    &:checked {
+      background-color: #f58220;
+      border-color: #f58220;
+    }
+  }
+
+  .form-check-label {
+    color: #6c757d;
+  }
+}
+
+.btn-orange {
+  background-color: #f58220;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+
+  &:hover {
+    background-color: #ff9f50;
+  }
+}

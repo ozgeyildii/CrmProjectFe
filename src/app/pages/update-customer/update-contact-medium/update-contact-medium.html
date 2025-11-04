@@ -2,7 +2,6 @@
   <div class="container-fluid py-4">
     <div class="card shadow-sm">
       <div class="card-body">
-        <!-- Popup -->
         <app-popup
           [title]="title() || ''"
           [message]="successMessage() || errorMessage() || ''"
@@ -11,7 +10,6 @@
           (close)="closePopup()"
         ></app-popup>
 
-        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h4 class="fw-semibold text-orange mb-0">Contact Medium</h4>
           <button

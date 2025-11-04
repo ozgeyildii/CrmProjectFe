@@ -1,8 +1,6 @@
 import {
   Component,
   Input,
-  Output,
-  EventEmitter,
   OnInit,
   OnChanges,
   SimpleChanges,
@@ -18,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { UpdateCustomerState } from '../../../models/states/updateCustomerState';
 import { CustomerService } from '../../../services/customer-service';
 import { PopupComponent } from '../../../components/popup/popup';
+import { UpdatePersonalInfoRequest } from '../../../models/requests/updatePersonalInfoRequest';
 
 @Component({
   selector: 'app-update-personal-info',
@@ -44,6 +43,8 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
   ngOnInit(): void {
     this.buildForm();
     this.loadCustomerData();
+    this.disableEditableFields(); // Başlangıçta disable yap
+    this.watchDateValidation();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -52,26 +53,54 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
     }
   }
 
-  /** ✅ Form oluştur */
-  buildForm(): void {
+  private buildForm(): void {
     this.form = this.fb.group({
-      id: [''],
-      customerNumber: [''],
+      id: [{ value: '', disabled: true }],
+      customerNumber: [{ value: '', disabled: true }],
       firstName: ['', Validators.required],
-      middleName: [''],
       lastName: ['', Validators.required],
       nationalId: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
-      dateOfBirth: ['', Validators.required],
+      dateOfBirth: ['', [Validators.required, this.minimumAgeValidator(18)]],
       gender: ['', Validators.required],
       motherName: [''],
       fatherName: [''],
     });
   }
 
-  /** ✅ Veriyi state veya @Input üzerinden doldur */
+  private disableEditableFields(): void {
+    this.form.get('firstName')?.disable();
+    this.form.get('lastName')?.disable();
+    this.form.get('nationalId')?.disable();
+    this.form.get('dateOfBirth')?.disable();
+    this.form.get('gender')?.disable();
+    this.form.get('motherName')?.disable();
+    this.form.get('fatherName')?.disable();
+  }
+
+  private enableEditableFields(): void {
+    this.form.get('firstName')?.enable();
+    this.form.get('lastName')?.enable();
+    this.form.get('nationalId')?.enable();
+    this.form.get('dateOfBirth')?.enable();
+    this.form.get('gender')?.enable();
+    this.form.get('motherName')?.enable();
+    this.form.get('fatherName')?.enable();
+  }
+
+  private watchDateValidation(): void {
+    const dateControl = this.form.get('dateOfBirth');
+    const today = this.today;
+    dateControl?.valueChanges.subscribe((value) => {
+      if (value && value > today) {
+        dateControl.setErrors({ futureDate: true });
+      } else if (dateControl?.hasError('futureDate')) {
+        dateControl.setErrors(null);
+      }
+    });
+  }
+
   private loadCustomerData(): void {
     const data = this.customer || this.customerService.state() || {};
-
     this.form.patchValue({
       id: data.id ?? '',
       customerNumber: data.customerNumber ?? '',
@@ -86,27 +115,72 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
     });
   }
 
-  /** ✅ Tarih formatı düzelt */
   private formatDate(date?: string): string {
     if (!date) return '';
     return date.includes('T') ? date.substring(0, 10) : date;
   }
 
-  isInvalid(control: string): boolean {
-    const c = this.form.get(control);
-    return !!(c && c.invalid && (c.dirty || c.touched));
+  private minimumAgeValidator(minAge: number) {
+    return (control: any) => {
+      if (!control.value) return null;
+      const today = new Date();
+      const birthDate = new Date(control.value);
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      const actualAge =
+        m < 0 || (m === 0 && today.getDate() < birthDate.getDate())
+          ? age - 1
+          : age;
+      return actualAge < minAge ? { underage: true } : null;
+    };
   }
 
-  getErrorMessage(control: string): string {
-    const c = this.form.get(control);
-    if (!c?.errors) return '';
-    if (c.errors['required']) return 'This field is required.';
-    if (c.errors['pattern']) return 'National ID must be 11 digits.';
-    return 'Invalid field.';
+  getErrorMessage(controlName: string): string {
+  const control = this.form.get(controlName);
+  if (!control || !control.errors) return '';
+
+  if (control.errors['required']) {
+    return 'This field is required.';
   }
+
+  if (control.errors['minlength']) {
+    return `Minimum ${control.errors['minlength'].requiredLength} characters required.`;
+  }
+
+  if (control.errors['maxlength']) {
+    return `Maximum ${control.errors['maxlength'].requiredLength} characters allowed.`;
+  }
+
+  if (control.errors['pattern']) {
+    return 'Invalid format.';
+  }
+
+  if (control.errors['futureDate']) {
+    return 'Date of Birth cannot be in the future.';
+  }
+
+  if (control.errors['underage']) {
+    return 'You must be at least 18 years old.';
+  }
+
+  return 'Invalid field.';
+}
+
 
   toggleEdit(): void {
     this.editMode.set(true);
+    this.enableEditableFields();
+  }
+
+  cancelEdit(): void {
+    this.editMode.set(false);
+    this.disableEditableFields();
+    this.loadCustomerData();
+  }
+
+  isInvalid(control: string): boolean {
+    const c = this.form.get(control);
+    return !!(c && c.invalid && (c.dirty || c.touched));
   }
 
   onSubmit(): void {
@@ -115,9 +189,9 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
       return;
     }
 
-    const updated: UpdateCustomerState = {
+    const updated: UpdatePersonalInfoRequest = {
       ...this.customerService.state(),
-      ...this.form.value,
+      ...this.form.getRawValue(), 
     };
 
     this.isSaving.set(true);
@@ -127,6 +201,7 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
         this.customerService.state.set(updated);
         this.isSaving.set(false);
         this.editMode.set(false);
+        this.disableEditableFields();
 
         this.title.set('Success');
         this.successMessage.set('Customer updated successfully.');
@@ -155,14 +230,13 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
   confirmDelete(): void {
     const id = this.form.get('id')?.value;
     if (!id) return;
-
     this.customerService.deleteCustomer(id).subscribe({
       next: () => {
         this.title.set('Deleted');
         this.successMessage.set('Customer deleted successfully.');
         this.errorMessage.set(null);
       },
-      error: (err) => {
+      error: () => {
         this.successMessage.set(null);
         this.title.set('Error');
         this.errorMessage.set('Error deleting customer.');

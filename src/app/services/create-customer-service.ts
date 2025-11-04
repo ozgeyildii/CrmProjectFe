@@ -23,7 +23,6 @@ export class CreateCustomerService {
 
   createCustomer(): Observable<CreateIndividualCustomerResponse> {
     const payload = this.state();
-    console.log('Creating customer with payload:', payload);
     return this.httpClient.post<CreateIndividualCustomerResponse>(this.baseUrl, payload);
   }
 }

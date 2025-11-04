@@ -1,6 +1,5 @@
 <div class="container-fluid update-customer-page">
   <div class="row min-vh-100 align-items-stretch">
-    <!-- Sol panel -->
     <div class="col-md-4 col-lg-3 bg-dark rounded-start p-3 search-panel">
       <app-search-customer-form
         (search)="onSearch($event)"
@@ -8,9 +7,7 @@
       ></app-search-customer-form>
     </div>
 
-    <!-- Sağ panel -->
     <div class="col-md-8 col-lg-9 bg-white rounded-end p-4 form-panel">
-      <!-- Üst tab header -->
       <div class="tab-header d-flex align-items-center mb-3" *ngIf="!showResults">
         <button class="tab-btn" routerLink="update-personal-info" routerLinkActive="active">
           Customer Info
@@ -29,10 +26,8 @@
         </button>
       </div>
 
-      <!-- Loader -->
       <app-loader *ngIf="isLoading()"></app-loader>
 
-      <!-- Arama sonuçları -->
       <app-search-customer-results
         *ngIf="showResults && !isLoading()"
         [customers]="customers"
@@ -41,7 +36,6 @@
         (prev)="previousPage()"
       ></app-search-customer-results>
 
-      <!-- Router outlet (her tab kendi component'ini getirir) -->
       <router-outlet *ngIf="!showResults && !isLoading()"></router-outlet>
     </div>
   </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -73,7 +72,7 @@ today = new Date().toISOString().split('T')[0];
   middleName: [this.createCustomerService.state().middleName ?? ""],
   nationalId: [
     this.createCustomerService.state().nationalId ?? "",
-    [Validators.required],
+    [Validators.required, Validators.pattern(/^[0-9]{11}$/)],
   ],
   dateOfBirth: [this.createCustomerService.state().dateOfBirth ?? "", [Validators.required , this.minimumAgeValidator(18)]],
   gender: [this.createCustomerService.state().gender ?? "", [Validators.required]],

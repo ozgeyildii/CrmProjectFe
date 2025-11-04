@@ -2,8 +2,6 @@
   <div class="container-fluid py-4">
     <div class="card shadow-sm customer-card">
       <div class="card-body">
-
-        <!-- Popup -->
         <app-popup
           [title]="title() || ''"
           [message]="successMessage() || errorMessage() || ''"
@@ -12,13 +10,13 @@
           (close)="closePopup()"
         ></app-popup>
 
-        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h4 class="fw-semibold text-orange mb-0">Customer Information</h4>
           <div>
             <button class="btn btn-sm btn-outline-danger me-2" (click)="onDelete()">
               <i class="bi bi-trash"></i>
             </button>
+
             <button
               class="btn btn-sm btn-outline-warning"
               *ngIf="!editMode()"
@@ -26,17 +24,31 @@
             >
               <i class="bi bi-pencil"></i>
             </button>
+
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              *ngIf="editMode()"
+              (click)="cancelEdit()"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Form -->
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="row g-3">
 
             <div class="col-md-4">
               <label class="form-label">First Name *</label>
-              <input formControlName="firstName" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <input
+                formControlName="firstName"
+                class="form-control"
+                maxlength="30"
+                [ngClass]="{ 'is-invalid': isInvalid('firstName'), 'readonly-field': !editMode() }"
+              />
+              <div *ngIf="isInvalid('firstName')" class="invalid-feedback d-block mt-1">
+                {{ getErrorMessage('firstName') }}
+              </div>
             </div>
 
             <div class="col-md-4">
@@ -45,58 +57,103 @@
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">National ID *</label>
-              <input formControlName="nationalId" maxlength="11" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <label class="form-label">Nat ID *</label>
+              <input
+                formControlName="nationalId"
+                maxlength="11"
+                class="form-control"
+                [ngClass]="{ 'is-invalid': isInvalid('nationalId'), 'readonly-field': !editMode() }"
+              />
+              <div *ngIf="isInvalid('nationalId')" class="invalid-feedback d-block mt-1">
+                {{ getErrorMessage('nationalId') }}
+              </div>
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Last Name *</label>
-              <input formControlName="lastName" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <input
+                formControlName="lastName"
+                class="form-control"
+                maxlength="45"
+                [ngClass]="{ 'is-invalid': isInvalid('lastName'), 'readonly-field': !editMode() }"
+              />
+              <div *ngIf="isInvalid('lastName')" class="invalid-feedback d-block mt-1">
+                {{ getErrorMessage('lastName') }}
+              </div>
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Account Number</label>
-              <input formControlName="customerNumber" class="form-control readonly-field" readonly />
+              <input
+                formControlName="customerNumber"
+                class="form-control readonly-field"
+                readonly
+              />
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Birth Date *</label>
-              <input formControlName="dateOfBirth" type="date" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <div class="position-relative">
+                <input
+                  formControlName="dateOfBirth"
+                  type="date"
+                  class="form-control"
+                  [max]="today"
+                  [ngClass]="{ 'is-invalid': isInvalid('dateOfBirth') }"
+                />
+                <div *ngIf="isInvalid('dateOfBirth')" class="invalid-feedback d-block mt-1">
+                  {{ getErrorMessage('dateOfBirth') }}
+                </div>
+              </div>
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Father Name</label>
-              <input formControlName="fatherName" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <input
+                formControlName="fatherName"
+                class="form-control"
+                maxlength="30"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+              />
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Mother Name</label>
-              <input formControlName="motherName" class="form-control"
-                     [readonly]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }"/>
+              <input
+                formControlName="motherName"
+                class="form-control"
+                maxlength="30"
+                [ngClass]="{ 'readonly-field': !editMode() }"
+              />
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Gender *</label>
-              <select formControlName="gender" class="form-select"
-                      [disabled]="!editMode()" [ngClass]="{ 'readonly-field': !editMode() }">
+              <select
+                formControlName="gender"
+                class="form-select"
+                [ngClass]="{ 'is-invalid': isInvalid('gender'), 'readonly-field': !editMode() }"
+              >
                 <option value="">Select gender</option>
                 <option>Male</option>
                 <option>Female</option>
                 <option>Other</option>
               </select>
+              <div *ngIf="isInvalid('gender')" class="invalid-feedback d-block mt-1">
+                {{ getErrorMessage('gender') }}
+              </div>
             </div>
           </div>
 
           <div class="d-flex justify-content-end mt-4" *ngIf="editMode()">
-            <button type="submit" class="btn btn-orange px-4" [disabled]="form.invalid || isSaving()">
+            <button
+              type="submit"
+              class="btn btn-orange px-4"
+              [disabled]="form.invalid || isSaving()"
+            >
               Save
             </button>
           </div>
-
         </form>
       </div>
     </div>
