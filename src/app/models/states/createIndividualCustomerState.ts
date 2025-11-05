@@ -12,8 +12,8 @@ export interface CreateIndividualCustomerState {
 }
 
 export interface Address {
-  city?: string;
-  district?: string;
+  cityName?: string;
+  districtName?: string;
   street?: string;
   houseNumber?: string;
   description?: string;

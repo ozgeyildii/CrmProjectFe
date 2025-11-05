@@ -16,7 +16,7 @@ export class CreateCustomerService {
 
   checkNationalId(nationalId: string): Observable<{ exists: boolean }> {
     return this.httpClient.get<{ exists: boolean }>(
-      `http://localhost:8091/searchservice/api/customer-search/check-national-id`,
+      `http://localhost:8091/customerservice/api/individual-customers/check-national-id`,
       { params: { nationalId } }
     );
   }

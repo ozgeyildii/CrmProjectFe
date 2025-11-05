@@ -25,11 +25,13 @@ export class PersonalInfo implements OnInit {
   successMessage = signal<string | null>(null);
   title = signal<string | null>(null);
 
-today = new Date().toISOString().split('T')[0];
+  today = new Date().toISOString().split('T')[0];
 
   constructor(
     private formBuilder: FormBuilder,
-    private createCustomerService: CreateCustomerService, public router:Router,  private customerCreationService:CreateCustomerService
+    private createCustomerService: CreateCustomerService,
+    public router: Router,
+    private customerCreationService: CreateCustomerService
   ) {}
 
   ngOnInit(): void {
@@ -48,39 +50,39 @@ today = new Date().toISOString().split('T')[0];
   }
 
   private minimumAgeValidator(minAge: number) {
-  return (control: any) => {
-    if (!control.value) return null;
+    return (control: any) => {
+      if (!control.value) return null;
 
-    const today = new Date();
-    const birthDate = new Date(control.value);
+      const today = new Date();
+      const birthDate = new Date(control.value);
 
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
 
-    const actualAge = m < 0 || (m === 0 && today.getDate() < birthDate.getDate())
-      ? age - 1
-      : age;
+      const actualAge = m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
 
-    return actualAge < minAge ? { underage: true } : null;
-  };
-}
-  
+      return actualAge < minAge ? { underage: true } : null;
+    };
+  }
+
   buildForm() {
-   this.createPersonalInfoForm = this.formBuilder.group({
-  firstName: [this.createCustomerService.state().firstName ?? "", [Validators.required]],
-  lastName: [this.createCustomerService.state().lastName ?? "", [Validators.required]],
-  middleName: [this.createCustomerService.state().middleName ?? ""],
-  nationalId: [
-    this.createCustomerService.state().nationalId ?? "",
-    [Validators.required, Validators.pattern(/^[0-9]{11}$/)],
-  ],
-  dateOfBirth: [this.createCustomerService.state().dateOfBirth ?? "", [Validators.required , this.minimumAgeValidator(18)]],
-  gender: [this.createCustomerService.state().gender ?? "", [Validators.required]],
-  motherName: [this.createCustomerService.state().motherName ?? ""],
-  fatherName: [this.createCustomerService.state().fatherName ?? ""],
-}) 
-
-}
+    this.createPersonalInfoForm = this.formBuilder.group({
+      firstName: [this.createCustomerService.state().firstName ?? '', [Validators.required]],
+      lastName: [this.createCustomerService.state().lastName ?? '', [Validators.required]],
+      middleName: [this.createCustomerService.state().middleName ?? ''],
+      nationalId: [
+        this.createCustomerService.state().nationalId ?? '',
+        [Validators.required, Validators.pattern(/^[0-9]{11}$/)],
+      ],
+      dateOfBirth: [
+        this.createCustomerService.state().dateOfBirth ?? '',
+        [Validators.required, this.minimumAgeValidator(18)],
+      ],
+      gender: [this.createCustomerService.state().gender ?? '', [Validators.required]],
+      motherName: [this.createCustomerService.state().motherName ?? ''],
+      fatherName: [this.createCustomerService.state().fatherName ?? ''],
+    });
+  }
 
   isInvalid(controlName: string): boolean {
     const control = this.createPersonalInfoForm.get(controlName);
@@ -96,53 +98,48 @@ today = new Date().toISOString().split('T')[0];
       return `Minimum ${control.errors['minlength'].requiredLength} characters required.`;
     if (control.errors['maxlength'])
       return `Maximum ${control.errors['maxlength'].requiredLength} characters allowed.`;
-    if (control.errors['futureDate'])
-      return 'Date of Birth cannot be in the future.';
-    if (control.errors['underage'])
-      return 'You must be at least 18 years old.';
+    if (control.errors['futureDate']) return 'Date of Birth cannot be in the future.';
+    if (control.errors['underage']) return 'You must be at least 18 years old.';
     return 'Invalid field.';
   }
 
+  checkNationalIdBeforeCreate() {
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+    this.title.set(null);
 
-checkNationalIdBeforeCreate() {
-  this.errorMessage.set(null);
-  this.successMessage.set(null);
-  this.title.set(null);
+    if (this.createPersonalInfoForm.invalid) {
+      this.createPersonalInfoForm.markAllAsTouched();
+      return;
+    }
 
-  if (this.createPersonalInfoForm.invalid) {
-    this.createPersonalInfoForm.markAllAsTouched();
-    return;
+    const nationalId = this.createPersonalInfoForm.get('nationalId')?.value;
+    if (!nationalId) return;
+
+    this.createCustomerService.checkNationalId(nationalId).subscribe({
+      next: (res:any) => {
+        if (res.exists) {
+          this.title.set('Duplicate Nationality ID Found');
+          this.errorMessage.set(res.message);
+        } else {
+          const newValue = {
+            ...this.createCustomerService.state(),
+            ...this.createPersonalInfoForm.value,
+          };
+          this.createCustomerService.state.set(newValue);
+
+          this.router.navigate(['/customers/create/address-info']);
+        }
+      },
+      error: () => {
+        this.title.set('Service Error');
+        this.errorMessage.set('Unable to check National ID. Please try again later.');
+      },
+    });
   }
 
-  const nationalId = this.createPersonalInfoForm.get('nationalId')?.value;
-  if (!nationalId) return;
-
-  this.createCustomerService.checkNationalId(nationalId).subscribe({
-    next: (res) => {
-      if (res.exists) {
-        this.title.set('Duplicate Nationality ID Found');
-        this.errorMessage.set(
-          'A customer already exists with this Nationality ID. Please review and ensure all the fields are filled correctly.'
-        );
-      } else {
-         const newValue = {...this.createCustomerService.state(), ...this.createPersonalInfoForm.value};
-         this.createCustomerService.state.set(newValue);
-
-        this.router.navigate(['/customers/create/address-info']);
-      }
-    },
-    error: () => {
-      this.title.set('Service Error');
-      this.errorMessage.set(
-        'Unable to check National ID. Please try again later.'
-      );
-    },
-  });
-}
-
-
-  onCancel(){
-      this.router.navigate(['customers/search'])
+  onCancel() {
+    this.router.navigate(['customers/search']);
   }
 
   closePopup() {

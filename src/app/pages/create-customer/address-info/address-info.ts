@@ -49,8 +49,8 @@ export class AddressInfo implements OnInit {
     });
 
     this.addressForm = this.fb.group({
-      city: ['', [Validators.required, Validators.maxLength(20)]],
-      district: ['', [Validators.required, Validators.maxLength(20)]],
+      cityName: ['', [Validators.required, Validators.maxLength(20)]],
+      districtName: ['', [Validators.required, Validators.maxLength(20)]],
       street: ['', [Validators.required, Validators.maxLength(20)]],
       houseNumber: ['', [Validators.required, Validators.maxLength(10)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
@@ -64,8 +64,8 @@ export class AddressInfo implements OnInit {
 
   private newAddress(address?: any): FormGroup {
     return this.fb.group({
-      city: new FormControl(address?.city ?? '', [Validators.required, Validators.maxLength(20)]),
-      district: new FormControl(address?.district ?? '', [Validators.required, Validators.maxLength(20)]),
+      cityName: new FormControl(address?.city ?? '', [Validators.required, Validators.maxLength(20)]),
+      districtName: new FormControl(address?.district ?? '', [Validators.required, Validators.maxLength(20)]),
       street: new FormControl(address?.street ?? '', [Validators.required, Validators.maxLength(20)]),
       houseNumber: new FormControl(address?.houseNumber ?? '', [Validators.required, Validators.maxLength(10)]),
       description: new FormControl(address?.description ?? '', [Validators.required, Validators.maxLength(250)]),
@@ -79,8 +79,8 @@ export class AddressInfo implements OnInit {
 
   onAddNewAddress(): void {
     this.addressForm.reset({
-      city: '',
-      district: '',
+      cityName: '',
+      districtName: '',
       street: '',
       houseNumber: '',
       description: '',

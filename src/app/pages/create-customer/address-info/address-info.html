@@ -11,8 +11,8 @@
               class="border rounded p-3 mb-3 bg-light"
             >
               <div class="row">
-                <div class="col-md-4"><strong>City:</strong> {{ addr.city }}</div>
-                <div class="col-md-4"><strong>District:</strong> {{ addr.district }}</div>
+                <div class="col-md-4"><strong>City:</strong> {{ addr.cityName }}</div>
+                <div class="col-md-4"><strong>District:</strong> {{ addr.districtName }}</div>
                 <div class="col-md-4"><strong>Street:</strong> {{ addr.street }}</div>
               </div>
               <div class="row mt-2">
@@ -58,9 +58,9 @@
             <input
               type="text"
               class="form-control"
-              formControlName="city"
+              formControlName="cityName"
               maxlength="20"
-              [ngClass]="{ 'is-invalid': addressForm.get('city')?.invalid && addressForm.get('city')?.touched }"
+              [ngClass]="{ 'is-invalid': addressForm.get('cityName')?.invalid && addressForm.get('cityName')?.touched }"
             />
             <div class="invalid-feedback">City is required (max 20 chars).</div>
           </div>
@@ -70,9 +70,9 @@
             <input
               type="text"
               class="form-control"
-              formControlName="district"
+              formControlName="districtName"
               maxlength="20"
-              [ngClass]="{ 'is-invalid': addressForm.get('district')?.invalid && addressForm.get('district')?.touched }"
+              [ngClass]="{ 'is-invalid': addressForm.get('districtName')?.invalid && addressForm.get('districtName')?.touched }"
             />
             <div class="invalid-feedback">District is required (max 20 chars).</div>
           </div>
