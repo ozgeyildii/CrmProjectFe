@@ -99,7 +99,7 @@
                   type="date"
                   class="form-control"
                   [max]="today"
-                  [ngClass]="{ 'is-invalid': isInvalid('dateOfBirth') }"
+                  [ngClass]="{ 'is-invalid': isInvalid('dateOfBirth'), 'readonly-field': !editMode() }"
                 />
                 <div *ngIf="isInvalid('dateOfBirth')" class="invalid-feedback d-block mt-1">
                   {{ getErrorMessage('dateOfBirth') }}

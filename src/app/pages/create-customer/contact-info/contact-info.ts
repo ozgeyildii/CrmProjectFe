@@ -27,7 +27,7 @@ export class ContactInfo implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private router: Router,
     private createCustomerService: CreateCustomerService,
-    public loaderService:LoaderService
+    public loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -45,26 +45,15 @@ export class ContactInfo implements OnInit, OnDestroy {
 
   buildForm(): void {
     this.contactForm = this.fb.group({
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(50),
-      ]),
-      homePhone: new FormControl('', [
-        Validators.pattern(/^$|^[0-9]{10}$/),
-      ]),
-      mobilePhone: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^\+?[0-9]{12}$/),
-      ]),
-      fax: new FormControl('', [
-        Validators.pattern(/^$|([0-9]{4}|[0-9]{13})$/),
-      ]),
+      email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(50)]),
+      homePhone: new FormControl('', [Validators.pattern(/^$|^[0-9]{10}$/)]),
+      mobilePhone: new FormControl('', [Validators.required, Validators.pattern(/^\+?[0-9]{12}$/)]),
+      fax: new FormControl('', [Validators.pattern(/^$|([0-9]{4}|[0-9]{13})$/)]),
     });
   }
 
   loadStateValues(): void {
-    const mediums = this.createCustomerService.state().contactMediums; 
+    const mediums = this.createCustomerService.state().contactMediums;
     if (mediums && Array.isArray(mediums)) {
       this.contactForm.patchValue({
         email: mediums.find((m) => m.type === 'EMAIL')?.value || '',
@@ -72,6 +61,33 @@ export class ContactInfo implements OnInit, OnDestroy {
         mobilePhone: mediums.find((m) => m.type === 'PHONE')?.value || '',
         fax: mediums.find((m) => m.type === 'FAX')?.value || '',
       });
+    }
+  }
+
+  onFaxInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // sadece rakam bırak
+
+    // 13 karakterden uzun olmasın
+    if (value.length > 13) {
+      value = value.slice(0, 13);
+    }
+
+    // input alanını güncelle
+    input.value = value;
+
+    // FormControl değerini güncelle ve validasyonu tetikle
+    const faxControl = this.contactForm.get('fax');
+    faxControl?.setValue(value, { emitEvent: true });
+
+    // manuel olarak validasyonu kontrol et
+    if (value.length !== 0 && value.length !== 4 && value.length !== 13) {
+      faxControl?.setErrors({ invalidFaxLength: true });
+    } else {
+      // geçerli uzunlukta ise özel hatayı temizle
+      if (faxControl?.hasError('invalidFaxLength')) {
+        faxControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+      }
     }
   }
 
@@ -91,7 +107,7 @@ export class ContactInfo implements OnInit, OnDestroy {
     this.createCustomerService.createCustomer().subscribe({
       next: (response) => {
         console.log('Customer created successfully:', response);
-         this.router.navigate(['customers/update', response.id]);
+        this.router.navigate(['customers/update', response.id]);
       },
       error: (err) => {
         console.error('Customer creation failed:', err);

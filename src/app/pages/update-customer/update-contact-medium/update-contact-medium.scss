@@ -1,71 +1,164 @@
-.contact-medium-form {
-  background-color: #f8f9fa;
+/* === Ana kart stili === */
+.card {
   border: 1px solid #f58220;
   border-radius: 12px;
-  padding: 1.5rem;
+  background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
 
-  .form-title {
-    color: #f58220;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #f58220;
+.card-body {
+  padding: 2rem 2.5rem;
+}
+
+/* === Başlık ve üst bar === */
+.text-orange {
+  color: #f58220 !important;
+}
+
+.btn-outline-warning {
+  color: #f58220;
+  border-color: #f58220;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-warning:hover {
+  background-color: #f58220;
+  color: #fff;
+  border-color: #f58220;
+}
+
+/* === Form genel görünüm === */
+.form-label {
+  font-weight: 600;
+  color: #242441;
+  margin-bottom: 0.25rem;
+}
+
+input,
+select,
+.form-control,
+.form-select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.9rem;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+.form-control:focus,
+.form-select:focus {
+  border-color: #f58220;
+  box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.25);
+  outline: none;
+}
+
+input.is-invalid,
+select.is-invalid,
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+  box-shadow: none;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+/* === Readonly alanlar === */
+.readonly-field {
+  background-color: #f0f0f5 !important;
+  color: #555 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+input[readonly],
+select[disabled],
+.form-control[readonly],
+.form-select[disabled] {
+  background-color: #f0f0f5 !important;
+  color: #555 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* === Düğmeler === */
+.btn-orange {
+  background-color: #f58220;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.55rem 1.3rem;
+  transition: background-color 0.25s ease;
+  border: none;
+}
+
+.btn-orange:hover:not(:disabled) {
+  background-color: #ff9f50;
+}
+
+.btn-orange:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-outline-secondary {
+  border-radius: 8px;
+  font-weight: 500;
+  color: #242441;
+  border-color: #ccc;
+  padding: 0.55rem 1.3rem;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f4f5fa;
+  border-color: #ccc;
+  color: #242441;
+}
+
+/* === Düzenleme ikonları === */
+.bi-pencil {
+  font-size: 1.1rem;
+}
+
+/* === Başlık alt çizgisi === */
+.d-flex.justify-content-between.align-items-center.mb-4 {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.75rem;
+}
+
+/* === Popup için görünüm uyumu === */
+app-popup {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.alert {
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+/* === Responsive yapı === */
+@media (max-width: 992px) {
+  .card-body {
+    padding: 1.5rem;
   }
 
-  label {
-    font-weight: 500;
-    color: #242441;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  input,
-  select {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 0.45rem 0.75rem;
-    width: 100%;
-    font-size: 0.9rem;
-
-    &:focus {
-      border-color: #f58220;
-      box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.2);
-      outline: none;
-    }
-
-    &::placeholder {
-      color: #999;
-    }
-  }
-
-  .btn-orange {
-    background-color: #f58220;
-    color: #fff;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    border: none;
-
-    &:hover {
-      background-color: #ff9f50;
-    }
-
-    &:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
+  .btn-orange,
   .btn-outline-secondary {
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 500;
-
-    &:hover {
-      background-color: #6c757d;
-      color: #fff;
-    }
+    width: 100%;
   }
+}
+
+/* === Gap için destek === */
+.gap-3 {
+  gap: 1rem;
 }

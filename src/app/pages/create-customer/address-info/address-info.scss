@@ -26,17 +26,50 @@
     margin-bottom: 0.4rem;
   }
 
+  // Row için z-index ayarı
+  .row {
+    position: relative;
+    z-index: 1;
+  }
+
+  // Kolonlar için z-index
+  .col-md-4 {
+    position: relative;
+    
+    // District kolonu (ikinci kolon) için özel z-index
+    &:nth-child(2) {
+      z-index: 10;
+    }
+  }
+
   .form-control,
   .form-select {
     border-radius: 6px;
     border: 1px solid #ccc;
     padding: 0.6rem 0.75rem;
     font-size: 0.95rem;
+    position: relative;
+    z-index: auto;
     transition: all 0.2s ease-in-out;
 
     &:focus {
       border-color: rgb(245, 130, 32);
       box-shadow: 0 0 0 0.15rem rgba(245, 130, 32, 0.25);
+      z-index: 1060 !important;
+      position: relative;
+    }
+
+    &:disabled {
+      background-color: #f2f2f2;
+      cursor: not-allowed;
+    }
+  }
+
+  // Select dropdown için özel ayarlar
+  .form-select {
+    &:focus,
+    &:active {
+      z-index: 1060 !important;
     }
   }
 

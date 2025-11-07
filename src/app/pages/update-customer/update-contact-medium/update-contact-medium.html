@@ -12,11 +12,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h4 class="fw-semibold text-orange mb-0">Contact Medium</h4>
-          <button
-            class="btn btn-sm btn-outline-warning"
-            *ngIf="!editMode()"
-            (click)="toggleEdit()"
-          >
+          <button class="btn btn-sm btn-outline-warning" *ngIf="!editMode()" (click)="toggleEdit()">
             <i class="bi bi-pencil"></i>
           </button>
         </div>
@@ -38,6 +34,7 @@
             <div class="col-md-6">
               <label class="form-label">Home Phone</label>
               <input
+                maxlength="10"
                 type="tel"
                 formControlName="homePhone"
                 class="form-control"
@@ -49,12 +46,13 @@
             <div class="col-md-6">
               <label class="form-label">Mobile Phone *</label>
               <input
+                maxlength="12"
                 type="tel"
                 formControlName="mobilePhone"
                 class="form-control"
                 [readonly]="!editMode()"
                 [ngClass]="{ 'readonly-field': !editMode() }"
-                placeholder="+9055003332"
+                placeholder="90XXXXXXXXXX"
               />
             </div>
 
@@ -65,20 +63,23 @@
                 formControlName="fax"
                 class="form-control"
                 [readonly]="!editMode()"
-                [ngClass]="{ 'readonly-field': !editMode() }"
+                [ngClass]="{
+                  'readonly-field': !editMode(),
+                  'is-invalid': isInvalid('fax')
+                }"
+                (input)="onFaxInput($event)"
               />
+              <div
+                *ngIf="form.get('fax')?.hasError('invalidFaxLength') && form.get('fax')?.touched"
+                class="invalid-feedback"
+              >
+                Fax must be 4 or 13 digits.
+              </div>
             </div>
           </div>
 
-          <div
-            class="d-flex justify-content-end mt-4 gap-3"
-            *ngIf="editMode()"
-          >
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="cancelEdit()"
-            >
+          <div class="d-flex justify-content-end mt-4 gap-3" *ngIf="editMode()">
+            <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">
               Cancel
             </button>
             <button

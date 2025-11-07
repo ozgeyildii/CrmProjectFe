@@ -8,9 +8,11 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CreateCustomerService } from '../../../services/create-customer-service';
+import { GetCityResponse } from '../../../models/responses/getCityResponse';
+import { GetDistrictResponse } from '../../../models/responses/getDistrictResponse';
 
 @Component({
   selector: 'app-address-info',
@@ -27,6 +29,9 @@ export class AddressInfo implements OnInit {
   addresses = signal<any[]>([]);
   showForm = signal(false);
 
+  cities: GetCityResponse[] = [];
+  districts: GetDistrictResponse[] = [];
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -35,12 +40,18 @@ export class AddressInfo implements OnInit {
 
   ngOnInit(): void {
     this.buildForms();
+    this.loadCities();
 
     const saved = this.createCustomerService.state().addresses ?? [];
     if (saved.length > 0) {
       this.addresses.set(saved);
       saved.forEach((addr: any) => this.addAddress(addr)); // ✅ Artık tanımlı
     }
+    this.addressForm.get('cityId')?.valueChanges.subscribe((cityId) => {
+      if (cityId) this.loadDistricts(cityId);
+      else this.districts = [];
+      this.addressForm.get('districtId')?.setValue('');
+    });
   }
 
   private buildForms(): void {
@@ -49,8 +60,8 @@ export class AddressInfo implements OnInit {
     });
 
     this.addressForm = this.fb.group({
-      cityName: ['', [Validators.required, Validators.maxLength(20)]],
-      districtName: ['', [Validators.required, Validators.maxLength(20)]],
+      cityId: ['', Validators.required],
+      districtId: ['', Validators.required],
       street: ['', [Validators.required, Validators.maxLength(20)]],
       houseNumber: ['', [Validators.required, Validators.maxLength(10)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
@@ -64,17 +75,50 @@ export class AddressInfo implements OnInit {
 
   private newAddress(address?: any): FormGroup {
     return this.fb.group({
-      cityName: new FormControl(address?.city ?? '', [Validators.required, Validators.maxLength(20)]),
-      districtName: new FormControl(address?.district ?? '', [Validators.required, Validators.maxLength(20)]),
-      street: new FormControl(address?.street ?? '', [Validators.required, Validators.maxLength(20)]),
-      houseNumber: new FormControl(address?.houseNumber ?? '', [Validators.required, Validators.maxLength(10)]),
-      description: new FormControl(address?.description ?? '', [Validators.required, Validators.maxLength(250)]),
+      cityName: new FormControl(address?.city ?? '', [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      districtName: new FormControl(address?.district ?? '', [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      street: new FormControl(address?.street ?? '', [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      houseNumber: new FormControl(address?.houseNumber ?? '', [
+        Validators.required,
+        Validators.maxLength(10),
+      ]),
+      description: new FormControl(address?.description ?? '', [
+        Validators.required,
+        Validators.maxLength(250),
+      ]),
       isDefault: new FormControl(address?.isDefault ?? false),
     });
   }
 
   private addAddress(address?: any): void {
     this.addressesFormArray.push(this.newAddress(address));
+  }
+
+  private loadCities(): void {
+    this.createCustomerService.getCities().subscribe((data) => (this.cities = data));
+  }
+
+  private loadDistricts(cityId: number): void {
+    this.createCustomerService
+      .getDistrictsByCityId(cityId)
+      .subscribe((data) => (this.districts = data));
+  }
+
+  getCityNameById(id: number): string {
+    return this.cities.find((c) => c.id === id)?.name || '';
+  }
+
+  getDistrictNameById(id: number): string {
+    return this.districts.find((d) => d.id === id)?.name || '';
   }
 
   onAddNewAddress(): void {
@@ -95,7 +139,16 @@ export class AddressInfo implements OnInit {
       return;
     }
 
-    const newAddr = { ...this.addressForm.value };
+    const formValue = this.addressForm.value;
+
+    const selectedCity = this.cities.find((c) => c.id === +formValue.cityId);
+    const selectedDistrict = this.districts.find((d) => d.id === +formValue.districtId);
+
+    const newAddr = {
+      ...formValue,
+      cityName: selectedCity ? selectedCity.name : '',
+      districtName: selectedDistrict ? selectedDistrict.name : '',
+    };
 
     if (this.addresses().length === 0) {
       newAddr.isDefault = true;
@@ -104,7 +157,7 @@ export class AddressInfo implements OnInit {
     const updatedList = [...this.addresses(), newAddr];
     this.addresses.set(updatedList);
 
-    this.createCustomerService.state.update(prev => ({
+    this.createCustomerService.state.update((prev) => ({
       ...prev,
       addresses: updatedList,
     }));
@@ -118,7 +171,7 @@ export class AddressInfo implements OnInit {
     const updated = this.addresses().map((a, i) => ({ ...a, isDefault: i === index }));
     this.addresses.set(updated);
 
-    this.createCustomerService.state.update(prev => ({
+    this.createCustomerService.state.update((prev) => ({
       ...prev,
       addresses: updated,
     }));

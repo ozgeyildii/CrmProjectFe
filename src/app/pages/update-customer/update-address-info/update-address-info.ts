@@ -1,15 +1,5 @@
-import {
-  Component,
-  Input,
-  SimpleChanges,
-  signal
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { Component, Input, SimpleChanges, signal } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../services/customer-service';
 import { UpdateCustomerState, Address } from '../../../models/states/updateCustomerState';
@@ -22,13 +12,16 @@ import { UpdatedAddressResponse } from '../../../models/responses/updatedAddress
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, PopupComponent],
   templateUrl: './update-address-info.html',
-  styleUrls: ['./update-address-info.scss']
+  styleUrls: ['./update-address-info.scss'],
 })
 export class UpdateAddressInfo {
   @Input() customer!: UpdateCustomerState;
 
   addresses: Address[] = [];
   selectedAddress: Address | null = null;
+
+  cities: any[] = [];
+  districts: any[] = [];
 
   form!: FormGroup;
   editMode = signal(false);
@@ -39,15 +32,24 @@ export class UpdateAddressInfo {
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  constructor(
-    private fb: FormBuilder,
-    private customerService: CustomerService
-  ) {}
+  constructor(private fb: FormBuilder, private customerService: CustomerService) {}
 
   ngOnInit(): void {
     this.buildForm();
     const state = this.customerService.state();
     this.addresses = state.addresses || [];
+
+    this.loadCities(); // şehirleri yükle
+
+    // City değiştiğinde districtleri getir
+    this.form.get('cityId')?.valueChanges.subscribe((cityId) => {
+      if (cityId) {
+        this.loadDistricts(cityId);
+      } else {
+        this.districts = [];
+        this.form.get('districtId')?.setValue('');
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,11 +60,11 @@ export class UpdateAddressInfo {
 
   buildForm(): void {
     this.form = this.fb.group({
-      city: ['', Validators.required],
-      district: ['', Validators.required],
+      cityId: ['', Validators.required],
+      districtId: ['', Validators.required],
       street: ['', Validators.required],
       houseNumber: ['', Validators.required],
-      description: ['', Validators.required]
+      description: ['', Validators.required],
     });
   }
 
@@ -76,11 +78,11 @@ export class UpdateAddressInfo {
   onEdit(address: Address): void {
     this.selectedAddress = address;
     this.form.patchValue({
-      city: address.cityName,
-      district: address.districtName,
+      cityName: address.cityName,
+      districtName: address.districtName,
       street: address.street,
       houseNumber: address.houseNumber,
-      description: address.description
+      description: address.description,
     });
     this.addMode.set(false);
     this.editMode.set(true);
@@ -91,17 +93,17 @@ export class UpdateAddressInfo {
 
     this.customerService.deleteAddress(address.id!).subscribe({
       next: () => {
-        this.addresses = this.addresses.filter(a => a.id !== address.id);
+        this.addresses = this.addresses.filter((a) => a.id !== address.id);
         this.customerService.state.set({
           ...this.customerService.state(),
-          addresses: this.addresses
+          addresses: this.addresses,
         });
         this.successMessage.set('Address deleted successfully.');
         this.errorMessage.set(null);
       },
       error: () => {
         this.errorMessage.set('Error deleting address.');
-      }
+      },
     });
   }
 
@@ -109,7 +111,7 @@ export class UpdateAddressInfo {
     if (!address.id) return;
 
     // Sadece bir tane primary olacak
-    this.addresses.forEach(a => (a.isDefault = false));
+    this.addresses.forEach((a) => (a.isDefault = false));
     address.isDefault = true;
 
     this.customerService.updatePrimaryAddress(address.id!).subscribe({
@@ -117,12 +119,34 @@ export class UpdateAddressInfo {
         this.successMessage.set('Primary address updated.');
         this.customerService.state.set({
           ...this.customerService.state(),
-          addresses: this.addresses
+          addresses: this.addresses,
         });
       },
       error: () => {
         this.errorMessage.set('Error updating primary address.');
-      }
+      },
+    });
+  }
+
+  loadCities(): void {
+    this.customerService.getCities().subscribe({
+      next: (data) => {
+        this.cities = data;
+      },
+      error: () => {
+        this.errorMessage.set('Error loading cities.');
+      },
+    });
+  }
+
+  loadDistricts(cityId: number): void {
+    this.customerService.getDistrictsByCityId(cityId).subscribe({
+      next: (data) => {
+        this.districts = data;
+      },
+      error: () => {
+        this.errorMessage.set('Error loading districts.');
+      },
     });
   }
 
@@ -139,15 +163,19 @@ export class UpdateAddressInfo {
       return;
     }
 
+    const selectedCity = this.cities.find((c) => c.id === +this.form.value.cityId);
+    const selectedDistrict = this.districts.find((d) => d.id === +this.form.value.districtId);
+
     const req: UpdateAddressRequest = {
       id: this.selectedAddress ? this.selectedAddress.id! : 0,
-      customerId: this.customer?.id ?? '', // UUID string
-      city: this.form.value.city,
-      district: this.form.value.district,
+      customerId: this.customerService.state().id ?? '',
+      districtId: selectedDistrict ? selectedDistrict.id : 0,
       street: this.form.value.street,
       houseNumber: this.form.value.houseNumber,
-      description: this.form.value.description
+      description: this.form.value.description,
     };
+
+    console.log('Submitting address:', req);
 
     this.isSaving.set(true);
 
@@ -161,17 +189,16 @@ export class UpdateAddressInfo {
           this.addresses.push({
             ...res,
             isDefault: false,
-            customerId: this.customer.id!
+            customerId: this.customer.id!,
           });
         } else if (this.selectedAddress?.id) {
-          const idx = this.addresses.findIndex(a => a.id === this.selectedAddress!.id);
-          if (idx !== -1)
-            this.addresses[idx] = { ...this.addresses[idx], ...res };
+          const idx = this.addresses.findIndex((a) => a.id === this.selectedAddress!.id);
+          if (idx !== -1) this.addresses[idx] = { ...this.addresses[idx], ...res };
         }
 
         this.customerService.state.set({
           ...this.customerService.state(),
-          addresses: this.addresses
+          addresses: this.addresses,
         });
 
         this.isSaving.set(false);
@@ -184,7 +211,7 @@ export class UpdateAddressInfo {
         this.isSaving.set(false);
         this.title.set('Error');
         this.errorMessage.set('An error occurred while saving the address.');
-      }
+      },
     });
   }
 

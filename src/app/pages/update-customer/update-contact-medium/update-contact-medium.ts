@@ -9,6 +9,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  FormControl,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
@@ -56,10 +57,26 @@ export class UpdateContactMedium implements OnInit, OnChanges {
   buildForm(): void {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      homePhone: [''],
-      mobilePhone: ['', Validators.required],
-      fax: ['']
+      homePhone: ['', [Validators.pattern(/^$|^[0-9]{10}$/)]],
+      mobilePhone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{12}$/)]],
+      fax: ['', [this.faxValidator]]
     });
+  }
+
+  faxValidator(control: FormControl) {
+    const value = control.value ? control.value.replace(/\D/g, '') : '';
+    if (value && value.length !== 4 && value.length !== 13) {
+      return { invalidFaxLength: true };
+    }
+    return null;
+  }
+
+  onFaxInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // sadece rakam
+    if (value.length > 13) value = value.slice(0, 13); // max 13
+    input.value = value;
+    this.form.get('fax')?.setValue(value, { emitEvent: true });
   }
 
   private patchFormFromState(state: UpdateCustomerState): void {
@@ -70,10 +87,8 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     const homePhone = state.contactMediums.find(m => m.type === 'HOME_PHONE')?.value || '';
     const fax = state.contactMediums.find(m => m.type === 'FAX')?.value || '';
 
-    
     this.customer = state;
-
-    this.form.patchValue({email, homePhone, mobilePhone, fax });
+    this.form.patchValue({ email, homePhone, mobilePhone, fax });
   }
 
   toggleEdit(): void {
@@ -82,7 +97,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
 
   cancelEdit(): void {
     this.editMode.set(false);
-    this.patchFormFromState(this.customerService.state()); // Eski veriye dön
+    this.patchFormFromState(this.customerService.state()); // eski veriye dön
   }
 
   onSubmit(): void {
@@ -93,13 +108,12 @@ export class UpdateContactMedium implements OnInit, OnChanges {
 
     const currentState = this.customerService.state();
 
-
     const updatedMediums: UpdateContactMediumRequest[] = [
       { id: currentState.contactMediums!.find(m => m.type === 'EMAIL')?.id!, customerId: this.customer.id!, type: 'EMAIL', value: this.form.value.email, isPrimary: true },
       { id: currentState.contactMediums!.find(m => m.type === 'PHONE')?.id!, customerId: this.customer.id!, type: 'PHONE', value: this.form.value.mobilePhone, isPrimary: true },
       { id: currentState.contactMediums!.find(m => m.type === 'HOME_PHONE')?.id!, customerId: this.customer.id!, type: 'HOME_PHONE', value: this.form.value.homePhone, isPrimary: false },
       { id: currentState.contactMediums!.find(m => m.type === 'FAX')?.id!, customerId: this.customer.id!, type: 'FAX', value: this.form.value.fax, isPrimary: false }
-    ].filter(m => m.value && m.value.trim() !== '');
+    ];
 
     const updatedCustomer: UpdateCustomerState = {
       ...currentState,
@@ -107,7 +121,6 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     };
 
     this.isSaving.set(true);
-
 
     this.customerService.updateMultipleContactMediums(updatedMediums).subscribe({
       next: () => {
@@ -131,5 +144,10 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     this.title.set(null);
     this.successMessage.set(null);
     this.errorMessage.set(null);
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.invalid && control.touched);
   }
 }

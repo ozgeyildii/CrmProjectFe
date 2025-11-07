@@ -41,7 +41,7 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="+905XXXXXXXXX"
+                placeholder="905XXXXXXXXX"
                 maxlength="12"
                 formControlName="mobilePhone"
                 [ngClass]="{ 'is-invalid': isInvalid('mobilePhone') }"
@@ -57,9 +57,10 @@
                 type="text"
                 class="form-control"
                 placeholder="internal: 4 chars, external: 13 chars"
+                (input)="onFaxInput($event)"
                 maxlength="13"
                 formControlName="fax"
-                [ngClass]="{ 'is-invalid': isInvalid('fax') }"
+                [ngClass]="{ 'is-invalid': contactForm.get('fax')?.invalid && contactForm.get('fax')?.touched }"
               />
               <div *ngIf="isInvalid('fax')" class="invalid-feedback">
                 Fax must be either 4 or 13 digits.
