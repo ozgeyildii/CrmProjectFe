@@ -1,13 +1,52 @@
 .address-card {
-  background-color: #f8f9fa;
-  border: 1px solid #f58220;
-  border-radius: 10px;
-  padding: 1rem;
+  background-color: #fffdf8;
+  border: 1px solid #f8d8b0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 10px rgba(245, 130, 32, 0.1);
   transition: all 0.25s ease;
+  position: relative;
 
   &:hover {
-    box-shadow: 0 0 10px rgba(245, 130, 32, 0.3);
-    background-color: #fffdf9;
+    background-color: #fffaf4;
+    box-shadow: 0 0 12px rgba(245, 130, 32, 0.2);
+  }
+
+  .btn-icon {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.2rem;
+    line-height: 1;
+    border-radius: 50%;
+    transition: all 0.2s;
+    padding: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(245, 130, 32, 0.15);
+      color: #f58220;
+    }
+  }
+
+  .dropdown-menu {
+    border-radius: 10px;
+    padding: 0.4rem;
+    animation: fadeIn 0.2s ease;
+    min-width: 140px;
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background-color: rgba(245, 130, 32, 0.1);
+      }
+    }
   }
 
   .form-check-input {
@@ -17,10 +56,22 @@
       background-color: #f58220;
       border-color: #f58220;
     }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 
-  .form-check-label {
-    color: #6c757d;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 

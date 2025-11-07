@@ -6,6 +6,8 @@ import { UpdateCustomerState, Address } from '../../../models/states/updateCusto
 import { PopupComponent } from '../../../components/popup/popup';
 import { UpdateAddressRequest } from '../../../models/requests/updateAddressRequest';
 import { UpdatedAddressResponse } from '../../../models/responses/updatedAddressResponse';
+import { CreateAddressRequest } from '../../../models/requests/createAddressRequest';
+import { CreatedAddressResponse } from '../../../models/responses/createdAddressResponse';
 
 @Component({
   selector: 'app-update-address',
@@ -39,9 +41,11 @@ export class UpdateAddressInfo {
     const state = this.customerService.state();
     this.addresses = state.addresses || [];
 
-    this.loadCities(); // şehirleri yükle
+    this.loadCities();
 
-    // City değiştiğinde districtleri getir
+    // ✅ Açılışta default adres varsa toggle açık olacak
+    this.syncPrimaryToggle();
+
     this.form.get('cityId')?.valueChanges.subscribe((cityId) => {
       if (cityId) {
         this.loadDistricts(cityId);
@@ -55,8 +59,20 @@ export class UpdateAddressInfo {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['customer'] && this.customer) {
       this.addresses = this.customer.addresses || [];
+      this.syncPrimaryToggle();
     }
   }
+
+private syncPrimaryToggle(): void {
+  const primary = this.addresses.find((a) => a.isDefault);
+  if (primary) {
+    this.addresses.forEach((a) => (a.isDefault = a.id === primary.id));
+  }
+  if (this.addresses.length === 1) {
+    this.addresses[0].isDefault = true;
+  }
+}
+
 
   buildForm(): void {
     this.form = this.fb.group({
@@ -77,15 +93,23 @@ export class UpdateAddressInfo {
 
   onEdit(address: Address): void {
     this.selectedAddress = address;
-    this.form.patchValue({
-      cityName: address.cityName,
-      districtName: address.districtName,
-      street: address.street,
-      houseNumber: address.houseNumber,
-      description: address.description,
-    });
     this.addMode.set(false);
     this.editMode.set(true);
+
+    this.form.get('cityId')?.setValue(address.cityId ?? '');
+
+    if (address.cityId) {
+      this.loadDistricts(address.cityId);
+    }
+
+    setTimeout(() => {
+      this.form.patchValue({
+        districtId: address.districtId,
+        street: address.street,
+        houseNumber: address.houseNumber,
+        description: address.description,
+      });
+    }, 300);
   }
 
   onDelete(address: Address): void {
@@ -93,40 +117,70 @@ export class UpdateAddressInfo {
 
     this.customerService.deleteAddress(address.id!).subscribe({
       next: () => {
-        this.addresses = this.addresses.filter((a) => a.id !== address.id);
-        this.customerService.state.set({
-          ...this.customerService.state(),
-          addresses: this.addresses,
-        });
+        this.refreshAddresses();
         this.successMessage.set('Address deleted successfully.');
         this.errorMessage.set(null);
       },
-      error: () => {
-        this.errorMessage.set('Error deleting address.');
+      error: (err) => {
+        if (err?.error?.title === 'Business Rule Violation') {
+          this.errorMessage.set(err.error.detail);
+        } else {
+          this.errorMessage.set('Error updating primary address.');
+        }
       },
     });
   }
+onSetPrimary(address: Address): void {
+  if (!address.id) return;
 
-  onSetPrimary(address: Address): void {
-    if (!address.id) return;
+  // Tüm adreslerin toggle’ını kapat, seçileni aç
+  this.addresses.forEach((a) => (a.isDefault = false));
+  address.isDefault = true;
 
-    // Sadece bir tane primary olacak
-    this.addresses.forEach((a) => (a.isDefault = false));
-    address.isDefault = true;
+  const selectedId = address.id; // 🔹 Seçilen adresi hatırla
 
-    this.customerService.updatePrimaryAddress(address.id!).subscribe({
-      next: () => {
-        this.successMessage.set('Primary address updated.');
-        this.customerService.state.set({
-          ...this.customerService.state(),
-          addresses: this.addresses,
-        });
-      },
-      error: () => {
-        this.errorMessage.set('Error updating primary address.');
-      },
-    });
-  }
+  this.customerService.updatePrimaryAddress(address.id!).subscribe({
+    next: () => {
+      this.successMessage.set('Primary address updated.');
+      this.refreshAddresses(true, selectedId); // ✅ toggle senkronizasyonu için id gönder
+    },
+    error: () => {
+      this.errorMessage.set('Error updating primary address.');
+    },
+  });
+}
+
+private refreshAddresses(preservePrimary: boolean = false, selectedId?: number): void {
+  const customerId = this.customerService.state().id;
+  if (!customerId) return;
+
+  this.customerService.getAddressesByCustomerId(customerId).subscribe({
+    next: (data) => {
+      this.addresses = data;
+
+      // 🔸 Sadece backend’den gelen "isDefault: true" olanları açık göster
+      const primary = this.addresses.find((a) => a.isDefault);
+      if (primary) {
+        this.addresses.forEach((a) => (a.isDefault = a.id === primary.id));
+      }
+
+      // (Opsiyonel) sadece 1 adres varsa toggle’ı aktif ve disabled yap
+      if (this.addresses.length === 1) {
+        this.addresses[0].isDefault = true;
+      }
+
+      // 🔹 customerService state’ini güncelle
+      this.customerService.state.set({
+        ...this.customerService.state(),
+        addresses: this.addresses,
+      });
+    },
+    error: () => {
+      this.errorMessage.set('Error refreshing addresses.');
+    },
+  });
+}
+
 
   loadCities(): void {
     this.customerService.getCities().subscribe({
@@ -157,62 +211,64 @@ export class UpdateAddressInfo {
     this.form.reset();
   }
 
-  onSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+onSubmit(): void {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
 
-    const selectedCity = this.cities.find((c) => c.id === +this.form.value.cityId);
-    const selectedDistrict = this.districts.find((d) => d.id === +this.form.value.districtId);
+  this.isSaving.set(true);
 
-    const req: UpdateAddressRequest = {
-      id: this.selectedAddress ? this.selectedAddress.id! : 0,
+  if (this.addMode()) {
+    const createReq: CreateAddressRequest = {
       customerId: this.customerService.state().id ?? '',
-      districtId: selectedDistrict ? selectedDistrict.id : 0,
+      districtId: this.form.value.districtId,
       street: this.form.value.street,
       houseNumber: this.form.value.houseNumber,
       description: this.form.value.description,
     };
 
-    console.log('Submitting address:', req);
-
-    this.isSaving.set(true);
-
-    const request$ = this.addMode()
-      ? this.customerService.createAddress(req)
-      : this.customerService.updateAddress(req);
-
-    request$.subscribe({
-      next: (res: UpdatedAddressResponse) => {
-        if (this.addMode()) {
-          this.addresses.push({
-            ...res,
-            isDefault: false,
-            customerId: this.customer.id!,
-          });
-        } else if (this.selectedAddress?.id) {
-          const idx = this.addresses.findIndex((a) => a.id === this.selectedAddress!.id);
-          if (idx !== -1) this.addresses[idx] = { ...this.addresses[idx], ...res };
-        }
-
-        this.customerService.state.set({
-          ...this.customerService.state(),
-          addresses: this.addresses,
-        });
-
+    this.customerService.createAddress(createReq).subscribe({
+      next: () => {
         this.isSaving.set(false);
         this.editMode.set(false);
         this.addMode.set(false);
+        this.refreshAddresses(); // ✅ sadece güncelleme yapılır
         this.title.set('Success');
-        this.successMessage.set('Address updated successfully.');
+        this.successMessage.set('Address created successfully.');
       },
       error: () => {
         this.isSaving.set(false);
         this.title.set('Error');
-        this.errorMessage.set('An error occurred while saving the address.');
+        this.errorMessage.set('An error occurred while creating the address.');
       },
     });
+  }  else {
+      const updateReq: UpdateAddressRequest = {
+        id: this.selectedAddress ? this.selectedAddress.id! : 0,
+        customerId: this.customerService.state().id ?? '',
+        districtId: this.form.value.districtId,
+        street: this.form.value.street,
+        houseNumber: this.form.value.houseNumber,
+        description: this.form.value.description,
+      };
+
+      this.customerService.updateAddress(updateReq).subscribe({
+        next: (res: UpdatedAddressResponse) => {
+          this.isSaving.set(false);
+          this.editMode.set(false);
+          this.addMode.set(false);
+          this.refreshAddresses();
+          this.title.set('Success');
+          this.successMessage.set('Address updated successfully.');
+        },
+        error: () => {
+          this.isSaving.set(false);
+          this.title.set('Error');
+          this.errorMessage.set('An error occurred while saving the address.');
+        },
+      });
+    }
   }
 
   closePopup(): void {

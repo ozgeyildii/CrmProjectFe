@@ -21,39 +21,55 @@
 
         <!-- Address List -->
         <div *ngIf="!editMode()">
-          <div *ngFor="let address of addresses" class="border rounded p-3 mb-3 address-card">
-            <p class="mb-1 text-dark fw-semibold">
-              {{ address.cityName }}, {{ address.districtName }}, {{ address.street }}
-              {{ address.houseNumber }}
-            </p>
-            <p class="mb-1 text-secondary small">
-              {{ address.description }}
-            </p>
-
-            <div class="d-flex justify-content-between align-items-center mt-2">
+          <div *ngFor="let address of addresses" class="address-card mb-3">
+            <div class="d-flex justify-content-between align-items-start">
               <div>
-                <button class="btn btn-sm btn-outline-warning me-2" (click)="onEdit(address)">
-                  <i class="bi bi-pencil"></i> Edit
-                </button>
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  [disabled]="addresses.length === 1"
-                  (click)="onDelete(address)"
-                >
-                  <i class="bi bi-trash"></i> Delete
-                </button>
+                <p class="mb-1 text-dark fw-semibold">
+                  {{ address.cityName }}, {{ address.districtName }}, {{ address.street }}
+                  {{ address.houseNumber }}
+                </p>
+                <p class="mb-2 text-secondary small">{{ address.description }}</p>
+
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [checked]="address.isDefault"
+                    [disabled]="addresses.length === 1"
+                    (change)="onSetPrimary(address)"
+                  />
+                  <label class="form-check-label small fw-semibold text-orange">
+                    {{ address.isDefault ? 'Primary Address' : 'Select as Primary' }}
+                  </label>
+                </div>
               </div>
 
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  [checked]="address.isDefault"
-                  (change)="onSetPrimary(address)"
-                />
-                <label class="form-check-label small fw-semibold text-orange">
-                  {{ address.isDefault ? 'Primary Address' : 'Select as Primary' }}
-                </label>
+              <!-- Dropdown menu -->
+              <div class="dropdown">
+                <button
+                  class="btn btn-icon"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                  <li>
+                    <button class="dropdown-item text-warning" (click)="onEdit(address)">
+                      <i class="bi bi-pencil me-2"></i>Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="dropdown-item text-danger"
+                      [disabled]="addresses.length === 1"
+                      (click)="onDelete(address)"
+                    >
+                      <i class="bi bi-trash me-2"></i>Delete
+                    </button>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

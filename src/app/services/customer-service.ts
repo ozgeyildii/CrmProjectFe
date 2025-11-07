@@ -12,6 +12,9 @@ import { UpdateAddressRequest } from '../models/requests/updateAddressRequest';
 import { GetCityResponse } from '../models/responses/getCityResponse';
 import { GetDistrictResponse } from '../models/responses/getDistrictResponse';
 import { NumberSymbol } from '@angular/common';
+import { CreatedAddressResponse } from '@app/models/responses/createdAddressResponse';
+import { CreateAddressRequest } from '@app/models/requests/createAddressRequest';
+import { GetAddressListResponse } from '@app/models/responses/getAddressListResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +26,7 @@ export class CustomerService {
   private serviceBaseUrl = 'http://localhost:8091/customerservice/api';
 
   constructor(private http: HttpClient) {}
-  /*
-  getCustomerById(id: string) {
-    console.log('Fetching customer with ID:', id);
-    return this.http.get<GetCustomerResponse>(`${this.baseUrl}/get-customer-by-id`,{params: {id}});
-  }
-    */
+
 
   getCustomerById(id: string) {
     console.log('Fetching customer with ID:', id);
@@ -67,10 +65,16 @@ export class CustomerService {
     return this.http.put<UpdatedAddressResponse>(`${this.serviceBaseUrl}/addresses`, request);
   }
 
-  createAddress(request: UpdateAddressRequest): Observable<UpdatedAddressResponse> {
-    return this.http.post<UpdatedAddressResponse>(
-      `${this.serviceBaseUrl}/addresses?customerId=${request.id}`,
+  createAddress(request: CreateAddressRequest): Observable<CreatedAddressResponse> {
+    return this.http.post<CreatedAddressResponse>(
+      `${this.serviceBaseUrl}/addresses`,
       request
+    );
+  }
+
+  getAddressesByCustomerId(customerId: string): Observable<GetAddressListResponse[]> {
+    return this.http.get<GetAddressListResponse[]>(
+      `${this.serviceBaseUrl}/addresses/get-all/${customerId}`
     );
   }
 
