@@ -19,16 +19,12 @@ export class SearchCustomerResults {
   @Output() next = new EventEmitter<void>();
   @Output() prev = new EventEmitter<void>();
 
-  constructor(private router: Router){
-  }
+  constructor(private router: Router) {}
 
-  onSelect(customer: GetCustomerResponse) {
+  onClick(customer: GetCustomerResponse) {
     this.select.emit(customer);
+    this.router.navigate(['customers/update', customer.id]);
   }
-
-onClick(id:string){
-  this.router.navigate(['customers/update', id]);
-}
 
   nextPage() {
     this.next.emit();

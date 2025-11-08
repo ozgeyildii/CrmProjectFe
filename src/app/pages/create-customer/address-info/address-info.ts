@@ -23,14 +23,15 @@ import { GetDistrictResponse } from '../../../models/responses/getDistrictRespon
 })
 export class AddressInfo implements OnInit {
   addressForm!: FormGroup;
-
   private addressListForm!: FormGroup;
 
   addresses = signal<any[]>([]);
   showForm = signal(false);
+  editIndex: number | null = null;
 
   cities: GetCityResponse[] = [];
   districts: GetDistrictResponse[] = [];
+  isLoadingDistricts = signal(false); // Yükleme durumu
 
   constructor(
     private fb: FormBuilder,
@@ -45,11 +46,17 @@ export class AddressInfo implements OnInit {
     const saved = this.createCustomerService.state().addresses ?? [];
     if (saved.length > 0) {
       this.addresses.set(saved);
-      saved.forEach((addr: any) => this.addAddress(addr)); // ✅ Artık tanımlı
+      saved.forEach((addr: any) => this.addAddress(addr));
     }
+
+    // City değişince district'leri yükle
     this.addressForm.get('cityId')?.valueChanges.subscribe((cityId) => {
-      if (cityId) this.loadDistricts(cityId);
-      else this.districts = [];
+      if (cityId) {
+        this.loadDistricts(cityId);
+      } else {
+        this.districts = [];
+        this.isLoadingDistricts.set(false);
+      }
       this.addressForm.get('districtId')?.setValue('');
     });
   }
@@ -75,14 +82,10 @@ export class AddressInfo implements OnInit {
 
   private newAddress(address?: any): FormGroup {
     return this.fb.group({
-      cityName: new FormControl(address?.city ?? '', [
-        Validators.required,
-        Validators.maxLength(20),
-      ]),
-      districtName: new FormControl(address?.district ?? '', [
-        Validators.required,
-        Validators.maxLength(20),
-      ]),
+      cityId: new FormControl(address?.cityId ?? ''),
+      cityName: new FormControl(address?.cityName ?? ''),
+      districtId: new FormControl(address?.districtId ?? ''),
+      districtName: new FormControl(address?.districtName ?? ''),
       street: new FormControl(address?.street ?? '', [
         Validators.required,
         Validators.maxLength(20),
@@ -108,67 +111,126 @@ export class AddressInfo implements OnInit {
   }
 
   private loadDistricts(cityId: number): void {
+    this.isLoadingDistricts.set(true);
+    this.districts = []; // Önce temizle
+    
     this.createCustomerService
       .getDistrictsByCityId(cityId)
-      .subscribe((data) => (this.districts = data));
-  }
-
-  getCityNameById(id: number): string {
-    return this.cities.find((c) => c.id === id)?.name || '';
-  }
-
-  getDistrictNameById(id: number): string {
-    return this.districts.find((d) => d.id === id)?.name || '';
+      .subscribe({
+        next: (data) => {
+          this.districts = data;
+          this.isLoadingDistricts.set(false);
+        },
+        error: (err) => {
+          console.error('Error loading districts:', err);
+          this.isLoadingDistricts.set(false);
+        }
+      });
   }
 
   onAddNewAddress(): void {
     this.addressForm.reset({
-      cityName: '',
-      districtName: '',
+      cityId: '',
+      districtId: '',
       street: '',
       houseNumber: '',
       description: '',
       isDefault: false,
     });
+    this.districts = []; // District'leri temizle
+    this.editIndex = null;
     this.showForm.set(true);
   }
 
-  onSave(): void {
+  onSaveAddress(): void {
     if (this.addressForm.invalid) {
       this.addressForm.markAllAsTouched();
       return;
     }
 
     const formValue = this.addressForm.value;
-
     const selectedCity = this.cities.find((c) => c.id === +formValue.cityId);
     const selectedDistrict = this.districts.find((d) => d.id === +formValue.districtId);
 
     const newAddr = {
       ...formValue,
-      cityName: selectedCity ? selectedCity.name : '',
-      districtName: selectedDistrict ? selectedDistrict.name : '',
+      cityName: selectedCity?.name ?? '',
+      districtName: selectedDistrict?.name ?? '',
     };
 
-    if (this.addresses().length === 0) {
-      newAddr.isDefault = true;
+    let updatedList = [...this.addresses()];
+
+    // Düzenleme modu
+    if (this.editIndex !== null) {
+      updatedList[this.editIndex] = newAddr;
+    } else {
+      if (updatedList.length === 0) {
+        newAddr.isDefault = true;
+      }
+      updatedList.push(newAddr);
     }
 
-    const updatedList = [...this.addresses(), newAddr];
     this.addresses.set(updatedList);
-
     this.createCustomerService.state.update((prev) => ({
       ...prev,
       addresses: updatedList,
     }));
 
-    this.addAddress(newAddr);
-
     this.showForm.set(false);
   }
 
+  onEditAddress(index: number): void {
+    const addr = this.addresses()[index];
+    this.editIndex = index;
+    
+    // Önce district'leri yükle, sonra formu doldur
+    this.isLoadingDistricts.set(true);
+    this.createCustomerService
+      .getDistrictsByCityId(addr.cityId)
+      .subscribe({
+        next: (data) => {
+          this.districts = data;
+          this.isLoadingDistricts.set(false);
+          
+          // District'ler yüklendikten sonra formu doldur
+          this.addressForm.patchValue({
+            cityId: addr.cityId,
+            districtId: addr.districtId,
+            street: addr.street,
+            houseNumber: addr.houseNumber,
+            description: addr.description,
+            isDefault: addr.isDefault,
+          });
+        },
+        error: (err) => {
+          console.error('Error loading districts:', err);
+          this.isLoadingDistricts.set(false);
+        }
+      });
+
+    this.showForm.set(true);
+  }
+
+  onDeleteAddress(index: number): void {
+    let updatedList = [...this.addresses()];
+    updatedList.splice(index, 1);
+
+    if (updatedList.length === 1) {
+      updatedList[0].isDefault = true;
+    }
+
+    this.addresses.set(updatedList);
+    this.createCustomerService.state.update((prev) => ({
+      ...prev,
+      addresses: updatedList,
+    }));
+  }
+
   onSelectPrimary(index: number): void {
-    const updated = this.addresses().map((a, i) => ({ ...a, isDefault: i === index }));
+    const updated = this.addresses().map((a, i) => ({
+      ...a,
+      isDefault: i === index,
+    }));
     this.addresses.set(updated);
 
     this.createCustomerService.state.update((prev) => ({

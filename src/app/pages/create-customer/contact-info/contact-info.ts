@@ -108,6 +108,7 @@ export class ContactInfo implements OnInit, OnDestroy {
       next: (response) => {
         console.log('Customer created successfully:', response);
         this.router.navigate(['customers/update', response.id]);
+        this.createCustomerService.state.set({});
       },
       error: (err) => {
         console.error('Customer creation failed:', err);

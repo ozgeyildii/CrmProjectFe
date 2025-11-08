@@ -1,7 +1,7 @@
 
 <div *ngIf="customers.length > 0" class="search-result-container">
   <div class="results-wrapper">
-    <div class="customer-card" *ngFor="let c of customers" (click)="onSelect(c)">
+    <div class="customer-card" *ngFor="let c of customers" >
       
       <div class="card-row">
         
@@ -18,7 +18,7 @@
         </div>
         
         <div class="card-column">
-          <div class="card-field" (click)="onClick(c.id)">
+          <div class="card-field" (click)="onClick(c)">
             <label>Customer ID</label>
             <div class="value link">{{ c.id }}</div> 
           </div>

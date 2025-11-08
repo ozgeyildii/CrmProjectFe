@@ -6,6 +6,7 @@
   box-shadow: 0 2px 10px rgba(245, 130, 32, 0.1);
   transition: all 0.25s ease;
   position: relative;
+  z-index: auto; // Her kart izole
 
   &:hover {
     background-color: #fffaf4;
@@ -29,11 +30,23 @@
     }
   }
 
+  // Dropdown container
+  .dropdown {
+    position: relative;
+    z-index: auto;
+
+    // Dropdown açıkken
+    &.show {
+      z-index: 1100;
+    }
+  }
+
   .dropdown-menu {
     border-radius: 10px;
     padding: 0.4rem;
     animation: fadeIn 0.2s ease;
     min-width: 140px;
+    z-index: 1100 !important; // Her zaman en üstte
 
     .dropdown-item {
       display: flex;
@@ -84,5 +97,102 @@
 
   &:hover {
     background-color: #ff9f50;
+  }
+}
+
+// Form stilleri
+.form-label {
+  font-weight: 500;
+  color: #242441;
+  margin-bottom: 0.4rem;
+}
+
+.row {
+  position: relative;
+  z-index: 1;
+}
+
+.col-md-6,
+.col-12 {
+  position: relative;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: auto;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    border-color: rgb(245, 130, 32);
+    box-shadow: 0 0 0 0.15rem rgba(245, 130, 32, 0.25);
+    z-index: 1060 !important;
+    position: relative;
+  }
+
+  &:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
+  }
+}
+
+// Select dropdown için özel ayarlar
+.form-select {
+  &:focus,
+  &:active {
+    z-index: 1060 !important;
+  }
+  
+  // Dropdown açıkken z-index
+  &[aria-expanded="true"] {
+    z-index: 1060 !important;
+  }
+}
+
+.text-orange {
+  color: rgb(245, 130, 32);
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border-color: #28a745;
+
+  &:hover {
+    background-color: #28a745;
+    color: #fff;
+  }
+}
+
+// Responsive ayarlar
+@media (max-width: 992px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-6,
+  .col-12 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 0.9rem;
+    padding: 0.5rem;
   }
 }

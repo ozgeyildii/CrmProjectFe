@@ -6,6 +6,21 @@
   transition: all 0.3s ease;
 }
 
+.dropdown-menu {
+  font-size: 0.9rem;
+  z-index: 1100 !important; // !important ekledik
+}
+
+.bi-three-dots-vertical {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.address-infos {
+  flex: 1;
+  min-width: 0;
+}
+
 .customer-card {
   border: none;
   border-radius: 12px;
@@ -26,20 +41,17 @@
     margin-bottom: 0.4rem;
   }
 
-  // Row için z-index ayarı
+  // Row ve kolon düzeni
   .row {
     position: relative;
     z-index: 1;
+    margin-bottom: 1rem;
   }
 
-  // Kolonlar için z-index
-  .col-md-4 {
+  .col-md-4,
+  .col-md-8,
+  .col-md-12 {
     position: relative;
-    
-    // District kolonu (ikinci kolon) için özel z-index
-    &:nth-child(2) {
-      z-index: 10;
-    }
   }
 
   .form-control,
@@ -71,8 +83,42 @@
     &:active {
       z-index: 1060 !important;
     }
+    
+    // Dropdown açıkken z-index
+    &[aria-expanded="true"] {
+      z-index: 1060 !important;
+    }
   }
 
+  // Adres kartı için özel z-index ayarı
+  .border.rounded {
+    position: relative;
+    z-index: auto; // Her kart kendi içinde izole
+  }
+
+  // Dropdown container
+  .dropdown {
+    display: inline;
+    margin-left: auto;
+    position: relative; // Eklendi
+    z-index: auto; // Eklendi
+    
+    .btn-light {
+      border: none;
+    }
+
+    // Dropdown açıkken üst elemana z-index ver
+    &.show {
+      z-index: 1100;
+    }
+  }
+
+  // Dropdown menü her zaman en üstte
+  .dropdown-menu {
+    z-index: 1100 !important;
+  }
+
+  // Düğme stilleri
   .btn {
     border-radius: 6px;
     font-weight: 500;
@@ -100,5 +146,50 @@
 
   .bg-light {
     background-color: #f8f9fa !important;
+  }
+
+  // Responsive ayarlar
+  @media (max-width: 992px) {
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .row {
+      flex-direction: column;
+    }
+
+    .col-md-4,
+    .col-md-8,
+    .col-md-12 {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .d-flex {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .dropdown {
+        align-self: flex-end;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .btn {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+    }
+
+    .form-control,
+    .form-select {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
   }
 }
