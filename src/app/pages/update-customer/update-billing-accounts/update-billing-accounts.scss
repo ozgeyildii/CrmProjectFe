@@ -1,0 +1,152 @@
+.customer-account-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  color: #242441;
+ 
+  // Header hizalaması
+  .header-bar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+ 
+    h5 {
+      color: #f58220;
+      font-weight: 600;
+      border-bottom: 2px solid #f58220;
+      padding-bottom: 0.25rem;
+      margin: 0;
+    }
+ 
+    .btn-orange {
+      background-color: #f58220;
+      color: #fff;
+      font-weight: 500;
+      border-radius: 6px;
+      border: none;
+      transition: all 0.2s ease;
+ 
+      &:hover {
+        background-color: darken(#f58220, 8%);
+      }
+    }
+  }
+ 
+  // Tablo
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+ 
+    table {
+      background-color: #fff;
+      color: #242441;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #eee;
+      min-width: 600px;
+ 
+      th {
+        background-color: #f4f5fa;
+        color: #242441;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+ 
+      td {
+        vertical-align: middle;
+      }
+ 
+      .btn-outline-secondary,
+      .btn-outline-danger {
+        font-size: 0.85rem;
+        padding: 0.3rem 0.6rem;
+      }
+    }
+  }
+ 
+  // Pagination bar
+  .pagination-bar {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+ 
+    .btn {
+      border: 1px solid #ccc;
+      color: #242441;
+      background-color: #f8f9fa;
+      min-width: 32px;
+      padding: 0.25rem 0.5rem;
+ 
+      &:hover:not(:disabled) {
+        background-color: #f58220;
+        color: #fff;
+        border-color: #f58220;
+      }
+ 
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+ 
+    .page-info {
+      font-weight: 500;
+      color: #242441;
+    }
+  }
+ 
+  // Empty state
+  .empty-state {
+    background-color: #fff;
+    border: 1px dashed #f58220;
+    border-radius: 8px;
+    padding: 2rem;
+    color: #242441;
+    text-align: center;
+ 
+    p {
+      margin-bottom: 1rem;
+    }
+ 
+    .btn-orange {
+      background-color: #f58220;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.2rem;
+ 
+      &:hover {
+        background-color: darken(#f58220, 8%);
+      }
+    }
+  }
+ 
+  // 🔹 Responsive tweaks
+  @media (max-width: 992px) {
+    padding: 1rem;
+ 
+    .header-bar {
+      flex-direction: column;
+      align-items: stretch;
+ 
+      .btn-orange {
+        width: 100%;
+      }
+    }
+ 
+    .pagination-bar {
+      justify-content: center;
+      .btn {
+        min-width: 40px;
+      }
+    }
+  }
+ 
+  @media (max-width: 576px) {
+    .table-responsive {
+      table {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}

@@ -12,10 +12,10 @@ import { UpdateAddressRequest } from '../models/requests/updateAddressRequest';
 import { GetCityResponse } from '../models/responses/getCityResponse';
 import { GetDistrictResponse } from '../models/responses/getDistrictResponse';
 import { NumberSymbol } from '@angular/common';
-import { CreatedAddressResponse } from '@app/models/responses/createdAddressResponse';
-import { CreateAddressRequest } from '@app/models/requests/createAddressRequest';
-import { GetAddressListResponse } from '@app/models/responses/getAddressListResponse';
-
+import { CreatedAddressResponse } from '../models/responses/createdAddressResponse';
+import { CreateAddressRequest } from '../models/requests/createAddressRequest';
+import { GetAddressListResponse } from '../models/responses/getAddressListResponse';
+import { GetBillingAccountResponse, PagedBillingAccountResponse } from '../models/responses/getBillingAccountResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -97,4 +97,17 @@ export class CustomerService {
       `${this.serviceBaseUrl}/districts/getByCityId/${cityId}`
     );
   }
+
+  getAccounts(customerId: string, page: number): Observable<PagedBillingAccountResponse> {
+    return this.http.get<PagedBillingAccountResponse>(
+      `${this.serviceBaseUrl}/billingAccounts/getList/${customerId}`, {
+      params: { page:page, pageSize: '4'},
+    }
+    );
+  }
+
+  deleteAccount(accountId: number): Observable<void> {
+    return this.http.delete<void>(`${this.serviceBaseUrl}/billingAccounts/${accountId}`);
+  }
+
 }

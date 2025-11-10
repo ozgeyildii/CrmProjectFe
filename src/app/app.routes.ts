@@ -12,6 +12,7 @@ import { UpdatePersonalInfo } from './pages/update-customer/update-personal-info
 import { UpdateCustomer } from './pages/update-customer/update-customer';
 import { UpdateContactMedium } from './pages/update-customer/update-contact-medium/update-contact-medium';
 import { UpdateAddressInfo } from './pages/update-customer/update-address-info/update-address-info';
+import { UpdateBillingAccounts } from './pages/update-customer/update-billing-accounts/update-billing-accounts';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -45,6 +46,7 @@ export const routes: Routes = [
             component: UpdateContactMedium,
           },
           { path: 'update-address', canActivate: [authGuard], component: UpdateAddressInfo },
+          { path: 'update-billing-accounts', canActivate: [authGuard], component: UpdateBillingAccounts  },
         ],
       },
     ],

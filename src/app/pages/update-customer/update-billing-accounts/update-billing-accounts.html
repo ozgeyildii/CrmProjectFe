@@ -1,0 +1,63 @@
+<div class="customer-account-section">
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 header-bar">
+    <h5 class="text-orange mb-2 mb-md-0">Customer Accounts</h5>
+    <button class="btn btn-sm btn-orange" (click)="createAccount()">+ Add Customer Account</button>
+  </div>
+
+  <div *ngIf="accounts().length > 0; else emptyState">
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th>Account Status</th>
+            <th>Account Number</th>
+            <th>Account Name</th>
+            <th>Account Type</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let acc of accounts()">
+            <td>{{ acc.status }}</td>
+            <td>{{ acc.accountNumber }}</td>
+            <td>{{ acc.accountName }}</td>
+            <td>{{ acc.type }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-2">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteAccount(acc.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-bar d-flex justify-content-end align-items-center flex-wrap mt-3">
+      <button
+        class="btn btn-outline-light btn-sm me-2"
+        (click)="prevPage()"
+        [disabled]="currentPage() === 0"
+      >
+        &lt;
+      </button>
+      <span class="page-info">{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+      <button
+        class="btn btn-outline-light btn-sm ms-2"
+        (click)="nextPage()"
+        [disabled]="currentPage() + 1 === totalPages()"
+      >
+        &gt;
+      </button>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="text-center mt-4 empty-state">
+      <p>No customer accounts found.</p>
+      <button class="btn btn-orange" (click)="createAccount()">+ Add Customer Account</button>
+    </div>
+  </ng-template>
+</div>
