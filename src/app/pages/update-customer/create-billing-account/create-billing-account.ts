@@ -1,16 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../../services/customer-service';
 import { GetCityResponse } from '../../../models/responses/getCityResponse';
 import { GetDistrictResponse } from '../../../models/responses/getDistrictResponse';
- 
+import { CreateAddressRequest } from '../../../models/requests/createAddressRequest';
+import { CreateBillingAccountRequest } from '../../../models/requests/createBillingAccountRequest';
+import { CreatedAddressResponse } from '../../../models/responses/createdAddressResponse';
+
 @Component({
   selector: 'app-create-billing-account',
   standalone: true,
@@ -22,149 +20,158 @@ export class CreateBillingAccount implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private customerService = inject(CustomerService);
- 
+
   accountForm!: FormGroup;
   addressForm!: FormGroup;
- 
+
   isLoading = signal(false);
   showModal = signal(false);
-  editingIndex = signal<number | null>(null);
- 
+
+  // sadece en güncel adres tutulur
+  tempAddress = signal<CreateAddressRequest | null>(null);
+  createdAddress = signal<CreatedAddressResponse | null>(null);
+
   cities = signal<GetCityResponse[]>([]);
   districts = signal<GetDistrictResponse[]>([]);
-  addresses = signal<any[]>([]);
- 
+
   ngOnInit(): void {
-    this.initForms();
+    this.initializeForms();
     this.loadCities();
   }
- 
-  initForms(): void {
+
+  initializeForms(): void {
     this.accountForm = this.fb.group({
       accountName: ['', [Validators.required, Validators.minLength(2)]],
-      accountDescription: [''],
     });
- 
+
     this.addressForm = this.fb.group({
       cityId: ['', Validators.required],
       districtId: ['', Validators.required],
-      flatNumber: ['', Validators.required],
       street: ['', Validators.required],
-      addressDescription: ['', Validators.required],
+      houseNumber: ['', Validators.required],
+      description: ['', Validators.required],
     });
   }
- 
-  // 🏙 Şehirleri backend'den al
+
+  // 🏙 Şehirleri getir
   loadCities(): void {
     this.customerService.getCities().subscribe({
       next: (res) => this.cities.set(res),
       error: (err) => console.error('Failed to load cities', err),
     });
   }
- 
-  // 🏘 Şehir değiştiğinde ilçeleri al
+
+  // 🏘 Şehir seçilince ilçeleri getir
   onCityChange(): void {
     const cityId = this.addressForm.get('cityId')?.value;
     if (!cityId) {
       this.districts.set([]);
       return;
     }
- 
+
     this.customerService.getDistrictsByCityId(cityId).subscribe({
       next: (res) => this.districts.set(res),
       error: (err) => console.error('Failed to load districts', err),
     });
- 
+
     this.addressForm.get('districtId')?.reset();
   }
- 
+
   // ➕ Yeni adres formunu aç
   openModalForNew(): void {
     this.addressForm.reset();
-    this.editingIndex.set(null);
     this.showModal.set(true);
   }
- 
-  // ✏️ Adresi düzenle
-  editAddress(index: number): void {
-    this.addressForm.patchValue(this.addresses()[index]);
-    this.editingIndex.set(index);
-    this.showModal.set(true);
-  }
- 
-  // 💾 Adresi kaydet (frontend + backend)
+
+  // 💾 "Save" sadece formu memory'de saklar, backend’e gitmez
   saveAddress(): void {
     if (this.addressForm.invalid) {
       this.addressForm.markAllAsTouched();
       return;
     }
- 
-    const addressData = this.addressForm.value;
- 
-    this.isLoading.set(true);
-    this.customerService.addAddress(addressData).subscribe({
-      next: (savedAddress) => {
-        // frontend list güncellemesi
-        if (this.editingIndex() !== null) {
-          const updated = [...this.addresses()];
-          updated[this.editingIndex()!] = savedAddress;
-          this.addresses.set(updated);
-        } else {
-          this.addresses.update((list) => [...list, savedAddress]);
-        }
- 
-        this.isLoading.set(false);
-        this.showModal.set(false);
-        this.addressForm.reset();
-        this.editingIndex.set(null);
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        console.error('Failed to save address', err);
-      },
-    });
+
+    const customerId = this.customerService.state().id;
+    const newAddress: CreateAddressRequest = {
+      customerId: customerId!,
+      districtId: this.addressForm.value.districtId,
+      street: this.addressForm.value.street,
+      houseNumber: this.addressForm.value.houseNumber,
+      description: this.addressForm.value.description,
+    };
+
+    // sadece state’de tut
+    this.tempAddress.set(newAddress);
+    this.createdAddress.set(null);
+    this.showModal.set(false);
+
+    console.log('Temporary address saved (not backend):', newAddress);
   }
- 
-  // ❌ Adres sil
-  deleteAddress(index: number): void {
-    this.addresses.update((list) => list.filter((_, i) => i !== index));
+
+  // ❌ Adresi sil
+  deleteAddress(): void {
+    this.tempAddress.set(null);
+    this.createdAddress.set(null);
   }
- 
-  // 🧾 Billing account oluştur
+
+  // 🧾 "Create" → önce adres oluşturur, sonra billing account
   onSubmit(): void {
     if (this.accountForm.invalid) {
       this.accountForm.markAllAsTouched();
       return;
     }
- 
-    const customerId = this.customerService.state().id;
-    const request = {
-      ...this.accountForm.value,
-      customerId,
-      addresses: this.addresses(),
-    };
- 
+
+    const customerId = this.customerService.state().id!;
+    const tempAddr = this.tempAddress();
+
+    if (!tempAddr) {
+      alert('Please add an address before creating the billing account.');
+      return;
+    }
+
     this.isLoading.set(true);
- 
-    this.customerService.createBillingAccount(request).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        console.log('Billing account created successfully');
-        this.router.navigate([
-          `/customers/update/${customerId}/update-billing-account`,
-        ]);
+
+    // 1️⃣ önce adres isteği
+    this.customerService.addAddress(tempAddr).subscribe({
+      next: (res: CreatedAddressResponse) => {
+        console.log('Address created on backend:', res);
+        this.createdAddress.set(res);
+
+        if (res.id == null) {
+          console.error('Address ID is missing in response');
+          this.isLoading.set(false);
+          return;
+        }
+
+        // 2️⃣ sonra billing account isteği
+        const request: CreateBillingAccountRequest = {
+          type: 'INDIVIDUAL',
+          status: 'ACTIVE',
+          accountName: this.accountForm.value.accountName,
+          customerId,
+          addressId: res.id,
+        };
+
+        this.customerService.createBillingAccount(request).subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            console.log('Billing account created successfully');
+            this.router.navigate([`/customers/update/${customerId}/update-billing-account`]);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            console.error('Failed to create billing account', err);
+          },
+        });
       },
       error: (err) => {
         this.isLoading.set(false);
-        console.error('Failed to create billing account', err);
+        console.error('Failed to create address', err);
       },
     });
   }
- 
+
   onCancel(): void {
     const customerId = this.customerService.state().id;
-    this.router.navigate([
-      `/customers/update/${customerId}/update-billing-account`,
-    ]);
+    this.router.navigate([`/customers/update/${customerId}/update-billing-account`]);
   }
 }

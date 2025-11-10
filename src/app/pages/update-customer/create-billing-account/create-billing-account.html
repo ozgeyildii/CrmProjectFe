@@ -1,93 +1,102 @@
-<div class="create-account-card">
-<h5 class="title">Create Billing Account</h5>
- 
+<div class="create-account-card" [formGroup]="accountForm">
+  <h5 class="title">Create Billing Account</h5>
+
   <div class="form-body">
-<div class="left-side">
-<label>Account Name *</label>
-<input formControlName="accountName" class="input" placeholder="Enter account name" />
-<div *ngIf="accountForm.get('accountName')?.touched && accountForm.get('accountName')?.invalid" class="error">
+    <!-- SOL -->
+    <div class="left-side">
+      <label>Account Name *</label>
+      <input formControlName="accountName" class="input" placeholder="Enter account name" />
+      <div
+        *ngIf="accountForm.get('accountName')?.touched && accountForm.get('accountName')?.invalid"
+        class="error"
+      >
         Name is required (min 2 chars)
-</div>
- 
-      <label>Account Description</label>
-<textarea formControlName="accountDescription" class="textarea" placeholder="Enter description"></textarea>
-</div>
- 
+      </div>
+    </div>
+
+    <!-- SAĞ -->
     <div class="right-side">
-<h6>Address Info</h6>
- 
-      <div class="address-list" *ngIf="addresses().length > 0; else emptyList">
-<div class="address-item" *ngFor="let addr of addresses(); let i = index">
-<div class="info">
-<p>{{ addr.city }}, {{ addr.district }}</p>
-<p>{{ addr.street }} / {{ addr.flatNumber }}</p>
-<p class="desc">{{ addr.addressDescription }}</p>
-</div>
-<div class="actions">
-<button class="menu" (click)="editAddress(i)">⋯</button>
-<div class="menu-options">
-<button (click)="editAddress(i)">✏️ Edit</button>
-<button (click)="deleteAddress(i)">🗑 Delete</button>
-</div>
-</div>
-</div>
-</div>
-<ng-template #emptyList>
-<p class="no-address">No address added.</p>
-</ng-template>
- 
-      <button class="btn-add" (click)="openModalForNew()">+ Add New Address</button>
-</div>
-</div>
- 
+      <h6>Address Info</h6>
+
+      <!-- eğer tempAddress varsa -->
+      <div *ngIf="tempAddress()">
+        <div class="address-item">
+          <div class="info">
+            <p>
+              <strong>{{ tempAddress()?.street }}</strong> No:
+              {{ tempAddress()?.houseNumber }}
+            </p>
+            <p>{{ tempAddress()?.description }}</p>
+          </div>
+          <div class="actions">
+            <button class="btn-outline" type="button" (click)="deleteAddress()">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template [ngIf]="!tempAddress()">
+        <p class="no-address">No address added yet.</p>
+      </ng-template>
+
+      <button
+        class="btn-add"
+        type="button"
+        (click)="openModalForNew()"
+        [disabled]="tempAddress() !== null"
+      >
+        + Add New Address
+      </button>
+    </div>
+  </div>
+
   <div class="actions-bottom">
-<button class="btn-cancel" (click)="onCancel()">Cancel</button>
-<button class="btn-create" (click)="onSubmit()">Create</button>
-</div>
- 
+    <button class="btn-cancel" type="button" (click)="onCancel()">Cancel</button>
+    <button class="btn-create" type="button" (click)="onSubmit()">Create</button>
+  </div>
+
   <!-- MODAL -->
-<div class="modal-backdrop" *ngIf="showModal()">
-<div class="modal-content">
-<button class="close-btn" (click)="showModal.set(false)">✕</button>
-<h6>{{ editingIndex() !== null ? 'Edit Address' : 'Add Address' }}</h6>
- 
-      <form [formGroup]="addressForm">
-<div class="row">
-<div class="col">
-<label>City *</label>
-<select formControlName="city" (change)="onCityChange()">
-<option value="">Select</option>
-<option *ngFor="let city of cities()" [value]="city.name">{{ city.name }}</option>
-</select>
-</div>
-<div class="col">
-<label>District *</label>
-<select formControlName="district">
-<option value="">Select</option>
-<option *ngFor="let dist of districts()" [value]="dist.name">{{ dist.name }}</option>
-</select>
-</div>
-</div>
- 
-        <div class="row">
-<div class="col">
-<label>Flat Number *</label>
-<input formControlName="flatNumber" />
-</div>
-<div class="col">
-<label>Street *</label>
-<input formControlName="street" />
-</div>
-</div>
- 
-        <label>Address Description *</label>
-<textarea formControlName="addressDescription"></textarea>
- 
-        <div class="modal-actions">
-<button type="button" class="btn-cancel" (click)="showModal.set(false)">Cancel</button>
-<button type="button" class="btn-save" (click)="saveAddress()">Save</button>
-</div>
-</form>
-</div>
-</div>
+  <div class="modal-backdrop" *ngIf="showModal()">
+    <div class="modal-content" [formGroup]="addressForm">
+      <button class="close-btn" type="button" (click)="showModal.set(false)">✕</button>
+      <h6>Add Address</h6>
+
+      <div class="row">
+        <div class="col">
+          <label>City *</label>
+          <select formControlName="cityId" (change)="onCityChange()">
+            <option value="">Select</option>
+            <option *ngFor="let city of cities()" [value]="city.id">{{ city.name }}</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>District *</label>
+          <select formControlName="districtId">
+            <option value="">Select</option>
+            <option *ngFor="let dist of districts()" [value]="dist.id">{{ dist.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Street *</label>
+          <input formControlName="street" placeholder="Enter street" />
+        </div>
+        <div class="col">
+          <label>House Number *</label>
+          <input formControlName="houseNumber" placeholder="Enter house no" />
+        </div>
+      </div>
+
+      <label>Description *</label>
+      <textarea formControlName="description" placeholder="Enter address description"></textarea>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="showModal.set(false)">Cancel</button>
+        <button type="button" class="btn-save" (click)="saveAddress()" [disabled]="isLoading()">
+          {{ isLoading() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

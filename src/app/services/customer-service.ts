@@ -16,6 +16,9 @@ import { CreatedAddressResponse } from '../models/responses/createdAddressRespon
 import { CreateAddressRequest } from '../models/requests/createAddressRequest';
 import { GetAddressListResponse } from '../models/responses/getAddressListResponse';
 import { GetBillingAccountResponse, PagedBillingAccountResponse } from '../models/responses/getBillingAccountResponse';
+import { CreateBillingAccount } from '@app/pages/update-customer/create-billing-account/create-billing-account';
+import { CreateBillingAccountRequest } from '@app/models/requests/createBillingAccountRequest';
+import { CreatedBillingAccountResponse } from '@app/models/responses/createdBillingAccountResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -110,22 +113,16 @@ export class CustomerService {
     return this.http.delete<void>(`${this.serviceBaseUrl}/billingAccounts/${accountId}`);
   }
 
-  createBillingAccount(customerId: string, accountName: string, accountDescription: string): Observable<GetBillingAccountResponse> {
-    const requestBody = {
-      customerId: customerId,
-      accountName: accountName,
-      accountDescription: accountDescription
-    };
-    return this.http.post<GetBillingAccountResponse>(
-      `${this.serviceBaseUrl}/billingAccounts`,
-      requestBody
+  createBillingAccount(request: CreateBillingAccountRequest): Observable<CreatedBillingAccountResponse> {
+    return this.http.post<CreatedBillingAccountResponse>(
+      `${this.serviceBaseUrl}/billingAccounts`,request
     );
   }
 
-  addAddress(addressData: any): Observable<any> {
-    return this.http.post<any>(
+  addAddress(request: CreateAddressRequest): Observable<CreatedAddressResponse> {
+    return this.http.post<CreatedAddressResponse>(
       `${this.serviceBaseUrl}/addresses`,
-      addressData
+      request
     );
   }
 
