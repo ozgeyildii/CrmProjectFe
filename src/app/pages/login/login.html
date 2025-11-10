@@ -44,11 +44,11 @@
             Log In
           </button>
 
-          <div *ngIf="loginStatus" class="alert alert-warning mt-3 py-2">
+          <div *ngIf="loginStatus() === 'error'" class="alert alert-warning mt-3 py-2">
             <i class="bi bi-exclamation-triangle-fill text-warning"></i>
             <p>Wrong username or password. Please try again</p>
           </div>
-          <div *ngIf="loginStatus === 'success'" class="alert alert-success mt-3 py-2">
+          <div *ngIf="loginStatus() === 'success'" class="alert alert-success mt-3 py-2">
             <i class="bi bi-check-circle-fill text-success"></i>
              <p>Successful.</p>
           </div>
