@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { CustomerService } from '../../../services/customer-service'; 
 import { GetBillingAccountResponse } from '@app/models/responses/getBillingAccountResponse';
 @Component({
-  selector: 'app-update-billing-accounts',
+  selector: 'app-update-billing-account',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './update-billing-accounts.html',
-  styleUrls: ['./update-billing-accounts.scss'],
+  templateUrl: './update-billing-account.html',
+  styleUrls: ['./update-billing-account.scss'],
 })
-export class UpdateBillingAccounts implements OnInit {
+export class UpdateBillingAccount implements OnInit {
   accounts = signal<GetBillingAccountResponse[]>([]);
   totalPages = signal(0);
   currentPage = signal(0);
@@ -46,7 +46,9 @@ export class UpdateBillingAccounts implements OnInit {
   }
  
   createAccount(): void {
-    this.router.navigateByUrl('/customers/create-account');
+      const customerId = this.customerService.state().id;
+      this.router.navigate([`/customers/update/${customerId}/create-billing-account`]);
+
   }
 
   deleteAccount(accountId: number): void {

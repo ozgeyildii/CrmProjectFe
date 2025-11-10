@@ -110,4 +110,23 @@ export class CustomerService {
     return this.http.delete<void>(`${this.serviceBaseUrl}/billingAccounts/${accountId}`);
   }
 
+  createBillingAccount(customerId: string, accountName: string, accountDescription: string): Observable<GetBillingAccountResponse> {
+    const requestBody = {
+      customerId: customerId,
+      accountName: accountName,
+      accountDescription: accountDescription
+    };
+    return this.http.post<GetBillingAccountResponse>(
+      `${this.serviceBaseUrl}/billingAccounts`,
+      requestBody
+    );
+  }
+
+  addAddress(addressData: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.serviceBaseUrl}/addresses`,
+      addressData
+    );
+  }
+
 }
