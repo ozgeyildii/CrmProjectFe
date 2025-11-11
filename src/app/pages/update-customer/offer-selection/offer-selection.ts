@@ -13,10 +13,10 @@ interface Offer {
   selector: 'app-offer-selection',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './offer-selection-component.html',
-  styleUrls: ['./offer-selection-component.scss']
+  templateUrl: './offer-selection.html',
+  styleUrls: ['./offer-selection.scss']
 })
-export class OfferSelectionComponent {
+export class OfferSelection {
   activeTab: 'catalog' | 'campaign' = 'catalog';
 
   // Mock veriler
