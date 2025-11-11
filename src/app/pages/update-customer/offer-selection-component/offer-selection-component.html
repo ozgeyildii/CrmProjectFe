@@ -1,0 +1,99 @@
+<div class="offer-wrap">
+  <div class="left">
+    <div class="tabs">
+      <button [class.active]="activeTab==='catalog'" (click)="setTab('catalog')">Catalog</button>
+      <button [class.active]="activeTab==='campaign'" (click)="setTab('campaign')">Campaign</button>
+    </div>
+
+    <div *ngIf="activeTab==='catalog'" class="panel">
+      <label>Catalog Selection</label>
+      <select [(ngModel)]="catalogSelection">
+        <option value="all">Select</option>
+        <option value="7">Starts with 7</option>
+        <option value="2">Starts with 2</option>
+      </select>
+
+      <table class="offer-table">
+        <thead>
+          <tr>
+            <th>Production Offer ID</th>
+            <th>Production Offer Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of filteredCatalog()"
+              (click)="selectOffer(o)"
+              [class.selected]="selectedOffer?.id === o.id">
+            <td>{{o.id}}</td>
+            <td>{{o.name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="activeTab==='campaign'" class="panel">
+      <label>Campaign Selection</label>
+      <select [(ngModel)]="catalogSelection">
+        <option value="all">Select</option>
+      </select>
+
+      <div class="search-row">
+        <input type="text" placeholder="Campaign ID" [(ngModel)]="campaignIdFilter" />
+        <input type="text" placeholder="Campaign Name" [(ngModel)]="campaignNameFilter" />
+        <button>Search</button>
+      </div>
+
+      <table class="offer-table">
+        <thead>
+          <tr>
+            <th>Campaign ID</th>
+            <th>Production Offer ID</th>
+            <th>Production Offer Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of filteredCampaigns()"
+              (click)="selectOffer(o)"
+              [class.selected]="selectedOffer?.id === o.id">
+            <td>{{o.id}}</td>
+            <td>{{o.id}}</td>
+            <td>{{o.name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="center">
+    <button class="add-btn" (click)="addToBasket()" [disabled]="!selectedOffer">
+      <span>Add to</span>
+      <div class="arrow">→</div>
+      <span>Basket</span>
+    </button>
+  </div>
+
+  <div class="right">
+    <h3>Basket</h3>
+    <div class="basket-content">
+      <div class="basket-items">
+        <div *ngFor="let b of basket; let i = index" class="basket-item">
+          <div class="info">
+            <div class="id">{{b.id}}</div>
+            <div class="name">{{b.name}}</div>
+          </div>
+          <div class="price">{{b.price | number:'1.2-2'}} TL</div>
+        </div>
+      </div>
+      
+      <div class="total">
+        <span>Total Amount</span>
+        <span>{{total | number:'1.2-2'}} TL</span>
+      </div>
+      
+      <div class="actions">
+        <button (click)="clearBasket()">Clear</button>
+        <button>Next</button>
+      </div>
+    </div>
+  </div>
+</div>

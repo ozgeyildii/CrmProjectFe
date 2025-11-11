@@ -14,6 +14,7 @@ import { UpdateContactMedium } from './pages/update-customer/update-contact-medi
 import { UpdateAddressInfo } from './pages/update-customer/update-address-info/update-address-info';
 import { CreateBillingAccount } from './pages/update-customer/create-billing-account/create-billing-account';
 import { UpdateBillingAccount } from './pages/update-customer/update-billing-account/update-billing-account';
+import { OfferSelectionComponent } from './pages/update-customer/offer-selection-component/offer-selection-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -49,6 +50,7 @@ export const routes: Routes = [
           { path: 'update-address', canActivate: [authGuard], component: UpdateAddressInfo },
           { path: 'update-billing-account', canActivate: [authGuard], component: UpdateBillingAccount  },
           { path: 'create-billing-account', canActivate: [authGuard], component: CreateBillingAccount  },
+          { path: 'offer-selection', canActivate: [authGuard], component: OfferSelectionComponent },
         ],
       },
 
