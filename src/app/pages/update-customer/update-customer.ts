@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Loader } from '../../components/loader/loader';
 import { SearchCustomerForm } from '../../components/search-customer/search-customer-form/search-customer-form';
@@ -11,6 +11,7 @@ import { SearchCustomerService } from '../../services/search-customer-service';
 import { SearchCustomerList } from '../../models/responses/searchCustomersResponse';
 import { UpdateContactMedium } from './update-contact-medium/update-contact-medium';
 import { GetCustomerResponse } from '../../models/responses/getCustomerResponse';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-update-customer',
@@ -20,6 +21,7 @@ import { GetCustomerResponse } from '../../models/responses/getCustomerResponse'
   styleUrls: ['./update-customer.scss']
 })
 export class UpdateCustomer {
+  showSidebar = signal(true);
   activeTab: string = 'info';
   isLoading = signal(false);
   showResults = false;
@@ -33,10 +35,21 @@ export class UpdateCustomer {
   constructor(
     private route: ActivatedRoute,
     public customerService: CustomerService,
-    private searchCustomerService: SearchCustomerService
+    private searchCustomerService: SearchCustomerService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: any) => {
+      const url: string = event.urlAfterRedirects;
+
+      // Eğer offer-selection altına girdiysek sidebar gizle
+      if (url.includes('/offer-selection')) {
+        this.showSidebar.set(false);
+      } else {
+        this.showSidebar.set(true);
+      }
+    });
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadCustomer(id);

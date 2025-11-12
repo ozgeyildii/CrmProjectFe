@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../../services/customer-service'; 
-import { GetBillingAccountResponse } from '@app/models/responses/getBillingAccountResponse';
+import { GetBillingAccountResponse } from '../../../models/responses/getBillingAccountResponse';
 @Component({
   selector: 'app-update-billing-account',
   standalone: true,
@@ -49,6 +49,11 @@ export class UpdateBillingAccount implements OnInit {
       const customerId = this.customerService.state().id;
       this.router.navigate([`/customers/update/${customerId}/create-billing-account`]);
 
+  }
+
+  goToOfferSelection(billingAccountId: number): void {
+    const customerId = this.customerService.state().id;
+    this.router.navigate([`/customers/update/${customerId}/offer-selection`], { queryParams: { billingAccountId: billingAccountId } });
   }
 
   deleteAccount(accountId: number): void {

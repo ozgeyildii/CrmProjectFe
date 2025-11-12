@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { ContactMedium, UpdateCustomerState } from '../models/states/updateCustomerState';
+import { UpdateCustomerState } from '../models/states/updateCustomerState';
 import { GetCustomerResponse } from '../models/responses/getCustomerResponse';
 import { Observable } from 'rxjs';
 import { UpdateContactMediumRequest } from '../models/requests/updateContactMediumRequest';
@@ -11,14 +11,12 @@ import { UpdatedAddressResponse } from '../models/responses/updatedAddressRespon
 import { UpdateAddressRequest } from '../models/requests/updateAddressRequest';
 import { GetCityResponse } from '../models/responses/getCityResponse';
 import { GetDistrictResponse } from '../models/responses/getDistrictResponse';
-import { NumberSymbol } from '@angular/common';
 import { CreatedAddressResponse } from '../models/responses/createdAddressResponse';
 import { CreateAddressRequest } from '../models/requests/createAddressRequest';
 import { GetAddressListResponse } from '../models/responses/getAddressListResponse';
-import { GetBillingAccountResponse, PagedBillingAccountResponse } from '../models/responses/getBillingAccountResponse';
-import { CreateBillingAccount } from '@app/pages/update-customer/create-billing-account/create-billing-account';
-import { CreateBillingAccountRequest } from '@app/models/requests/createBillingAccountRequest';
-import { CreatedBillingAccountResponse } from '@app/models/responses/createdBillingAccountResponse';
+import { PagedBillingAccountResponse } from '../models/responses/getBillingAccountResponse';
+import { CreateBillingAccountRequest } from '../models/requests/createBillingAccountRequest';
+import { CreatedBillingAccountResponse } from '../models/responses/createdBillingAccountResponse';
 @Injectable({
   providedIn: 'root',
 })

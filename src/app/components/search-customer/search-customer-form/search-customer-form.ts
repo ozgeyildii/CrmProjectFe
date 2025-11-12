@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,7 +20,7 @@ export class SearchCustomerForm {
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
-      nationalId: [''],
+      nationalId: ['', Validators.pattern('^[0-9]*$')],
       customerNumber: [''],
       accountNumber: [''],
       value: [''],
@@ -34,11 +34,7 @@ export class SearchCustomerForm {
 
   updateFormState() {
     const formValue = this.form.getRawValue();
-
-    const anyUniqueStarted = this.uniqueFields.some(
-      f => (formValue[f] || '').trim().length > 0
-    );
-
+    const anyUniqueStarted = this.uniqueFields.some(f => (formValue[f] || '').trim().length > 0);
     const nameFilled = this.nameFields.some(f => (formValue[f] || '').trim().length > 0);
 
     if (anyUniqueStarted) {
@@ -50,7 +46,6 @@ export class SearchCustomerForm {
           this.form.get(f)?.disable({ emitEvent: false });
         }
       });
-
       this.nameFields.forEach(f => this.form.get(f)?.disable({ emitEvent: false }));
     } else if (nameFilled) {
       this.nameFields.forEach(f => this.form.get(f)?.enable({ emitEvent: false }));
@@ -65,6 +60,13 @@ export class SearchCustomerForm {
   isSearchDisabled(): boolean {
     const formValue = this.form.getRawValue();
 
+    // Eğer hiçbir alan dolu değilse
+    if (Object.values(formValue).every(v => !v || (v + '').trim() === '')) return true;
+
+    // Eğer form valid değilse (örneğin pattern hatası varsa)
+    if (this.form.invalid) return true;
+
+    // Unique alanlardan biri doluysa
     for (const field of this.uniqueFields) {
       const val = (formValue[field] || '').trim();
       if (val) {
@@ -76,6 +78,7 @@ export class SearchCustomerForm {
       }
     }
 
+    // Eğer isim alanlarından biri doluysa
     const nameFilled = this.nameFields.some(f => (formValue[f] || '').trim().length > 0);
     return !nameFilled;
   }
@@ -83,6 +86,8 @@ export class SearchCustomerForm {
   onSearch() {
     if (!this.isSearchDisabled()) {
       this.search.emit(this.form.getRawValue());
+    } else {
+      this.form.markAllAsTouched(); // 🔹 Hataları göstermek için
     }
   }
 

@@ -1,27 +1,35 @@
 <div class="container-fluid update-customer-page">
   <div class="row min-vh-100 align-items-stretch">
-    <div class="col-md-4 col-lg-3 bg-dark rounded-start p-3 search-panel">
+
+    <div
+      *ngIf="showSidebar()"
+      class="col-md-4 col-lg-3 bg-dark rounded-start p-3 search-panel"
+    >
       <app-search-customer-form
         (search)="onSearch($event)"
         (clear)="onClear()"
       ></app-search-customer-form>
     </div>
 
-    <div class="col-md-8 col-lg-9 bg-white rounded-end p-4 form-panel">
+    <div
+      class="bg-white rounded-end p-4 form-panel"
+      [ngClass]="{
+        'col-md-8 col-lg-9': showSidebar(),
+        'col-12 rounded': !showSidebar()
+      }"
+    >
+      <!-- Tab header -->
       <div class="tab-header d-flex align-items-center mb-3" *ngIf="!showResults">
         <button class="tab-btn" routerLink="update-personal-info" routerLinkActive="active">
           Customer Info
         </button>
-
         <button class="tab-btn" routerLink="update-billing-account" routerLinkActive="active">
           Customer Account 
         </button>
-
         <button class="tab-btn" routerLink="update-address" routerLinkActive="active">
           Address
         </button>
-
-        <button class="tab-btn" [routerLink]="['update-contact-medium']" routerLinkActive="active">
+        <button class="tab-btn" routerLink="update-contact-medium" routerLinkActive="active">
           Contact Medium
         </button>
       </div>

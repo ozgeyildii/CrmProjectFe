@@ -9,7 +9,8 @@
 
     <div class="form-group">
       <label>Nat ID</label>
-      <input formControlName="nationalId" placeholder="" maxlength="11"/>
+      <input formControlName="nationalId" placeholder="" maxlength="11" />
+      <small *ngIf="form.get('nationalId')?.errors?.['pattern']">Must be 11 digits.</small>
     </div>
 
     <div class="form-group">
