@@ -57,6 +57,13 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.customer-card .card-field .extra-count {
+  color: #f58220;
+  font-weight: 600;
+  margin-left: 4px;
+  font-size: 0.9rem;
+}
+
 .customer-card .card-field .value.link:hover {
   color: rgb(225, 110, 12);
 }.pagination {
@@ -68,7 +75,7 @@
   font-family: 'Poppins', sans-serif;
 
   button {
-    background-color: rgb(245, 130, 32); /* ETIYA turuncusu */
+    background-color: rgb(245, 130, 32);
     color: #fff;
     border: none;
     border-radius: 6px;

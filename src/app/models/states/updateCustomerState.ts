@@ -11,6 +11,7 @@ export interface UpdateCustomerState {
   gender?: string;
   addresses?: Address[];
   contactMediums?: ContactMedium[]; 
+  billingAccounts?: BillingAccount[];
 }
 
 export interface Address {
@@ -32,4 +33,14 @@ export interface ContactMedium {
   value?: string;
   isPrimary?: boolean;
   customerId: string;
+}
+
+export interface BillingAccount {
+  id: number;
+  type: string;
+  status: string;
+  accountNumber: string;
+  accountName: string;
+  customerId: string;
+  addressId: number;
 }

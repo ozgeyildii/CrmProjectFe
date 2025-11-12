@@ -21,7 +21,7 @@ export class SearchCustomerForm {
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
       nationalId: ['', Validators.pattern('^[0-9]*$')],
-      customerNumber: [''],
+      customerNumber: ['', Validators.pattern('^CUST-\\d{4}-\\d{7}$')],
       accountNumber: [''],
       value: [''],
       firstName: [''],
@@ -72,8 +72,9 @@ export class SearchCustomerForm {
       if (val) {
         if (field === 'nationalId' && val.length === 11) return false;
         if (field === 'customerNumber' && val.length === 17) return false;
+        if (field === 'accountNumber' && val.length === 14) return false;
         if (field === 'value' && val.length === 12) return false;
-        if (!['nationalId', 'customerNumber', 'value'].includes(field)) return false;
+        if (!['nationalId', 'customerNumber','accountNumber', 'value'].includes(field)) return false;
         return true;
       }
     }

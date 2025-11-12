@@ -41,13 +41,13 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="905XXXXXXXXX"
-                maxlength="12"
+                placeholder="5XXXXXXXXX"
+                maxlength="10"
                 formControlName="mobilePhone"
                 [ngClass]="{ 'is-invalid': isInvalid('mobilePhone') }"
               />
               <div *ngIf="isInvalid('mobilePhone')" class="invalid-feedback">
-                Mobile phone is required and must be 12 digits.
+                Mobile phone is required and must be 10 digits.
               </div>
             </div>
 

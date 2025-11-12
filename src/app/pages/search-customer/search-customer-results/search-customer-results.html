@@ -1,34 +1,42 @@
-
 <div *ngIf="customers.length > 0" class="search-result-container">
   <div class="results-wrapper">
-    <div class="customer-card" *ngFor="let c of customers" >
-      
+    <div class="customer-card" *ngFor="let c of customers">
       <div class="card-row">
-        
         <div class="card-column">
           <div class="card-field">
             <label>First Name</label>
             <div class="value">{{ c.firstName }}</div>
           </div>
-          
+
           <div class="card-field">
             <label>Last Name</label>
             <div class="value">{{ c.lastName }}</div>
           </div>
         </div>
-        
+
         <div class="card-column">
           <div class="card-field" (click)="onClick(c)">
             <label>Customer ID</label>
-            <div class="value link">{{ c.id }}</div> 
+            <div class="value link">{{ c.customerNumber }}</div>
           </div>
-          
+
           <div class="card-field">
             <label>Account Number</label>
-            <div class="value">{{ c.customerNumber }}</div> 
+            <div class="value">
+              <ng-container *ngIf="c.billingAccounts.length === 0; else hasAccounts">
+                -
+              </ng-container>
+
+              <ng-template #hasAccounts>
+                {{ c.billingAccounts[0].accountNumber }}
+                <span *ngIf="c.billingAccounts.length > 1" class="extra-count">
+                  +{{ c.billingAccounts.length - 1 }}
+                </span>
+              </ng-template>
+            </div>
           </div>
         </div>
-        
+
         <div class="card-column">
           <div class="card-field">
             <label>Nat ID</label>
@@ -37,8 +45,8 @@
         </div>
       </div>
     </div>
-    
-   <div class="pagination">
+
+    <div class="pagination">
       <button (click)="previousPage()" [disabled]="page === 0">&lt;</button>
       <span>Page {{ page + 1 }}</span>
       <button (click)="nextPage()" [disabled]="!hasMore">&gt;</button>

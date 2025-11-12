@@ -55,7 +55,7 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: true }],
+      accountNumber: [{ value: '-', disabled: true }],
       customerNumber: [{ value: '', disabled: true }],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -102,7 +102,7 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
   private loadCustomerData(): void {
     const data = this.customer || this.customerService.state() || {};
     this.form.patchValue({
-      id: data.id ?? '',
+      accountNumber: data.billingAccounts && data.billingAccounts.length > 0 ? data.billingAccounts[0].accountNumber : '',
       customerNumber: data.customerNumber ?? '',
       firstName: data.firstName ?? '',
       middleName: data.middleName ?? '',

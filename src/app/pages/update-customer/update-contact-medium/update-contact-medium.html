@@ -27,7 +27,6 @@
                 class="form-control"
                 [readonly]="!editMode()"
                 [ngClass]="{ 'readonly-field': !editMode() }"
-                placeholder="etiug@etiug.com"
               />
             </div>
 
@@ -46,13 +45,12 @@
             <div class="col-md-6">
               <label class="form-label">Mobile Phone *</label>
               <input
-                maxlength="12"
+                maxlength="10"
                 type="tel"
                 formControlName="mobilePhone"
                 class="form-control"
                 [readonly]="!editMode()"
                 [ngClass]="{ 'readonly-field': !editMode() }"
-                placeholder="90XXXXXXXXXX"
               />
             </div>
 

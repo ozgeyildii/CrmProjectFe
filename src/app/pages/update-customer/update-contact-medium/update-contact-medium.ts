@@ -58,7 +58,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       homePhone: ['', [Validators.pattern(/^$|^[0-9]{10}$/)]],
-      mobilePhone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{12}$/)]],
+      mobilePhone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10}$/)]],
       fax: ['', [this.faxValidator]]
     });
   }

@@ -12,6 +12,7 @@ export interface SearchCustomer {
   gender: string
   addresses: Address[]
   contactMediums: ContactMedium[]
+  billingAccounts: BillingAccount[]
 }
 
 export interface Address {
@@ -34,4 +35,14 @@ export interface ContactMedium {
   customerId: any
   deletedDate: any
   primary: boolean
+}
+
+export interface BillingAccount {
+  id: number;
+  type: string;
+  status: string;
+  accountNumber: string;
+  accountName: string;
+  customerId: string;
+  addressId: number;
 }

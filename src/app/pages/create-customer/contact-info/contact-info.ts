@@ -47,7 +47,7 @@ export class ContactInfo implements OnInit, OnDestroy {
     this.contactForm = this.fb.group({
       email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(50)]),
       homePhone: new FormControl('', [Validators.pattern(/^$|^[0-9]{10}$/)]),
-      mobilePhone: new FormControl('', [Validators.required, Validators.pattern(/^\+?[0-9]{12}$/)]),
+      mobilePhone: new FormControl('', [Validators.required, Validators.pattern(/^\+?[0-9]{10}$/)]),
       fax: new FormControl('', [Validators.pattern(/^$|([0-9]{4}|[0-9]{13})$/)]),
     });
   }

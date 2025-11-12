@@ -63,6 +63,18 @@ export class UpdateCustomer {
         this.customerService.state.set(data);
         this.isLoading.set(false);
         console.log('Customer loaded:', data);
+        this.customerService.getAccounts(id,0).subscribe({
+          next: (res) => {
+            this.customerService.state.update((state) => ({
+              ...state,
+              billingAccounts: res.content
+            }));
+            console.log('Billing accounts loaded:', res.content);
+          },
+          error: (err) => {
+            console.error('Failed to load accounts', err);
+          },
+        })
       },
       error: (err) => {
         console.error('Error fetching customer:', err);
