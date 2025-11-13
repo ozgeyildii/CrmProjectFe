@@ -1,0 +1,30 @@
+.text-orange { color: #f58220 !important; }
+
+.btn-orange {
+  background: #f58220; color: #fff; border: 0;
+  &:hover { background: #d96f10; }
+}
+.btn-outline-orange {
+  color: #f58220; border: 1px solid #f58220;
+  &:hover { background: #f58220; color: #fff; }
+}
+
+.card { border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+
+.bg-light-subtle { background: #f7f7f9; }
+
+.addr-modal {
+  border: none; border-radius: 1rem; padding: 0;
+  .modal-content {
+    border-radius: 1rem; padding: 1.5rem;
+    width: min(600px, 95vw);
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .row.g-3 > * { flex: 0 0 100%; }
+}

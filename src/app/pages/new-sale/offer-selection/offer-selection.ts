@@ -1,7 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { BasketService } from '../../../services/basket-service';
 import { AddBasketItemRequest } from '../../../models/requests/addBasketItemRequest';
@@ -11,7 +11,7 @@ import { GetProductOfferByCatalogResponse } from '../../../models/responses/getP
 import { GetCampaignResponse } from '../../../models/responses/getCampaignResponse';
 import { GetCampaignProductOfferResponse } from '../../../models/responses/getCampaignProductOfferResponse';
 import { BasketState, BasketItem } from '../../../models/states/basketState';
-import { CustomerService } from 'src/app/services/customer-service';
+import { CustomerService } from '../../../../app/services/customer-service';
 
 @Component({
   selector: 'app-offer-selection',
@@ -60,7 +60,8 @@ export class OfferSelection {
   constructor(
     private basketApi: BasketService,
     private customerService: CustomerService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router:Router
   ) {}
 
   ngOnInit() {
@@ -124,9 +125,11 @@ export class OfferSelection {
   }
 
   selectOffer(offer: any, type: 'OFFER' | 'CAMPAIGN') {
+          console.log('Clicked offer:', offer);  // 👈 burayı ekle
+
     this.selectedOffer.set({
-      id: offer.id ?? offer.productOfferId,
-      name: offer.name ?? offer.productOfferName,
+      id: offer.id,
+      name: offer.productOfferName,
       type,
     });
   }
@@ -167,12 +170,16 @@ export class OfferSelection {
         };
 
         this.basket.set(updatedBasket);
+        console.log('🧺 Current basket state:', this.basket());
+
         this.selectedOffer.set(null);
       },
       error: () => this.errorMsg.set('Item could not be added to basket.'),
       complete: () => this.loading.set(false),
     });
   }
+
+
 
   // ✅ BasketState’e göre düzenlendi
   clearBasket() {
@@ -190,6 +197,18 @@ export class OfferSelection {
       },
       error: () => this.errorMsg.set('Basket could not be cleared.'),
     });
+  }
+
+  goNext(){
+const customerId = this.customerService.state().id;
+
+this.router.navigate(
+  [`/customers/update/${customerId}/configuration-product`],
+
+  {
+    queryParams: { billingAccountId: this.billingAccountId },
+  }
+);
   }
 
   // ✅ BasketState’ten total hesaplama

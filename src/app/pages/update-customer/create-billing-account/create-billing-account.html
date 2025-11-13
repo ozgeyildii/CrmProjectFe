@@ -1,45 +1,49 @@
-<div class="create-account-card" [formGroup]="accountForm">
-  <h5 class="title">Create Billing Account</h5>
+<div class="card shadow-sm border-warning p-4" [formGroup]="accountForm">
+  <h5 class="text-orange fw-semibold mb-4">Create Billing Account</h5>
 
-  <div class="form-body">
-    <!-- SOL -->
-    <div class="left-side">
-      <label>Account Name *</label>
-      <input formControlName="accountName" class="input" placeholder="Enter account name" />
+  <div class="row g-4">
+    <!-- SOL TARAF -->
+    <div class="col-md-6">
+      <label class="form-label fw-medium">Account Name *</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="accountName"
+        placeholder="Enter account name"
+      />
       <div
         *ngIf="accountForm.get('accountName')?.touched && accountForm.get('accountName')?.invalid"
-        class="error"
+        class="text-danger small mt-1"
       >
         Name is required (min 2 chars)
       </div>
     </div>
 
-    <!-- SAĞ -->
-    <div class="right-side">
-      <h6>Address Info</h6>
+    <!-- SAĞ TARAF -->
+    <div class="col-md-6">
+      <h6 class="text-orange fw-semibold">Address Info</h6>
 
-      <!-- eğer tempAddress varsa -->
-      <div *ngIf="tempAddress()">
-        <div class="address-item">
-          <div class="info">
-            <p>
+      <div *ngIf="tempAddress(); else noAddress" class="border rounded p-3 mt-2 bg-light">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="mb-1">
               <strong>{{ tempAddress()?.street }}</strong> No:
               {{ tempAddress()?.houseNumber }}
             </p>
-            <p>{{ tempAddress()?.description }}</p>
+            <p class="text-muted mb-0">{{ tempAddress()?.description }}</p>
           </div>
-          <div class="actions">
-            <button class="btn-outline" type="button" (click)="deleteAddress()">🗑 Delete</button>
-          </div>
+          <button class="btn btn-outline-danger btn-sm" type="button" (click)="deleteAddress()">
+            🗑 Delete
+          </button>
         </div>
       </div>
 
-      <ng-template [ngIf]="!tempAddress()">
-        <p class="no-address">No address added yet.</p>
+      <ng-template #noAddress>
+        <p class="text-muted mt-2">No address added yet.</p>
       </ng-template>
 
       <button
-        class="btn-add"
+        class="btn btn-outline-warning mt-3"
         type="button"
         (click)="openModalForNew()"
         [disabled]="tempAddress() !== null"
@@ -49,53 +53,64 @@
     </div>
   </div>
 
-  <div class="actions-bottom">
-    <button class="btn-cancel" type="button" (click)="onCancel()">Cancel</button>
-    <button class="btn-create" type="button" (click)="onSubmit()">Create</button>
+  <div class="d-flex justify-content-end mt-4 gap-2">
+    <button class="btn btn-secondary" type="button" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-warning text-white" type="button" (click)="onSubmit()">Create</button>
   </div>
 
   <!-- MODAL -->
-  <div class="modal-backdrop" *ngIf="showModal()">
-    <div class="modal-content" [formGroup]="addressForm">
-      <button class="close-btn" type="button" (click)="showModal.set(false)">✕</button>
-      <h6>Add Address</h6>
-
-      <div class="row">
-        <div class="col">
-          <label>City *</label>
-          <select formControlName="cityId" (change)="onCityChange()">
-            <option value="">Select</option>
-            <option *ngFor="let city of cities()" [value]="city.id">{{ city.name }}</option>
-          </select>
+  <div class="modal fade show d-block" *ngIf="showModal()" tabindex="-1" style="background: rgba(0, 0, 0, 0.45);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-warning" [formGroup]="addressForm">
+        <div class="modal-header">
+          <h6 class="modal-title text-orange">Add Address</h6>
+          <button type="button" class="btn-close" (click)="showModal.set(false)"></button>
         </div>
-        <div class="col">
-          <label>District *</label>
-          <select formControlName="districtId">
-            <option value="">Select</option>
-            <option *ngFor="let dist of districts()" [value]="dist.id">{{ dist.name }}</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Street *</label>
-          <input formControlName="street" placeholder="Enter street" />
-        </div>
-        <div class="col">
-          <label>House Number *</label>
-          <input formControlName="houseNumber" placeholder="Enter house no" />
-        </div>
-      </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">City *</label>
+              <select class="form-select" formControlName="cityId" (change)="onCityChange()">
+                <option value="">Select</option>
+                <option *ngFor="let city of cities()" [value]="city.id">{{ city.name }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">District *</label>
+              <select class="form-select" formControlName="districtId">
+                <option value="">Select</option>
+                <option *ngFor="let dist of districts()" [value]="dist.id">{{ dist.name }}</option>
+              </select>
+            </div>
+          </div>
 
-      <label>Description *</label>
-      <textarea formControlName="description" placeholder="Enter address description"></textarea>
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Street *</label>
+              <input class="form-control" formControlName="street" placeholder="Enter street" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">House Number *</label>
+              <input class="form-control" formControlName="houseNumber" placeholder="Enter house no" />
+            </div>
+          </div>
 
-      <div class="modal-actions">
-        <button type="button" class="btn-cancel" (click)="showModal.set(false)">Cancel</button>
-        <button type="button" class="btn-save" (click)="saveAddress()" [disabled]="isLoading()">
-          {{ isLoading() ? 'Saving...' : 'Save' }}
-        </button>
+          <label class="form-label mt-3">Description *</label>
+          <textarea class="form-control" formControlName="description" rows="3" placeholder="Enter address description"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="showModal.set(false)">Cancel</button>
+          <button
+            type="button"
+            class="btn btn-warning text-white"
+            (click)="saveAddress()"
+            [disabled]="isLoading()"
+          >
+            {{ isLoading() ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>

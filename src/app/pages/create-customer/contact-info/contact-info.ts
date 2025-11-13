@@ -16,7 +16,7 @@ import { LoaderService } from '../../../services/loader-service';
 @Component({
   selector: 'app-contact-info',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, Loader],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, Loader],
   templateUrl: './contact-info.html',
   styleUrls: ['./contact-info.scss'],
 })

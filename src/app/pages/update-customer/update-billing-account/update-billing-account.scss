@@ -1,93 +1,91 @@
 .customer-account-section {
-  border: 1px solid #f58220;
-  border-radius: 10px;
-  padding: 1rem;
-  background-color: #f9f9f9;
+  background-color: #fff; /* beyaz zemin */
+  border: 1px solid #f58220; /* ince turuncu çerçeve */
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* yumuşak gölge */
+  color: #242441;
 
-  .header-bar {
-    h5 {
-      color: #f58220;
+  h5,
+  .section-title {
+    color: #f58220;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .btn-orange {
+    background-color: #f58220;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    &:hover {
+      background-color: #ff9e48;
+    }
+  }
+
+  table {
+    background-color: #fff;
+    border: 1px solid #f58220;
+    border-radius: 8px;
+    overflow: hidden;
+
+    th {
+      background-color: #fff6ef;
       font-weight: 600;
+      color: #333;
+    }
+
+    td {
+      background-color: #fff;
+      color: #444;
+      vertical-align: middle;
+    }
+  }
+
+  .text-success {
+    color: #28a745 !important;
+    font-weight: 600;
+  }
+
+  .btn-outline-orange {
+    border: 1px solid #f58220;
+    color: #f58220;
+    border-radius: 6px;
+    &:hover {
+      background-color: #f58220;
+      color: #fff;
+    }
+  }
+
+  .pagination-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+
+    .btn {
+      border: 1px solid #ddd;
+      background: #fff;
+      &:hover {
+        background: #fef4eb;
+      }
+    }
+  }
+
+  /* Responsive düzeltmeler */
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    table {
+      font-size: 0.85rem;
     }
 
     .btn-orange {
-      background-color: #f58220;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      &:hover {
-        opacity: 0.9;
-      }
-    }
-  }
-
-  .account-header {
-    font-weight: 600;
-    border-bottom: 1px solid #f58220;
-    color: #333;
-    background-color: #fff6ef;
-  }
-
-  .accordion-item {
-    border: 1px solid #f58220;
-    border-radius: 10px;
-    margin-top: 0.6rem;
-    background-color: #eaeaea;
-
-    .accordion-button {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: transparent;
-      box-shadow: none;
-      border: none;
-      padding: 0.8rem 1rem;
-
-      &:focus {
-        box-shadow: none;
-      }
-
-      .col {
-        flex: 1;
-      }
-
-      .col-status {
-        color: green;
-        font-weight: 600;
-      }
-
-      .col-action i {
-        cursor: pointer;
-        font-size: 1rem;
-      }
-    }
-
-    .accordion-body {
-      background-color: #fff;
-      border-top: 1px solid #f58220;
-      border-radius: 0 0 10px 10px;
-
-      table {
-        width: 100%;
-        th {
-          background-color: #fff6ef;
-          font-weight: 600;
-          font-size: 0.9rem;
-        }
-        td {
-          font-size: 0.9rem;
-        }
-      }
-
-      .btn-outline-orange {
-        border: 1px solid #f58220;
-        color: #f58220;
-        border-radius: 6px;
-        &:hover {
-          background-color: #f58220;
-          color: white;
-        }
-      }
+      width: 100%;
     }
   }
 }

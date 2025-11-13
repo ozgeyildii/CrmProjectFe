@@ -14,7 +14,8 @@ import { UpdateContactMedium } from './pages/update-customer/update-contact-medi
 import { UpdateAddressInfo } from './pages/update-customer/update-address-info/update-address-info';
 import { CreateBillingAccount } from './pages/update-customer/create-billing-account/create-billing-account';
 import { UpdateBillingAccount } from './pages/update-customer/update-billing-account/update-billing-account';
-import { OfferSelection } from './pages/update-customer/offer-selection/offer-selection';
+import { OfferSelection } from './pages/new-sale/offer-selection/offer-selection';
+import { ConfigurationProduct } from './pages/new-sale/configuration-product/configuration-product';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -51,6 +52,7 @@ export const routes: Routes = [
           { path: 'update-billing-account', canActivate: [authGuard], component: UpdateBillingAccount  },
           { path: 'create-billing-account', canActivate: [authGuard], component: CreateBillingAccount  },
           { path: 'offer-selection', canActivate: [authGuard], component: OfferSelection },
+          {path:'configuration-product', canActivate: [authGuard], component:ConfigurationProduct}
         ],
       },
 

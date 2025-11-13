@@ -5,7 +5,6 @@ import { GetCampaignProductOfferResponse } from '../models/responses/getCampaign
 import { GetCampaignResponse } from '../models/responses/getCampaignResponse';
 import { GetCatalogResponse } from '../models/responses/getCatalogResponse';
 import { GetProductOfferByCatalogResponse } from '../models/responses/getProductOfferByCatalogResponse';
-import { BasketState } from '../models/states/basketState';
 import { map, Observable } from 'rxjs';
 import { AddBasketItemRequest } from '../models/requests/addBasketItemRequest';
 import { GetBasketResponse } from '../models/responses/getBasketResponse';
@@ -57,4 +56,6 @@ export class BasketService {
   clearBasket(basketId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.basketServiceBaseUrl}/baskets/clear/${basketId}`);
   }
+
+  
 }

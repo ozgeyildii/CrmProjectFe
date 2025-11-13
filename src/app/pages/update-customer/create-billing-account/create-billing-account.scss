@@ -180,6 +180,21 @@
   }
 }
 
+.text-orange {
+  color: #f58220 !important;
+}
+
+.btn-warning {
+  background-color: #f58220 !important;
+  border-color: #f58220 !important;
+}
+
+.btn-outline-warning {
+  color: #f58220 !important;
+  border-color: #f58220 !important;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .form-body {
