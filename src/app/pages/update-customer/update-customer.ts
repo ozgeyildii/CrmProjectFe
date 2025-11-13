@@ -151,10 +151,12 @@ export class UpdateCustomer {
     this.showResults = false;
   }
  
-  onClear() {
+
+  onClear() {    
     this.filters = {};
     this.customers = [];
-    this.showResults = false;
+    this.showResults = true;
+    this.customerService.state.set({});
   }
 }
  

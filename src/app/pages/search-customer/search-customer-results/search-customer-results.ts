@@ -26,6 +26,14 @@ export class SearchCustomerResults {
     this.router.navigate(['customers/update', customer.id]);
   }
 
+  expandedCustomer: any = null;
+
+  toggleAccounts(c: any, event: MouseEvent) {
+    event.stopPropagation(); // kartın kendi tıklamasını engeller
+
+    this.expandedCustomer = this.expandedCustomer === c ? null : c;
+  }
+
   nextPage() {
     this.next.emit();
   }
