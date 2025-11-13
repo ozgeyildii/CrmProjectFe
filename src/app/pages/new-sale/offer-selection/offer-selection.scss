@@ -1,154 +1,47 @@
-/* ------------------------------
-   Design Tokens
------------------------------- */
-$orange: #f58220;
-$orange-600: #d96f10;
-$orange-100: #fff3e6;
-$slate-900: #1f2937;
-$slate-600: #4b5563;
-$slate-200: #e5e7eb;
-$bg-subtle: #f7f7f9;
-$radius-xl: 1rem;
-$shadow-sm: 0 2px 10px rgba(0,0,0,.06);
-$shadow-md: 0 6px 20px rgba(0,0,0,.08);
- 
-/* ------------------------------
-   Utilities
------------------------------- */
-.text-orange { color: $orange !important; }
- 
-.btn-orange {
-  background: $orange; color: #fff; border: 0;
-  transition: transform .12s ease, background .15s ease;
-&:hover { background: $orange-600; transform: translateY(-1px); }
-&:active { transform: translateY(0); }
-&:disabled { opacity: .6; cursor: not-allowed; }
-}
-.btn-outline-orange {
-  background: #fff; color: $orange; border: 1px solid $orange;
-&:hover { background: $orange; color: #fff; }
-}
- 
-/* ------------------------------
-   Card Shell
------------------------------- */
-.container-fluid { padding-inline: clamp(8px, 1.5vw, 24px); }
-.card { border-radius: $radius-xl; box-shadow: $shadow-sm; }
-.card-header {
-  border-radius: $radius-xl $radius-xl 0 0 !important;
-  background: linear-gradient(90deg, $orange 0%, #ff9944 100%);
-  color: #fff;
-}
- 
-/* ------------------------------
-   Layout (responsive grid)
------------------------------- */
-.offer-wrap,
-.card-body.bg-light-subtle { background: $bg-subtle; border-radius: $radius-xl; }
- 
-.row.g-3 {
-  /* küçük ekranlarda kolonlar tam genişlik */
-  @media (max-width: 575.98px) { gap: 1rem !important; }
-}
-.col-lg-7, .col-lg-1, .col-lg-4 {
-  @media (max-width: 991.98px) { width: 100%; }
-}
- 
-/* ------------------------------
-   Left Pane (tabs + filters + tables)
------------------------------- */
-.bg-white.rounded-4 {
-  border-radius: $radius-xl; box-shadow: $shadow-sm;
-}
- 
-/* Tabs */
-.d-flex.mb-3 { gap: .5rem; }
-.d-flex.mb-3 .btn {
-  border-radius: 999px; font-weight: 600; padding: .6rem 1rem;
-}
- 
-/* Select & inputs */
-.form-select, .form-control {
-  border-radius: .6rem; border-color: $slate-200;
-&:focus { outline: 0; border-color: $orange; box-shadow: 0 0 0 .2rem rgba(245,130,32,.15); }
-}
- 
-/* Search inputs grubu: küçük ekranda dikey */
-.input-group {
-  gap: .5rem;
-  @media (max-width: 575.98px) {
-    display: grid; grid-template-columns: 1fr; 
-    .form-control { width: 100%; }
+.offer-selection-card {
+  background-color: #fff;
+  border: 1px solid #f58220;
+  border-radius: 12px;
+  padding: 1.8rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  .table {
+    tbody tr {
+      cursor: pointer;
+    }
   }
-}
- 
-/* ------------------------------
-   Table (sticky header + scroll)
------------------------------- */
-.table {
-  border: 1px solid $slate-200;
-  border-radius: .75rem; overflow: hidden; box-shadow: $shadow-sm;
-  thead th {
-    position: sticky; top: 0; z-index: 1;
-    background: #fff; border-bottom: 1px solid $slate-200;
+
+  .text-orange {
+    color: #f58220 !important;
   }
-  tbody tr { cursor: pointer; }
-  tbody tr:hover { background: $orange-100; }
-  .table-active { background: $orange-100 !important; }
-}
- 
-/* mobilde yatay kaydırma kapsayıcı */
-.table { display: block; overflow-x: auto; }
-.table table { min-width: 520px; }
- 
-/* ------------------------------
-   Center Button (Add to Basket)
------------------------------- */
-.btn-outline-orange.rounded-circle {
-  width: 56px; height: 56px; display: grid; place-items: center;
-  border-width: 2px; box-shadow: $shadow-sm;
-  @media (min-width: 992px) { width: 64px; height: 64px; }
-}
- 
-/* ------------------------------
-   Basket Panel (right)
------------------------------- */
-.bg-white.rounded-4.p-3.shadow-sm { box-shadow: $shadow-md; }
- 
-.basket-item {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  gap: .75rem;
-  .fw-bold { color: $slate-900; }
-  .text-muted { color: $slate-600 !important; }
-}
- 
-/* Toplam ve butonlar */
-.border-top { border-top: 2px solid $slate-200 !important; }
-.mt-3 .btn { min-width: 96px; }
- 
-/* Hata mesajı */
-.text-danger { font-size: .9rem; }
- 
-/* ------------------------------
-   Micro-interactions
------------------------------- */
-@media (prefers-reduced-motion: no-preference) {
-  tbody tr { transition: background-color .15s ease; }
-  .btn, .form-select, .form-control { transition: box-shadow .15s ease, border-color .15s ease; }
-}
- 
-/* ------------------------------
-   Compact mode for very small screens
------------------------------- */
-@media (max-width: 380px) {
-  .btn { padding: .45rem .75rem; font-size: .9rem; }
-  .card-header { font-size: 1rem; }
-}
- 
-/* ------------------------------
-   Print-friendly (optional)
------------------------------- */
-@media print {
-  .btn, .input-group, .form-select, .card-header { display: none !important; }
-  .card, .bg-white { box-shadow: none !important; }
+
+  .btn-orange {
+    background-color: #f58220;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #ff9f50;
+    }
+  }
+
+  .btn-outline-orange {
+    border-radius: 8px;
+    color: #f58220;
+    border: 1px solid #f58220;
+
+    &:hover {
+      background-color: #f58220;
+      color: #fff;
+    }
+  }
+
+  .table-active {
+    background-color: #ffe9d6 !important;
+  }
+
+  @media (max-width: 992px) {
+    padding: 1.25rem;
+  }
 }

@@ -1,91 +1,136 @@
 .customer-account-section {
-  background-color: #fff; /* beyaz zemin */
-  border: 1px solid #f58220; /* ince turuncu çerçeve */
+  border: 1px solid #f58220;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* yumuşak gölge */
-  color: #242441;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 
-  h5,
-  .section-title {
-    color: #f58220;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
+  padding: 2rem 2.5rem;
 
-  .btn-orange {
-    background-color: #f58220;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    transition: 0.2s;
-    &:hover {
-      background-color: #ff9e48;
+  /* Başlık satırı */
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0; /* Customer Info ile aynı */
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    h4,
+    h5 {
+      color: #f58220;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .btn-orange {
+      background-color: #f58220;
+      color: #fff;
+      font-weight: 500;
+      border-radius: 8px;
+      border: none;
+      padding: 0.55rem 1.3rem;
+      transition: background-color 0.25s ease;
+
+      &:hover {
+        background-color: #ff9f50;
+      }
     }
   }
 
+  /* Tablo alanı */
   table {
     background-color: #fff;
-    border: 1px solid #f58220;
+    border: 1px solid #f3d3b0;
     border-radius: 8px;
     overflow: hidden;
 
     th {
       background-color: #fff6ef;
       font-weight: 600;
-      color: #333;
+      color: #242441;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      border-bottom: 1px solid #f3d3b0;
     }
 
     td {
+      font-size: 0.9rem;
+      color: #333;
+      padding: 0.75rem;
       background-color: #fff;
-      color: #444;
-      vertical-align: middle;
+      border-top: 1px solid #f3d3b0;
+    }
+
+    tr:hover td {
+      background-color: #fffaf5;
     }
   }
 
+  /* Durum */
   .text-success {
     color: #28a745 !important;
     font-weight: 600;
   }
 
-  .btn-outline-orange {
+  /* Outline buton */
+  .btn-outline-warning {
     border: 1px solid #f58220;
     color: #f58220;
-    border-radius: 6px;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.45rem 1.1rem;
+    transition: all 0.25s ease;
+
     &:hover {
       background-color: #f58220;
       color: #fff;
     }
   }
 
+  /* Pagination */
   .pagination-bar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
 
     .btn {
-      border: 1px solid #ddd;
-      background: #fff;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+
       &:hover {
-        background: #fef4eb;
+        background-color: #fff6ef;
       }
+    }
+
+    span {
+      font-weight: 500;
+      color: #242441;
     }
   }
 
-  /* Responsive düzeltmeler */
-  @media (max-width: 768px) {
-    padding: 1rem;
+  /* Responsive */
+  @media (max-width: 992px) {
+    padding: 1.5rem;
+
+    .header-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .btn-orange {
+        align-self: stretch;
+        text-align: center;
+      }
+    }
 
     table {
       font-size: 0.85rem;
-    }
-
-    .btn-orange {
-      width: 100%;
     }
   }
 }

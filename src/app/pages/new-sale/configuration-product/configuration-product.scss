@@ -1,30 +1,165 @@
-.text-orange { color: #f58220 !important; }
+/* === PRODUCT CONFIGURATION === */
+.product-config-card {
+  background-color: #fff;
+  border: 1px solid #f58220;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
 
+/* Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.75rem;
+
+  h4 {
+    color: #f58220;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+/* Product Boxes */
+.product-box {
+  background-color: #fffdfb;
+  border: 1px solid #f8d8b0;
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+/* Form fields */
+.form-label {
+  font-weight: 600;
+  color: #242441;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.75rem;
+
+  &:focus {
+    border-color: #f58220;
+    box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.2);
+  }
+}
+
+/* Error text */
+.text-danger {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Selected Address Box */
+.service-address-box {
+  background-color: #fffdfb;
+  border: 1px solid #f8d8b0;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+/* Existing Address List */
+.existing-addr-box {
+  background-color: #fffdfb;
+  border: 1px solid #f8d8b0;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+/* Address card */
+.address-card {
+  background: #fff;
+  border: 1px solid #e6b889;
+  padding: 0.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.9rem;
+
+  &:hover {
+    border-color: #f58220;
+    background: #fff7ef;
+  }
+
+  &.selected {
+    border-color: #f58220;
+    background: #ffe7cf;
+    box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.2);
+  }
+}
+
+/* Orange Button */
 .btn-orange {
-  background: #f58220; color: #fff; border: 0;
-  &:hover { background: #d96f10; }
+  background-color: #f58220;
+  color: #fff;
+  border-color: #f58220;
+  font-weight: 500;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: #ff9f50;
+  }
 }
+
+/* Outline Button */
 .btn-outline-orange {
-  color: #f58220; border: 1px solid #f58220;
-  &:hover { background: #f58220; color: #fff; }
+  color: #f58220;
+  border-color: #f58220;
+  border-radius: 8px;
+  font-weight: 500;
+
+  &:hover {
+    background-color: #f58220;
+    color: #fff;
+  }
 }
 
-.card { border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
-
-.bg-light-subtle { background: #f7f7f9; }
-
+/* Modal Styling */
 .addr-modal {
-  border: none; border-radius: 1rem; padding: 0;
-  .modal-content {
-    border-radius: 1rem; padding: 1.5rem;
-    width: min(600px, 95vw);
-  }
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 1rem;
-  }
-}
+  border: none;
+  padding: 0;
+  margin: auto;
+  border-radius: 1rem;
+  background: transparent;
 
-@media (max-width: 768px) {
-  .row.g-3 > * { flex: 0 0 100%; }
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: min(600px, 95vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+
+    .btn {
+      min-width: 100px;
+    }
+  }
 }

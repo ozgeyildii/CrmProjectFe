@@ -93,7 +93,7 @@ export class CreateBillingAccount implements OnInit {
     const customerId = this.customerService.state().id;
     const newAddress: CreateAddressRequest = {
       customerId: customerId!,
-      districtId: this.addressForm.value.districtId,
+      districtId: Number(this.addressForm.value.districtId),
       street: this.addressForm.value.street,
       houseNumber: this.addressForm.value.houseNumber,
       description: this.addressForm.value.description,

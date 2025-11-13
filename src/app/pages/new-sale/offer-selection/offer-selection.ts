@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,39 +21,38 @@ import { CustomerService } from '../../../../app/services/customer-service';
   styleUrls: ['./offer-selection.scss'],
 })
 export class OfferSelection {
+
   activeTab = signal<'catalog' | 'campaign'>('catalog');
 
   catalogs = signal<GetCatalogResponse[]>([]);
   catalogOffers = signal<GetProductOfferByCatalogResponse[]>([]);
   campaigns = signal<GetCampaignResponse[]>([]);
   campaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
+  searchedCampaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
 
   selectedCatalogId: number | null = null;
   selectedCampaignId: number | null = null;
 
+  billingAccountId: number | null = null;
+
+  // TEKLİ SEÇİM — sadece bir offer tutuyoruz
+  selectedOffer = signal<{
+    sendId: number;   // backend’e gidecek ID
+    uniqueId: number; // UI highlight için
+    name: string;
+    type: 'OFFER' | 'CAMPAIGN';
+  } | null>(null);
+
   campaignIdFilter = signal('');
   campaignNameFilter = signal('');
 
-  billingAccountId: number | null = null;
-
-  filteredCampaignOffers = computed(() => {
-    const offers = this.campaignOffers();
-    const idFilter = this.campaignIdFilter().trim().toLowerCase();
-    const nameFilter = this.campaignNameFilter().trim().toLowerCase();
-
-    return offers.filter((offer) => {
-      const matchesId = idFilter
-        ? offer.campaignId?.toString().toLowerCase().includes(idFilter)
-        : true;
-      const matchesName = nameFilter
-        ? offer.productOfferName?.toLowerCase().includes(nameFilter)
-        : true;
-      return matchesId && matchesName;
-    });
+  basket = signal<BasketState>({
+    id: '',
+    billingAccountId: 0,
+    totalPrice: 0,
+    basketItems: [],
   });
 
-  selectedOffer = signal<{ id: number; name: string; type: 'OFFER' | 'CAMPAIGN' } | null>(null);
-  basket = signal<BasketState>({ id: '', billingAccountId: 0, totalPrice: 0, basketItems: [] });
   loading = signal(false);
   errorMsg = signal<string | null>(null);
 
@@ -61,95 +60,122 @@ export class OfferSelection {
     private basketApi: BasketService,
     private customerService: CustomerService,
     private route: ActivatedRoute,
-    private router:Router
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadCatalogs();
     this.loadCampaigns();
 
-    this.route.queryParams.subscribe((params) => {
-      this.billingAccountId = +params['billingAccountId'];
+    this.route.queryParams.subscribe(p => {
+      this.billingAccountId = +p['billingAccountId'];
     });
 
-    this.basketApi.getBasket(this.billingAccountId!).subscribe({
-      next: (res) => {
-        this.basket.set(res); // artık res zaten BasketState
-      },
-      error: () => this.catalogOffers.set([]),
-    });
+    if (this.billingAccountId) {
+      this.basketApi.getBasket(this.billingAccountId).subscribe({
+        next: res => this.basket.set(res),
+        error: () => {} // basket yoksa sıfırdan başlayacak
+      });
+    }
   }
 
   loadCatalogs() {
     this.basketApi.getAllCatalogs().subscribe({
-      next: (res) => this.catalogs.set(res),
-      error: () => this.catalogs.set([]),
+      next: res => this.catalogs.set(res),
+      error: () => this.catalogs.set([])
     });
   }
 
   loadCampaigns() {
     this.basketApi.getAllCampaigns().subscribe({
-      next: (res) => this.campaigns.set(res),
-      error: () => this.campaigns.set([]),
+      next: res => this.campaigns.set(res),
+      error: () => this.campaigns.set([])
     });
   }
 
   onCatalogSelect() {
     if (!this.selectedCatalogId) return;
-    this.catalogOffers.set([]);
+
     this.basketApi.getProductOffersByCatalogId(this.selectedCatalogId).subscribe({
       next: (res) => {
-        const offers = Array.isArray(res) ? res : [res];
-        this.catalogOffers.set(offers);
+        const list = Array.isArray(res) ? res : [res];
+        this.catalogOffers.set(list);
       },
-      error: () => this.catalogOffers.set([]),
+      error: () => this.catalogOffers.set([])
     });
   }
 
   onCampaignSelect() {
     if (!this.selectedCampaignId) return;
-    this.campaignOffers.set([]);
+
     this.basketApi.getProductOffersByCampaignId(this.selectedCampaignId).subscribe({
-      next: (res) => {
-        const offers = Array.isArray(res) ? res : [res];
-        this.campaignOffers.set(offers);
+      next: res => {
+        const list = Array.isArray(res) ? res : [res];
+        this.campaignOffers.set(list);
+        this.searchedCampaignOffers.set(list);
       },
-      error: () => this.campaignOffers.set([]),
+      error: () => this.campaignOffers.set([])
     });
   }
 
-  setTab(tab: 'catalog' | 'campaign') {
-    this.activeTab.set(tab);
-    this.selectedOffer.set(null);
-    this.errorMsg.set(null);
+  searchCampaignOffers() {
+    const idF = this.campaignIdFilter().trim().toLowerCase();
+    const nameF = this.campaignNameFilter().trim().toLowerCase();
+
+    const filtered = this.campaignOffers().filter(o => {
+      const matchId = idF ? o.campaignId.toString().includes(idF) : true;
+      const matchName = nameF ? o.productOfferName.toLowerCase().includes(nameF) : true;
+      return matchId && matchName;
+    });
+
+    this.searchedCampaignOffers.set(filtered);
   }
 
+  // TEKLİ SEÇİM
   selectOffer(offer: any, type: 'OFFER' | 'CAMPAIGN') {
-          console.log('Clicked offer:', offer);  // 👈 burayı ekle
+
+    const uniqueId = type === 'CAMPAIGN'
+      ? offer.productOfferId
+      : offer.id;
+
+    const sendId = type === 'CAMPAIGN'
+      ? offer.campaignId
+      : offer.id;
+
+    const name = offer.productOfferName || offer.name;
 
     this.selectedOffer.set({
-      id: offer.id,
-      name: offer.productOfferName,
-      type,
+      uniqueId,
+      sendId,
+      name,
+      type
     });
   }
 
-  // ✅ BasketState yapısına göre güncellendi
-  addToBasket() {
-    const selected = this.selectedOffer();
-    if (!selected || !this.billingAccountId) return;
+  isCatalogActive(o: any) {
+    return this.selectedOffer()?.uniqueId === o.id && this.selectedOffer()?.type === 'OFFER';
+  }
 
-    const request: AddBasketItemRequest = {
-      id: selected.id,
-      type: selected.type,
-    };
+  isCampaignActive(o: any) {
+    return this.selectedOffer()?.uniqueId === o.productOfferId && this.selectedOffer()?.type === 'CAMPAIGN';
+  }
+
+  addToBasket() {
+    const sel = this.selectedOffer();
+    if (!sel || !this.billingAccountId) return;
 
     this.loading.set(true);
-    this.errorMsg.set(null);
 
-    this.basketApi.addItemToBasket(this.billingAccountId, request).subscribe({
+    const req: AddBasketItemRequest = {
+      id: sel.sendId,
+      type: sel.type
+    };
+
+    this.basketApi.addItemToBasket(this.billingAccountId, req).subscribe({
       next: (res: CreatedBasketItemResponse) => {
-        const currentBasket = this.basket();
+
+        const cur = this.basket();
+
         const newItem: BasketItem = {
           id: res.id,
           basketId: res.basketId,
@@ -163,56 +189,44 @@ export class OfferSelection {
           discountRate: res.discountRate,
         };
 
-        const updatedBasket: BasketState = {
-          ...currentBasket,
-          basketItems: [...currentBasket.basketItems, newItem],
-          totalPrice: currentBasket.totalPrice + (res.discountedPrice ?? res.price ?? 0),
-        };
-
-        this.basket.set(updatedBasket);
-        console.log('🧺 Current basket state:', this.basket());
+        this.basket.set({
+          ...cur,
+          id: res.basketId,
+          basketItems: [...cur.basketItems, newItem],
+          totalPrice: cur.totalPrice + (res.discountedPrice ?? res.price ?? 0),
+        });
 
         this.selectedOffer.set(null);
       },
-      error: () => this.errorMsg.set('Item could not be added to basket.'),
-      complete: () => this.loading.set(false),
+      error: () => this.errorMsg.set("Item could not be added."),
+      complete: () => this.loading.set(false)
     });
   }
 
-
-
-  // ✅ BasketState’e göre düzenlendi
   clearBasket() {
-    const basketId = this.basket().id;
-    if (!basketId) return;
+    if (!this.basket().id) return;
 
-    this.basketApi.clearBasket(basketId).subscribe({
+    this.basketApi.clearBasket(this.basket().id).subscribe({
       next: () => {
         this.basket.set({
           ...this.basket(),
           basketItems: [],
-          totalPrice: 0,
+          totalPrice: 0
         });
-        this.errorMsg.set(null);
-      },
-      error: () => this.errorMsg.set('Basket could not be cleared.'),
+      }
     });
   }
 
-  goNext(){
-const customerId = this.customerService.state().id;
+  goNext() {
+    const cid = this.customerService.state().id;
 
-this.router.navigate(
-  [`/customers/update/${customerId}/configuration-product`],
-
-  {
-    queryParams: { billingAccountId: this.billingAccountId },
-  }
-);
+    this.router.navigate(
+      [`/customers/update/${cid}/configuration-product`],
+      { queryParams: { billingAccountId: this.billingAccountId } }
+    );
   }
 
-  // ✅ BasketState’ten total hesaplama
-  get total(): number {
+  get total() {
     return this.basket().basketItems.reduce(
       (sum, item) => sum + (item.discountedPrice ?? item.price ?? 0),
       0

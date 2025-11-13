@@ -39,20 +39,32 @@ export class ConfigurationProduct {
   productsData = signal<GetCharacteristicsByProductOffersResponse[]>([]);
   cities = signal<{ id: number; name: string }[]>([]);
   districts = signal<{ id: number; name: string }[]>([]);
+
+  // Adres listesi
+  addresses = signal<{ id: number; displayText: string }[]>([]);
+
+  // Seçili adres
   selectedServiceAddress = signal<{ id: number; displayText: string } | null>(null);
 
   form = this.fb.group({
     products: this.fb.array<FormGroup>([]),
   });
+
   get productsFA(): FormArray<FormGroup> {
     return this.form.get('products') as FormArray<FormGroup>;
   }
 
   /* ===== lifecycle ===== */
   ngOnInit() {
+    // Query params
     this.route.queryParams.subscribe((p) => {
       this.billingAccountId = p['billingAccountId'] ? +p['billingAccountId'] : null;
     });
+
+    const customerId = this.customerApi.state().id;
+    if (customerId) {
+      this.loadAddresses(customerId); // mevcut adresleri çek
+    }
 
     this.loadCities();
 
@@ -85,6 +97,29 @@ export class ConfigurationProduct {
   }
 
   /* ===== data fetchers ===== */
+
+  private loadAddresses(customerId: string) {
+    this.customerApi.getAddressesByCustomerId(customerId).subscribe({
+      next: (res) => {
+        const list = (res ?? []).map((a: any) => {
+          const text = [
+            a.cityName,
+            a.districtName,
+            a.street ? `${a.street} No:${a.houseNumber}` : `No:${a.houseNumber}`,
+            a.description,
+          ]
+            .filter(Boolean)
+            .join(', ');
+
+          return { id: a.id, displayText: text };
+        });
+
+        this.addresses.set(list);
+      },
+      error: () => this.addresses.set([]),
+    });
+  }
+
   private fetchCharacteristics(productOfferIds: number[]) {
     this.configurationApi.getCharacteristicsByProductOfferIds(productOfferIds).subscribe({
       next: (res: GetCharacteristicsByProductOffersResponse[]) => {
@@ -122,6 +157,7 @@ export class ConfigurationProduct {
   }
 
   /* ===== address dropdowns & modal ===== */
+
   loadCities() {
     this.customerApi.getCities().subscribe({
       next: (res) => this.cities.set(res ?? []),
@@ -164,7 +200,7 @@ export class ConfigurationProduct {
 
     this.customerApi.createAddress(req).subscribe({
       next: (res: CreatedAddressResponse) => {
-        const addressText = [
+        const text = [
           res.cityName,
           res.districtName,
           res.street ? `${res.street} No:${res.houseNumber}` : `No:${res.houseNumber}`,
@@ -173,42 +209,59 @@ export class ConfigurationProduct {
           .filter(Boolean)
           .join(', ');
 
-        this.selectedServiceAddress.set({
-          id: res.id!,
-          displayText: addressText,
-        });
+        // Listeye ekle
+        this.addresses.set([
+          ...this.addresses(),
+          { id: res.id!, displayText: text },
+        ]);
+
+        // Seçili yap
+        this.selectedServiceAddress.set({ id: res.id!, displayText: text });
+
+        this.closeAddressModal();
       },
       error: () => this.error.set('Address could not be created.'),
     });
   }
 
   closeAddressModal() {
-    (document.getElementById('addressModal') as HTMLDialogElement)?.close?.();
+    const modal = document.getElementById('addressModal') as HTMLDialogElement;
+    if (modal) modal.close();
   }
 
   /* ===== navigation ===== */
+
   goPrevious() {
-    this.router.navigate(['/customers/update/${customerId}/offer-selection']);
+    const customerId = this.customerApi.state().id;
+    this.router.navigate(
+      [`/customers/update/${customerId}/offer-selection`],
+      { queryParams: { billingAccountId: this.billingAccountId } }
+    );
   }
 
   goNext() {
     this.form.markAllAsTouched();
+
     if (!this.form.valid) {
       this.error.set('Please fill in all required fields.');
       return;
     }
+
     if (!this.selectedServiceAddress()) {
-      this.error.set('Please add a service address.');
+      this.error.set('Please select a service address.');
       return;
     }
 
     const payload = this.productsFA.controls.map((grp) => {
       const poId = grp.get('productOfferId')!.value as number;
       const charValuesGroup = grp.get('characteristics') as FormGroup;
-      const characteristics = Object.entries(charValuesGroup.value).map(([charId, value]) => ({
-        charId: +charId,
-        value,
-      }));
+      const characteristics = Object.entries(charValuesGroup.value).map(
+        ([charId, value]) => ({
+          charId: +charId,
+          value,
+        })
+      );
+
       return {
         productOfferId: poId,
         serviceAddressId: this.selectedServiceAddress()!.id,
@@ -216,6 +269,6 @@ export class ConfigurationProduct {
       };
     });
 
-    console.log('✅ Payload:', payload);
+    console.log('PAYLOAD:', payload);
   }
 }

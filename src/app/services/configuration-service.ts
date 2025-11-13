@@ -19,7 +19,7 @@ export class ConfigurationService {
   ): Observable<GetCharacteristicsByProductOffersResponse[]> {
     const body: GetCharacteristicsByProductOffersRequest = { productOfferIds };
     return this.http.post<GetCharacteristicsByProductOffersResponse[]>(
-      `${this.catalogServiceBaseUrl}/characteristics`,
+      `${this.catalogServiceBaseUrl}/prod-char-values/detail`,
       body
     );
   }
