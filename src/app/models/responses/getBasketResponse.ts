@@ -6,7 +6,7 @@ export interface GetBasketResponse {
 }
 
 export interface BasketItem {
-    id: string;
+    basketItemId: string;
     basketId: string;
     productOfferId: number;
     productOfferName: string;

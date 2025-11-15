@@ -29,6 +29,7 @@ export class OfferSelection {
   campaigns = signal<GetCampaignResponse[]>([]);
   campaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
   searchedCampaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
+  
 
   selectedCatalogId: number | null = null;
   selectedCampaignId: number | null = null;
@@ -46,21 +47,15 @@ export class OfferSelection {
   campaignIdFilter = signal('');
   campaignNameFilter = signal('');
 
-  basket = signal<BasketState>({
-    id: '',
-    billingAccountId: 0,
-    totalPrice: 0,
-    basketItems: [],
-  });
 
   loading = signal(false);
   errorMsg = signal<string | null>(null);
 
   constructor(
-    private basketApi: BasketService,
+    public basketService: BasketService,
     private customerService: CustomerService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -72,22 +67,22 @@ export class OfferSelection {
     });
 
     if (this.billingAccountId) {
-      this.basketApi.getBasket(this.billingAccountId).subscribe({
-        next: res => this.basket.set(res),
+      this.basketService.getBasket(this.billingAccountId).subscribe({
+        next: res => this.basketService.basket.set(res),
         error: () => {} // basket yoksa sıfırdan başlayacak
       });
     }
   }
 
   loadCatalogs() {
-    this.basketApi.getAllCatalogs().subscribe({
+    this.basketService.getAllCatalogs().subscribe({
       next: res => this.catalogs.set(res),
       error: () => this.catalogs.set([])
     });
   }
 
   loadCampaigns() {
-    this.basketApi.getAllCampaigns().subscribe({
+    this.basketService.getAllCampaigns().subscribe({
       next: res => this.campaigns.set(res),
       error: () => this.campaigns.set([])
     });
@@ -96,7 +91,7 @@ export class OfferSelection {
   onCatalogSelect() {
     if (!this.selectedCatalogId) return;
 
-    this.basketApi.getProductOffersByCatalogId(this.selectedCatalogId).subscribe({
+    this.basketService.getProductOffersByCatalogId(this.selectedCatalogId).subscribe({
       next: (res) => {
         const list = Array.isArray(res) ? res : [res];
         this.catalogOffers.set(list);
@@ -108,7 +103,7 @@ export class OfferSelection {
   onCampaignSelect() {
     if (!this.selectedCampaignId) return;
 
-    this.basketApi.getProductOffersByCampaignId(this.selectedCampaignId).subscribe({
+    this.basketService.getProductOffersByCampaignId(this.selectedCampaignId).subscribe({
       next: res => {
         const list = Array.isArray(res) ? res : [res];
         this.campaignOffers.set(list);
@@ -171,13 +166,13 @@ export class OfferSelection {
       type: sel.type
     };
 
-    this.basketApi.addItemToBasket(this.billingAccountId, req).subscribe({
+    this.basketService.addItemToBasket(this.billingAccountId, req).subscribe({
       next: (res: CreatedBasketItemResponse) => {
 
-        const cur = this.basket();
+        const cur = this.basketService.basket();
 
         const newItem: BasketItem = {
-          id: res.id,
+          basketItemId: res.basketItemId,
           basketId: res.basketId,
           productOfferId: res.productOfferId,
           productOfferName: res.productOfferName,
@@ -189,7 +184,7 @@ export class OfferSelection {
           discountRate: res.discountRate,
         };
 
-        this.basket.set({
+        this.basketService.basket.set({
           ...cur,
           id: res.basketId,
           basketItems: [...cur.basketItems, newItem],
@@ -204,12 +199,12 @@ export class OfferSelection {
   }
 
   clearBasket() {
-    if (!this.basket().id) return;
+    if (!this.basketService.basket().id) return;
 
-    this.basketApi.clearBasket(this.basket().id).subscribe({
+    this.basketService.clearBasket(this.basketService.basket().id).subscribe({
       next: () => {
-        this.basket.set({
-          ...this.basket(),
+        this.basketService.basket.set({
+          ...this.basketService.basket(),
           basketItems: [],
           totalPrice: 0
         });
@@ -227,7 +222,7 @@ export class OfferSelection {
   }
 
   get total() {
-    return this.basket().basketItems.reduce(
+    return this.basketService.basket().basketItems.reduce(
       (sum, item) => sum + (item.discountedPrice ?? item.price ?? 0),
       0
     );

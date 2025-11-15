@@ -1,5 +1,5 @@
 export interface CreatedBasketItemResponse {
-    id: string;
+    basketItemId: string;
     basketId: string;
     productOfferId: number;
     productOfferName: string;

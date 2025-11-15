@@ -15,6 +15,7 @@ import { ConfigurationService } from '../../../services/configuration-service';
 import { GetCharacteristicsByProductOffersResponse } from '../../../models/responses/getCharacteristicsByProductOfferResponse';
 import { CreateAddressRequest } from '../../../models/requests/createAddressRequest';
 import { CreatedAddressResponse } from '../../../models/responses/createdAddressResponse';
+import { CreateOrderRequest } from '../../../models/requests/createOrderRequest';
 
 @Component({
   selector: 'app-configuration-product',
@@ -27,9 +28,10 @@ export class ConfigurationProduct {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private basketApi = inject(BasketService);
-  private customerApi = inject(CustomerService);
+  private basketService = inject(BasketService);
+  private customerService = inject(CustomerService);
   private configurationApi = inject(ConfigurationService);
+
 
   billingAccountId: number | null = null;
 
@@ -61,7 +63,7 @@ export class ConfigurationProduct {
       this.billingAccountId = p['billingAccountId'] ? +p['billingAccountId'] : null;
     });
 
-    const customerId = this.customerApi.state().id;
+    const customerId = this.customerService.state().id;
     if (customerId) {
       this.loadAddresses(customerId); // mevcut adresleri çek
     }
@@ -75,7 +77,7 @@ export class ConfigurationProduct {
 
     this.loading.set(true);
 
-    this.basketApi.getBasket(this.billingAccountId).subscribe({
+    this.basketService.getBasket(this.billingAccountId).subscribe({
       next: (basket) => {
         const productOfferIds = (basket?.basketItems ?? [])
           .map((i: any) => i.productOfferId)
@@ -99,7 +101,7 @@ export class ConfigurationProduct {
   /* ===== data fetchers ===== */
 
   private loadAddresses(customerId: string) {
-    this.customerApi.getAddressesByCustomerId(customerId).subscribe({
+    this.customerService.getAddressesByCustomerId(customerId).subscribe({
       next: (res) => {
         const list = (res ?? []).map((a: any) => {
           const text = [
@@ -159,7 +161,7 @@ export class ConfigurationProduct {
   /* ===== address dropdowns & modal ===== */
 
   loadCities() {
-    this.customerApi.getCities().subscribe({
+    this.customerService.getCities().subscribe({
       next: (res) => this.cities.set(res ?? []),
       error: () => this.cities.set([]),
     });
@@ -168,7 +170,7 @@ export class ConfigurationProduct {
   onCityChange(cityId: number) {
     this.districts.set([]);
     if (!cityId) return;
-    this.customerApi.getDistrictsByCityId(cityId).subscribe({
+    this.customerService.getDistrictsByCityId(cityId).subscribe({
       next: (res) => this.districts.set(res ?? []),
       error: () => this.districts.set([]),
     });
@@ -184,7 +186,7 @@ export class ConfigurationProduct {
     houseNumber: string;
     description: string;
   }) {
-    const customerId = this.customerApi.state().id;
+    const customerId = this.customerService.state().id;
     if (!customerId) {
       this.error.set('Customer ID is missing.');
       return;
@@ -198,7 +200,7 @@ export class ConfigurationProduct {
       description: modalForm.description,
     };
 
-    this.customerApi.createAddress(req).subscribe({
+    this.customerService.createAddress(req).subscribe({
       next: (res: CreatedAddressResponse) => {
         const text = [
           res.cityName,
@@ -232,43 +234,86 @@ export class ConfigurationProduct {
   /* ===== navigation ===== */
 
   goPrevious() {
-    const customerId = this.customerApi.state().id;
+    const customerId = this.customerService.state().id;
     this.router.navigate(
       [`/customers/update/${customerId}/offer-selection`],
       { queryParams: { billingAccountId: this.billingAccountId } }
     );
   }
 
-  goNext() {
-    this.form.markAllAsTouched();
-
-    if (!this.form.valid) {
-      this.error.set('Please fill in all required fields.');
-      return;
-    }
-
-    if (!this.selectedServiceAddress()) {
-      this.error.set('Please select a service address.');
-      return;
-    }
-
-    const payload = this.productsFA.controls.map((grp) => {
-      const poId = grp.get('productOfferId')!.value as number;
-      const charValuesGroup = grp.get('characteristics') as FormGroup;
-      const characteristics = Object.entries(charValuesGroup.value).map(
-        ([charId, value]) => ({
-          charId: +charId,
-          value,
-        })
-      );
-
-      return {
-        productOfferId: poId,
-        serviceAddressId: this.selectedServiceAddress()!.id,
-        characteristics,
-      };
-    });
-
-    console.log('PAYLOAD:', payload);
-  }
+  findCharacteristicName(productOfferId: number, charId: number): string {
+  const prod = this.productsData().find(p => p.productOfferId === productOfferId);
+  if (!prod) return '';
+ 
+  const char = prod.characteristics.find(c => c.id === charId);
+  return char?.name ?? '';
 }
+
+goNext() {
+  console.log("goNext() CALISTI");
+  this.form.markAllAsTouched();
+ 
+  if (!this.form.valid) {
+    this.error.set('Please fill in all required fields.');
+    return;
+  }
+ 
+  if (!this.selectedServiceAddress()) {
+    this.error.set('Please select a service address.');
+    return;
+  }
+ 
+  // 1️⃣ Sepetteki tüm item'lar (zaten BasketItem[] tipinde)
+  const basketItems = this.basketService.basket().basketItems;
+ 
+  // 2️⃣ Formdaki karakteristik değerlerini oku
+  const productConfigs = this.productsFA.controls.map((group: FormGroup) => {
+    const productOfferId = group.get('productOfferId')!.value as number;
+    const characteristicsGroup = group.get('characteristics') as FormGroup;
+ 
+    const charValues = Object.entries(characteristicsGroup.value).map(
+      ([charId, charValue]) => ({
+        charId: Number(charId),
+        value: charValue
+      })
+    );
+ 
+    return {
+      productOfferId,
+      charValues
+    };
+  });
+ 
+  // 3️⃣ Basket'taki ilgili item'larla eşleştir → CreateOrderItemRequest[]
+  const orderItems = productConfigs.flatMap(config => {
+ 
+    // Bu productOfferId'ye ait tüm basketItem'ları bul
+    const matchedBasketItems = basketItems.filter(
+      item => item.productOfferId === config.productOfferId
+    );
+ 
+    // Her basketItem için charValues ekle
+    return matchedBasketItems.map(item => ({
+      basketItemId: item.basketItemId,   // ✔ artık string olduğu için hata yok
+      charValues: config.charValues.map(char => ({
+        characteristicName: String(this.findCharacteristicName(config.productOfferId, char.charId)),
+        characteristicValue: String(char.value)
+      }))
+    }));
+  });
+ 
+  // 4️⃣ Final request
+  const request: CreateOrderRequest = {
+    billingAccountId: this.billingAccountId!,
+    items: orderItems
+  };
+ 
+  console.log("FINAL ORDER REQUEST:", request);
+ 
+  this.configurationApi.createOrder(request).subscribe({
+    next: (res) => {
+      console.log("ORDER CREATED:", res);
+      // navigate success page later
+    }
+  });
+}}

@@ -8,6 +8,7 @@ import { GetProductOfferByCatalogResponse } from '../models/responses/getProduct
 import { map, Observable } from 'rxjs';
 import { AddBasketItemRequest } from '../models/requests/addBasketItemRequest';
 import { GetBasketResponse } from '../models/responses/getBasketResponse';
+import { BasketState } from '../models/states/basketState';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,12 @@ export class BasketService {
 
   private catalogServiceBaseUrl = 'http://localhost:8091/catalogservice/api';
   private basketServiceBaseUrl = 'http://localhost:8091/basketservice/api';
+  public basket =  signal<BasketState>({
+    id: '',
+    billingAccountId: 0,
+    totalPrice: 0,
+    basketItems: [],
+  });
 
   constructor(private httpClient: HttpClient) {}
 
@@ -56,6 +63,7 @@ export class BasketService {
   clearBasket(basketId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.basketServiceBaseUrl}/baskets/clear/${basketId}`);
   }
+
 
   
 }
