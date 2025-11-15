@@ -52,7 +52,7 @@ export const routes: Routes = [
           { path: 'update-billing-account', canActivate: [authGuard], component: UpdateBillingAccount  },
           { path: 'create-billing-account', canActivate: [authGuard], component: CreateBillingAccount  },
           { path: 'offer-selection', canActivate: [authGuard], component: OfferSelection },
-          {path:'configuration-product', canActivate: [authGuard], component:ConfigurationProduct}
+          { path: 'configuration-product', canActivate: [authGuard], component:ConfigurationProduct}
         ],
       },
 

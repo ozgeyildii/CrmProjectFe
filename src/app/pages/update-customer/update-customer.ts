@@ -57,7 +57,7 @@ export class UpdateCustomer {
         const url: string = event.urlAfterRedirects;
  
         // Eğer offer-selection altına girdiysek sidebar gizle
-        if (url.includes('/offer-selection')) {
+        if (url.includes('/offer-selection') || url.includes('/configuration-product')) {
           this.showSidebar.set(false);
         } else {
           this.showSidebar.set(true);
