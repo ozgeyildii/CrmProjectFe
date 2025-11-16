@@ -1,5 +1,4 @@
 <div class="submit-card" *ngIf="orderPreview() as o">
-  
   <h4 class="title">Submit Order</h4>
 
   <!-- Order ID -->
@@ -35,11 +34,8 @@
   <div class="btn-row">
     <button class="btn-outline" type="button" (click)="goPrevious()">Previous</button>
 
-    <button class="btn-orange"
-            type="button"
-            [disabled]="loading()"
-            (click)="submitOrder()">
-        {{ loading() ? 'Submitting...' : 'Submit' }}
+    <button class="btn-orange" type="button" [disabled]="loading()" (click)="submitOrder()">
+      {{ loading() ? 'Submitting...' : 'Submit' }}
     </button>
   </div>
 
@@ -52,8 +48,6 @@
     <div class="success-icon">✓</div>
     <h3 class="success-text">Order Submitted Successfully</h3>
 
-    <button class="btn-orange mt-3" type="button" (click)="closeSuccess()">
-      OKAY
-    </button>
+    <button class="btn-orange mt-3" type="button" (click)="closeSuccess()">OKAY</button>
   </div>
 </dialog>

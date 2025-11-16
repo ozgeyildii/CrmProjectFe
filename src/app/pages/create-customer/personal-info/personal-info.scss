@@ -7,10 +7,9 @@
   color: #333;
 }
 
-
 .content-area {
-  margin-left: 0px; 
-  margin-top: 0px; 
+  margin-left: 0px;
+  margin-top: 0px;
   min-height: calc(100vh - 84px);
   background-color: #f7f8fa;
   transition: all 0.3s ease;
@@ -28,7 +27,6 @@
   border: none;
   border-radius: 12px;
   overflow: hidden;
-
 
   .card-body {
     background-color: #fff;
@@ -55,17 +53,16 @@
     }
   }
 
-  input[type="date"].form-control {
-  background-color: #fff;
-  padding-right: 2.2rem;
-}
+  input[type='date'].form-control {
+    background-color: #fff;
+    padding-right: 2.2rem;
+  }
 
-input[type="date"].form-control.is-invalid {
-  background-position: right 0.75rem center;
-  background-repeat: no-repeat;
-  background-size: 16px 16px;
-}
-
+  input[type='date'].form-control.is-invalid {
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+  }
 
   .btn {
     border-radius: 6px;
@@ -97,4 +94,3 @@ input[type="date"].form-control.is-invalid {
     margin-top: 0.25rem;
   }
 }
-

@@ -52,22 +52,17 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       return;
     }
-    console.log('%c[LOGIN] Sending login request...', 'color: #3498db');
 
     this.authService.sendLoginRequest(this.loginForm.value).subscribe({
       next: (response) => {
-        console.log('%c[LOGIN] Login response received', 'color: #2ecc71', response);
         const jwt = response.token;
         localStorage.setItem('token', jwt);
-        console.log('%c[LOGIN] Token saved to localStorage:', 'color: #f39c12', jwt);
 
         const decodedJwt = jwtDecode<UserJwtModel>(jwt);
         this.authService.userState.set({
           isLoggedIn: true,
           user: { sub: decodedJwt.sub!, roles: decodedJwt.roles },
         });
-        this.loginStatus.set('success');
-        console.log('%c[LOGIN] Navigating to customers/search', 'color: #9b59b6');
         this.router.navigateByUrl('customers/search');
       },
       error: (error) => {
@@ -75,7 +70,7 @@ export class LoginComponent implements OnInit {
         if (error.status === 400 || error.status === 401) {
           this.loginStatus.set('error');
         } else {
-          alert('An unexpected error occurred. Please try again later.');
+          console.log('An unexpected error occurred. Please try again later.');
         }
       },
     });

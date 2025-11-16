@@ -78,8 +78,8 @@ export class CreateBillingAccount implements OnInit {
       return;
     }
 
-    const city = this.cities().find(c => c.id === +this.addressForm.value.cityId);
-    const district = this.districts().find(d => d.id === +this.addressForm.value.districtId);
+    const city = this.cities().find((c) => c.id === +this.addressForm.value.cityId);
+    const district = this.districts().find((d) => d.id === +this.addressForm.value.districtId);
 
     const req: CreateAddressRequest = {
       customerId: this.customerService.state().id!,

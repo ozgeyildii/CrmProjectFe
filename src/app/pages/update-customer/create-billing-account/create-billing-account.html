@@ -2,7 +2,6 @@
   <h5 class="text-orange fw-semibold mb-4">Create Billing Account</h5>
 
   <div class="row g-4">
-
     <!-- LEFT -->
     <div class="col-md-6">
       <label class="form-label fw-medium">Account Name *</label>
@@ -27,8 +26,9 @@
       <!-- SELECTED ADDRESS DISPLAY -->
       <div *ngIf="tempAddressDetailed(); else noAddress" class="addr-preview mt-2">
         <div>
-          <p class="fw-semibold mb-1">{{ tempAddressDetailed()?.cityName }},
-            {{ tempAddressDetailed()?.districtName }}</p>
+          <p class="fw-semibold mb-1">
+            {{ tempAddressDetailed()?.cityName }}, {{ tempAddressDetailed()?.districtName }}
+          </p>
 
           <p class="mb-1">
             <strong>{{ tempAddressDetailed()?.street }}</strong> No:
@@ -47,10 +47,7 @@
         <p class="text-muted mt-2 addr-empty">No address added yet.</p>
       </ng-template>
 
-      <button
-        class="btn btn-outline-orange mt-3"
-        (click)="openModalForNew()"
-      >
+      <button class="btn btn-outline-orange mt-3" (click)="openModalForNew()">
         + Add New Address
       </button>
     </div>
@@ -68,14 +65,12 @@
   <div class="modal fade show d-block" *ngIf="showModal()" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom">
       <div class="modal-content modal-content-custom" [formGroup]="addressForm">
-
         <div class="modal-header">
           <h6 class="text-orange">Add Address</h6>
           <button class="btn-close" (click)="showModal.set(false)"></button>
         </div>
 
         <div class="modal-body">
-
           <!-- CITY & DISTRICT -->
           <div class="row g-3">
             <div class="col-md-6">
@@ -103,12 +98,12 @@
           <div class="row g-3 mt-2">
             <div class="col-md-6">
               <label class="form-label">Street *</label>
-              <input class="form-control" formControlName="street">
+              <input class="form-control" formControlName="street" />
             </div>
 
             <div class="col-md-6">
               <label class="form-label">House No *</label>
-              <input class="form-control" formControlName="houseNumber">
+              <input class="form-control" formControlName="houseNumber" />
             </div>
           </div>
 
@@ -118,14 +113,9 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-gray" (click)="showModal.set(false)">
-            Cancel
-          </button>
-          <button class="btn btn-orange" (click)="saveAddress()">
-            Save
-          </button>
+          <button class="btn btn-gray" (click)="showModal.set(false)">Cancel</button>
+          <button class="btn btn-orange" (click)="saveAddress()">Save</button>
         </div>
-
       </div>
     </div>
   </div>

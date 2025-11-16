@@ -1,5 +1,5 @@
 <main class="content-area">
-    <app-loader *ngIf="loaderService.isLoading()"></app-loader>
+  <app-loader *ngIf="loaderService.isLoading()"></app-loader>
   <div class="container-fluid py-4">
     <div class="card shadow-sm customer-card bg-white border-0">
       <div class="card-body">
@@ -60,7 +60,9 @@
                 (input)="onFaxInput($event)"
                 maxlength="13"
                 formControlName="fax"
-                [ngClass]="{ 'is-invalid': contactForm.get('fax')?.invalid && contactForm.get('fax')?.touched }"
+                [ngClass]="{
+                  'is-invalid': contactForm.get('fax')?.invalid && contactForm.get('fax')?.touched
+                }"
               />
               <div *ngIf="isInvalid('fax')" class="invalid-feedback">
                 Fax must be either 4 or 13 digits.
@@ -69,8 +71,12 @@
           </div>
 
           <div class="d-flex justify-content-end gap-2 mt-4">
-            <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">Cancel</button>
-            <button type="button" class="btn btn-outline-secondary px-4" (click)="onPrevious()">Previous</button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="onPrevious()">
+              Previous
+            </button>
             <button
               type="submit"
               class="btn btn-warning text-white px-4"

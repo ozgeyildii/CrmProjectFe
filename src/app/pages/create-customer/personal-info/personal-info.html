@@ -10,10 +10,9 @@
           (close)="closePopup()"
         ></app-popup>
 
-         <p class="form-hint mb-4">
+        <p class="form-hint mb-4">
           <strong>To continue, please fill in all the necessary fields below.</strong>
         </p>
-
 
         <form [formGroup]="createPersonalInfoForm" (ngSubmit)="checkNationalIdBeforeCreate()">
           <div class="row g-3">
@@ -61,7 +60,7 @@
             <div class="col-md-4">
               <label class="form-label">Birth Date <span class="text-danger">*</span></label>
               <input
-               [max]="today"
+                [max]="today"
                 formControlName="dateOfBirth"
                 type="date"
                 class="form-control"
@@ -128,7 +127,9 @@
           </div>
 
           <div class="d-flex justify-content-end gap-2 mt-4">
-            <button type="button" class="btn btn-outline-secondary px-4" (click)=onCancel()>Cancel</button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">
+              Cancel
+            </button>
             <button
               type="submit"
               class="btn btn-primary px-4"

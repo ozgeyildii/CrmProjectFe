@@ -117,7 +117,7 @@ export class PersonalInfo implements OnInit {
     if (!nationalId) return;
 
     this.createCustomerService.checkNationalId(nationalId).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         if (res.exists) {
           this.title.set('Duplicate Nationality ID Found');
           this.errorMessage.set(res.message);

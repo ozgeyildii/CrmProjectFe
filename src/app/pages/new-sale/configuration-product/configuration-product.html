@@ -29,11 +29,7 @@
                   disabled
                 />
 
-                <select
-                  *ngIf="c.editable"
-                  class="form-select"
-                  [formControlName]="c.id.toString()"
-                >
+                <select *ngIf="c.editable" class="form-select" [formControlName]="c.id.toString()">
                   <option value="">Select</option>
                   <option *ngFor="let v of c.values" [value]="v">{{ v }}</option>
                 </select>
@@ -51,9 +47,7 @@
     <div class="existing-addr-box mb-4">
       <h6 class="fw-semibold mb-2">Select a Service Address from Existing Addresses</h6>
 
-      <div *ngIf="addresses().length === 0" class="text-muted small">
-        No saved addresses.
-      </div>
+      <div *ngIf="addresses().length === 0" class="text-muted small">No saved addresses.</div>
 
       <div class="row g-3" *ngIf="addresses().length > 0">
         <div class="col-md-6" *ngFor="let addr of addresses()">
@@ -100,12 +94,14 @@
 <dialog id="addressModal" class="addr-modal">
   <form
     #addrForm="ngForm"
-    (ngSubmit)="saveNewAddress({
-      districtId: +distSel.value,
-      street: streetInp.value,
-      houseNumber: houseInp.value,
-      description: descInp.value
-    })"
+    (ngSubmit)="
+      saveNewAddress({
+        districtId: +distSel.value,
+        street: streetInp.value,
+        houseNumber: houseInp.value,
+        description: descInp.value
+      })
+    "
     class="modal-content"
   >
     <div class="modal-header">

@@ -18,7 +18,7 @@ export class OrderService {
     return this.httpClient.post<void>(`${this.orderServiceBaseUrl}/create-product/${orderId}`, {});
   }
 
- getOrders(billingAccountId: number): Observable<GetOrdersByBillingAccountResponse[]> {
+  getOrders(billingAccountId: number): Observable<GetOrdersByBillingAccountResponse[]> {
     return this.httpClient.get<GetOrdersByBillingAccountResponse[]>(
       `${this.orderServiceBaseUrl}/${billingAccountId}`
     );

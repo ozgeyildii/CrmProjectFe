@@ -39,47 +39,47 @@ export class SearchCustomer {
     this.page = 0;
     this.loadCustomers();
   }
-loadCustomers() {
-  this.searchCustomerService.searchCustomers(this.filters, this.page, this.size).subscribe({
-    next: (res: any) => {
-      // Eğer veri geldiyse kaydet
-      this.customers = res || [];
+  loadCustomers() {
+    this.searchCustomerService.searchCustomers(this.filters, this.page, this.size).subscribe({
+      next: (res: any) => {
+        // Eğer veri geldiyse kaydet
+        this.customers = res || [];
 
-      // Eğer gelen veri sayısı size'dan küçükse → bu son sayfa
-      this.hasMore = res && res.length === this.size;
+        // Eğer gelen veri sayısı size'dan küçükse → bu son sayfa
+        this.hasMore = res && res.length === this.size;
 
-      if(this.customers.length === 0 && this.page === 0) {
+        if (this.customers.length === 0 && this.page === 0) {
           this.popupMessage.set('No customer found.');
           this.popupType.set('warning');
           this.showPopup.set(true);
-      }
+        }
 
-      // Eğer son sayfadaysak ama boş geldiyse (örneğin fazla tıklama olmuşsa)
-      if (res.length === 0 && this.page > 0) {
-        this.page--; // bir önceki sayfaya dön
+        // Eğer son sayfadaysak ama boş geldiyse (örneğin fazla tıklama olmuşsa)
+        if (res.length === 0 && this.page > 0) {
+          this.page--; // bir önceki sayfaya dön
+          this.hasMore = false;
+          this.loadCustomers(); // geri yükle
+        }
+      },
+      error: () => {
+        this.customers = [];
         this.hasMore = false;
-        this.loadCustomers(); // geri yükle
-      }
-    },
-    error: () => {
-      this.customers = [];
-      this.hasMore = false;
-    }
-  });
-}
+      },
+    });
+  }
 
-nextPage() {
-  if (!this.hasMore) return; // eğer son sayfaysa gitme
-  this.page++;
-  this.loadCustomers();
-}
-
-previousPage() {
-  if (this.page > 0) {
-    this.page--;
+  nextPage() {
+    if (!this.hasMore) return; // eğer son sayfaysa gitme
+    this.page++;
     this.loadCustomers();
   }
-}
+
+  previousPage() {
+    if (this.page > 0) {
+      this.page--;
+      this.loadCustomers();
+    }
+  }
 
   onClear() {
     this.filters = {};

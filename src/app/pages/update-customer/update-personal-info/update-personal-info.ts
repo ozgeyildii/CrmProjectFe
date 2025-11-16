@@ -112,7 +112,6 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
     ? this.customer
     : this.customerService.state();
  
-    console.log('Loading customer data into form:', source);
  
   const data = source || {};
   this.form.patchValue({

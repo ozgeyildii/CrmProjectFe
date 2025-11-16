@@ -1,7 +1,7 @@
 <main class="content-area">
   <div class="container-fluid py-4">
-  <div class="address-section">
-          <div class="card-body">
+    <div class="address-section">
+      <div class="card-body">
         <!-- Popup -->
         <app-popup
           [title]="title() || ''"
@@ -12,13 +12,13 @@
         ></app-popup>
 
         <!-- Header -->
-    
-  <div class="header-bar">
-    <h4 class="fw-semibold text-orange mb-0">Address Info</h4>
-    <button class="btn btn-orange btn-sm" (click)="onAddNew()">
-      <i class="bi bi-plus-circle"></i> Add New Address
-    </button>
-  </div>
+
+        <div class="header-bar">
+          <h4 class="fw-semibold text-orange mb-0">Address Info</h4>
+          <button class="btn btn-orange btn-sm" (click)="onAddNew()">
+            <i class="bi bi-plus-circle"></i> Add New Address
+          </button>
+        </div>
 
         <!-- Address List -->
         <div *ngIf="!editMode()">

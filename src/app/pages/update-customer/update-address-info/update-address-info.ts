@@ -100,8 +100,6 @@ export class UpdateAddressInfo {
     this.addMode.set(false);
     this.editMode.set(true);
 
-    console.log('address:', address);
-
     this.form.get('cityId')?.setValue(address.cityId ?? '');
 
     if (address.cityId) {

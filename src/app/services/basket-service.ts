@@ -14,10 +14,9 @@ import { BasketState } from '../models/states/basketState';
   providedIn: 'root',
 })
 export class BasketService {
-
   private catalogServiceBaseUrl = 'http://localhost:8091/catalogservice/api';
   private basketServiceBaseUrl = 'http://localhost:8091/basketservice/api';
-  public basket =  signal<BasketState>({
+  public basket = signal<BasketState>({
     id: '',
     billingAccountId: 0,
     totalPrice: 0,
@@ -35,15 +34,17 @@ export class BasketService {
   }
 
   getProductOffersByCampaignId(campaignId: number): Observable<GetCampaignProductOfferResponse[]> {
-  return this.httpClient.get<GetCampaignProductOfferResponse | GetCampaignProductOfferResponse[]>(
-    `${this.catalogServiceBaseUrl}/campaign-product-offers/${campaignId}`
-  ).pipe(
-      map((res) => Array.isArray(res) ? res : [res]) 
-    );
-}
+    return this.httpClient
+      .get<GetCampaignProductOfferResponse | GetCampaignProductOfferResponse[]>(
+        `${this.catalogServiceBaseUrl}/campaign-product-offers/${campaignId}`
+      )
+      .pipe(map((res) => (Array.isArray(res) ? res : [res])));
+  }
 
   getProductOffersByCatalogId(catalogId: number): Observable<GetProductOfferByCatalogResponse[]> {
-    return this.httpClient.get<GetProductOfferByCatalogResponse[]>(`${this.catalogServiceBaseUrl}/product-offers/get-by-catalog/${catalogId}`);
+    return this.httpClient.get<GetProductOfferByCatalogResponse[]>(
+      `${this.catalogServiceBaseUrl}/product-offers/get-by-catalog/${catalogId}`
+    );
   }
 
   addItemToBasket(
@@ -57,13 +58,12 @@ export class BasketService {
   }
 
   getBasket(billingAccountId: number): Observable<GetBasketResponse> {
-    return this.httpClient.get<GetBasketResponse>(`${this.basketServiceBaseUrl}/baskets/${billingAccountId}`);
+    return this.httpClient.get<GetBasketResponse>(
+      `${this.basketServiceBaseUrl}/baskets/${billingAccountId}`
+    );
   }
 
   clearBasket(basketId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.basketServiceBaseUrl}/baskets/clear/${basketId}`);
   }
-
-
-  
 }

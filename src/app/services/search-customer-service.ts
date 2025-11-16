@@ -9,19 +9,15 @@ export class SearchCustomerService {
 
   constructor(private http: HttpClient) {}
 
-
   searchCustomers(filters: any, page: number, size: number): Observable<SearchCustomerList> {
-    let params = new HttpParams()
-      .set('page', page)
-      .set('size', size);
+    let params = new HttpParams().set('page', page).set('size', size);
 
-    Object.keys(filters).forEach(key => {
+    Object.keys(filters).forEach((key) => {
       const value = filters[key];
       if (value !== null && value !== undefined && value !== '') {
         params = params.set(key, value);
       }
     });
-
 
     return this.http.get<SearchCustomerList>(`${this.baseUrl}/search`, { params });
   }

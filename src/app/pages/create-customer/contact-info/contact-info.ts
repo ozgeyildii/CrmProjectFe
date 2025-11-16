@@ -106,7 +106,6 @@ export class ContactInfo implements OnInit, OnDestroy {
 
     this.createCustomerService.createCustomer().subscribe({
       next: (response) => {
-        console.log('Customer created successfully:', response);
         this.router.navigate(['customers/update', response.id]);
         this.createCustomerService.state.set({});
       },

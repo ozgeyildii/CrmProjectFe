@@ -35,7 +35,7 @@
 
   &.success {
     border-left-color: #10b981;
-    
+
     .modal-header {
       background-color: #f0fdf4;
       border-bottom-color: #d1fae5;
@@ -63,7 +63,7 @@
 
   &.error {
     border-left-color: #ef4444;
-    
+
     .modal-header {
       background-color: #fef2f2;
       border-bottom-color: #fecaca;
@@ -89,7 +89,7 @@
     }
   }
 
-   /* ⚠️ WARNING MODAL THEME */
+  /* ⚠️ WARNING MODAL THEME */
   &.warning {
     border-left-color: #f59e0b; // amber-500
 
@@ -214,7 +214,6 @@
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
   }
 }
-
 
 // Animations
 @keyframes fadeIn {

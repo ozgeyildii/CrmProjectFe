@@ -83,9 +83,9 @@
     &:active {
       z-index: 1060 !important;
     }
-    
+
     // Dropdown açıkken z-index
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
       z-index: 1060 !important;
     }
   }
@@ -102,7 +102,7 @@
     margin-left: auto;
     position: relative; // Eklendi
     z-index: auto; // Eklendi
-    
+
     .btn-light {
       border: none;
     }

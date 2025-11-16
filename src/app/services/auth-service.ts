@@ -28,12 +28,10 @@ export class AuthService {
         user: { sub: decodedJwt.sub!, roles: decodedJwt.roles },
       });
     } else {
-      // Token yok veya süresi dolmuş
-      this.logout();
+-      this.logout();
     }
   }
 
-  
   sendLoginRequest(loginRequest: LoginRequest): Observable<{ token: string }> {
     return this.httpClient.post<{ token: string }>(
       `http://localhost:8091/authservice/api/auth/login`,

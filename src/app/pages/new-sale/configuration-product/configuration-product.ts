@@ -32,8 +32,7 @@ export class ConfigurationProduct {
   private basketService = inject(BasketService);
   private customerService = inject(CustomerService);
   private configurationService = inject(ConfigurationService);
-  private orderService= inject(OrderService);
-
+  private orderService = inject(OrderService);
 
   billingAccountId: number | null = null;
 
@@ -56,7 +55,7 @@ export class ConfigurationProduct {
   }
 
   ngOnInit() {
-      this.route.queryParams.subscribe((p) => {
+    this.route.queryParams.subscribe((p) => {
       this.billingAccountId = p['billingAccountId'] ? +p['billingAccountId'] : null;
     });
 
@@ -155,7 +154,6 @@ export class ConfigurationProduct {
     });
   }
 
-
   loadCities() {
     this.customerService.getCities().subscribe({
       next: (res) => this.cities.set(res ?? []),
@@ -207,10 +205,7 @@ export class ConfigurationProduct {
           .filter(Boolean)
           .join(', ');
 
-        this.addresses.set([
-          ...this.addresses(),
-          { id: res.id!, displayText: text },
-        ]);
+        this.addresses.set([...this.addresses(), { id: res.id!, displayText: text }]);
 
         this.selectedServiceAddress.set({ id: res.id!, displayText: text });
 
@@ -225,92 +220,86 @@ export class ConfigurationProduct {
     if (modal) modal.close();
   }
 
-
   goPrevious() {
     const customerId = this.customerService.state().id;
-    this.router.navigate(
-      [`/customers/update/${customerId}/offer-selection`],
-      { queryParams: { billingAccountId: this.billingAccountId } }
-    );
+    this.router.navigate([`/customers/update/${customerId}/offer-selection`], {
+      queryParams: { billingAccountId: this.billingAccountId },
+    });
   }
 
   findCharacteristicName(productOfferId: number, charId: number): string {
-  const prod = this.productsData().find(p => p.productOfferId === productOfferId);
-  if (!prod) return '';
- 
-  const char = prod.characteristics.find(c => c.id === charId);
-  return char?.name ?? '';
-}
+    const prod = this.productsData().find((p) => p.productOfferId === productOfferId);
+    if (!prod) return '';
 
-goNext() {
-  console.log("goNext() CALISTI");
-  this.form.markAllAsTouched();
- 
-  if (!this.form.valid) {
-    this.error.set('Please fill in all required fields.');
-    return;
+    const char = prod.characteristics.find((c) => c.id === charId);
+    return char?.name ?? '';
   }
- 
-  if (!this.selectedServiceAddress()) {
-    this.error.set('Please select a service address.');
-    return;
-  }
- 
-  const basketItems = this.basketService.basket().basketItems;
- 
-  const productConfigs = this.productsFA.controls.map((group: FormGroup) => {
-    const productOfferId = group.get('productOfferId')!.value as number;
-    const characteristicsGroup = group.get('characteristics') as FormGroup;
- 
-    const charValues = Object.entries(characteristicsGroup.value).map(
-      ([charId, charValue]) => ({
+
+  goNext() {
+    this.form.markAllAsTouched();
+
+    if (!this.form.valid) {
+      this.error.set('Please fill in all required fields.');
+      return;
+    }
+
+    if (!this.selectedServiceAddress()) {
+      this.error.set('Please select a service address.');
+      return;
+    }
+
+    const basketItems = this.basketService.basket().basketItems;
+
+    const productConfigs = this.productsFA.controls.map((group: FormGroup) => {
+      const productOfferId = group.get('productOfferId')!.value as number;
+      const characteristicsGroup = group.get('characteristics') as FormGroup;
+
+      const charValues = Object.entries(characteristicsGroup.value).map(([charId, charValue]) => ({
         charId: Number(charId),
-        value: charValue
-      })
-    );
- 
-    return {
-      productOfferId,
-      charValues
+        value: charValue,
+      }));
+
+      return {
+        productOfferId,
+        charValues,
+      };
+    });
+
+    const orderItems = productConfigs.flatMap((config) => {
+      const matchedBasketItems = basketItems.filter(
+        (item) => item.productOfferId === config.productOfferId
+      );
+
+      return matchedBasketItems.map((item) => ({
+        basketItemId: item.basketItemId,
+        charValues: config.charValues.map((char) => ({
+          characteristicName: String(
+            this.findCharacteristicName(config.productOfferId, char.charId)
+          ),
+          characteristicValue: String(char.value),
+        })),
+      }));
+    });
+
+    const request: CreateOrderRequest = {
+      billingAccountId: this.billingAccountId!,
+      items: orderItems,
+      addressId: this.selectedServiceAddress()?.id!,
     };
-  });
- 
-  const orderItems = productConfigs.flatMap(config => {
- 
-    const matchedBasketItems = basketItems.filter(
-      item => item.productOfferId === config.productOfferId
-    );
- 
-    return matchedBasketItems.map(item => ({
-      basketItemId: item.basketItemId,   
-      charValues: config.charValues.map(char => ({
-        characteristicName: String(this.findCharacteristicName(config.productOfferId, char.charId)),
-        characteristicValue: String(char.value)
-      }))
-    }));
-  });
- 
-  const request: CreateOrderRequest = {
-    billingAccountId: this.billingAccountId!,
-    items: orderItems,
-    addressId:this.selectedServiceAddress()?.id!
-  };
- 
- 
-  this.configurationService.createOrder(request).subscribe({
-    next: (res) => {
-      this.orderService.orderState.set(res);
-       const customerId = this.customerService.state().id;
 
-       this.router.navigate(
-      [`/customers/update/${customerId}/submit-order`],
-      { queryParams: { billingAccountId: this.billingAccountId } }
-    );
+    this.configurationService.createOrder(request).subscribe({
+      next: (res) => {
+        this.orderService.orderState.set(res);
+        const customerId = this.customerService.state().id;
 
-    },
-    error: (err) => {
-    console.error("Order creation failed:", err);
-    this.error.set("Order could not be created. Please try again.");
-  },
-  });
-}}
+        this.router.navigate([`/customers/update/${customerId}/submit-order`], {
+          queryParams: { billingAccountId: this.billingAccountId },
+        });
+      },
+      error: (err) => {
+        console.error('Order creation failed:', err);
+        this.error.set('Order could not be created. Please try again.');
+      },
+    });
+  }
+}

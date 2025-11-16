@@ -21,7 +21,6 @@ import { CustomerService } from '../../../../app/services/customer-service';
   styleUrls: ['./offer-selection.scss'],
 })
 export class OfferSelection {
-
   activeTab = signal<'catalog' | 'campaign'>('catalog');
 
   catalogs = signal<GetCatalogResponse[]>([]);
@@ -29,7 +28,6 @@ export class OfferSelection {
   campaigns = signal<GetCampaignResponse[]>([]);
   campaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
   searchedCampaignOffers = signal<GetCampaignProductOfferResponse[]>([]);
-  
 
   selectedCatalogId: number | null = null;
   selectedCampaignId: number | null = null;
@@ -38,7 +36,7 @@ export class OfferSelection {
 
   // TEKLİ SEÇİM — sadece bir offer tutuyoruz
   selectedOffer = signal<{
-    sendId: number;   // backend’e gidecek ID
+    sendId: number; // backend’e gidecek ID
     uniqueId: number; // UI highlight için
     name: string;
     type: 'OFFER' | 'CAMPAIGN';
@@ -47,7 +45,6 @@ export class OfferSelection {
   campaignIdFilter = signal('');
   campaignNameFilter = signal('');
 
-
   loading = signal(false);
   errorMsg = signal<string | null>(null);
 
@@ -55,36 +52,36 @@ export class OfferSelection {
     public basketService: BasketService,
     private customerService: CustomerService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadCatalogs();
     this.loadCampaigns();
 
-    this.route.queryParams.subscribe(p => {
+    this.route.queryParams.subscribe((p) => {
       this.billingAccountId = +p['billingAccountId'];
     });
 
     if (this.billingAccountId) {
       this.basketService.getBasket(this.billingAccountId).subscribe({
-        next: res => this.basketService.basket.set(res),
-        error: () => {} // basket yoksa sıfırdan başlayacak
+        next: (res) => this.basketService.basket.set(res),
+        error: () => {}, // basket yoksa sıfırdan başlayacak
       });
     }
   }
 
   loadCatalogs() {
     this.basketService.getAllCatalogs().subscribe({
-      next: res => this.catalogs.set(res),
-      error: () => this.catalogs.set([])
+      next: (res) => this.catalogs.set(res),
+      error: () => this.catalogs.set([]),
     });
   }
 
   loadCampaigns() {
     this.basketService.getAllCampaigns().subscribe({
-      next: res => this.campaigns.set(res),
-      error: () => this.campaigns.set([])
+      next: (res) => this.campaigns.set(res),
+      error: () => this.campaigns.set([]),
     });
   }
 
@@ -96,7 +93,7 @@ export class OfferSelection {
         const list = Array.isArray(res) ? res : [res];
         this.catalogOffers.set(list);
       },
-      error: () => this.catalogOffers.set([])
+      error: () => this.catalogOffers.set([]),
     });
   }
 
@@ -104,12 +101,12 @@ export class OfferSelection {
     if (!this.selectedCampaignId) return;
 
     this.basketService.getProductOffersByCampaignId(this.selectedCampaignId).subscribe({
-      next: res => {
+      next: (res) => {
         const list = Array.isArray(res) ? res : [res];
         this.campaignOffers.set(list);
         this.searchedCampaignOffers.set(list);
       },
-      error: () => this.campaignOffers.set([])
+      error: () => this.campaignOffers.set([]),
     });
   }
 
@@ -117,7 +114,7 @@ export class OfferSelection {
     const idF = this.campaignIdFilter().trim().toLowerCase();
     const nameF = this.campaignNameFilter().trim().toLowerCase();
 
-    const filtered = this.campaignOffers().filter(o => {
+    const filtered = this.campaignOffers().filter((o) => {
       const matchId = idF ? o.campaignId.toString().includes(idF) : true;
       const matchName = nameF ? o.productOfferName.toLowerCase().includes(nameF) : true;
       return matchId && matchName;
@@ -128,14 +125,9 @@ export class OfferSelection {
 
   // TEKLİ SEÇİM
   selectOffer(offer: any, type: 'OFFER' | 'CAMPAIGN') {
+    const uniqueId = type === 'CAMPAIGN' ? offer.productOfferId : offer.id;
 
-    const uniqueId = type === 'CAMPAIGN'
-      ? offer.productOfferId
-      : offer.id;
-
-    const sendId = type === 'CAMPAIGN'
-      ? offer.campaignId
-      : offer.id;
+    const sendId = type === 'CAMPAIGN' ? offer.campaignId : offer.id;
 
     const name = offer.productOfferName || offer.name;
 
@@ -143,7 +135,7 @@ export class OfferSelection {
       uniqueId,
       sendId,
       name,
-      type
+      type,
     });
   }
 
@@ -152,7 +144,10 @@ export class OfferSelection {
   }
 
   isCampaignActive(o: any) {
-    return this.selectedOffer()?.uniqueId === o.productOfferId && this.selectedOffer()?.type === 'CAMPAIGN';
+    return (
+      this.selectedOffer()?.uniqueId === o.productOfferId &&
+      this.selectedOffer()?.type === 'CAMPAIGN'
+    );
   }
 
   addToBasket() {
@@ -163,12 +158,11 @@ export class OfferSelection {
 
     const req: AddBasketItemRequest = {
       id: sel.sendId,
-      type: sel.type
+      type: sel.type,
     };
 
     this.basketService.addItemToBasket(this.billingAccountId, req).subscribe({
       next: (res: CreatedBasketItemResponse) => {
-
         const cur = this.basketService.basket();
 
         const newItem: BasketItem = {
@@ -193,8 +187,8 @@ export class OfferSelection {
 
         this.selectedOffer.set(null);
       },
-      error: () => this.errorMsg.set("Item could not be added."),
-      complete: () => this.loading.set(false)
+      error: () => this.errorMsg.set('Item could not be added.'),
+      complete: () => this.loading.set(false),
     });
   }
 
@@ -206,25 +200,23 @@ export class OfferSelection {
         this.basketService.basket.set({
           ...this.basketService.basket(),
           basketItems: [],
-          totalPrice: 0
+          totalPrice: 0,
         });
-      }
+      },
     });
   }
 
   goNext() {
     const customerId = this.customerService.state().id;
 
-    this.router.navigate(
-      [`/customers/update/${customerId}/configuration-product`],
-      { queryParams: { billingAccountId: this.billingAccountId } }
-    );
+    this.router.navigate([`/customers/update/${customerId}/configuration-product`], {
+      queryParams: { billingAccountId: this.billingAccountId },
+    });
   }
 
   get total() {
-    return this.basketService.basket().basketItems.reduce(
-      (sum, item) => sum + (item.discountedPrice ?? item.price ?? 0),
-      0
-    );
+    return this.basketService
+      .basket()
+      .basketItems.reduce((sum, item) => sum + (item.discountedPrice ?? item.price ?? 0), 0);
   }
 }

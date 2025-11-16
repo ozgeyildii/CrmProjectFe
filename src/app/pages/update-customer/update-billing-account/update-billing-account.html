@@ -1,11 +1,12 @@
 <div class="card border-warning p-3 customer-account-section">
-
   <div class="header-bar">
     <h4 class="fw-semibold text-orange mb-0">Customer Accounts</h4>
     <button class="btn btn-orange" (click)="createAccount()">+ Add Customer Account</button>
   </div>
 
-  <div class="d-none d-md-flex fw-semibold text-secondary bg-light rounded px-3 py-2 border border-warning mb-2">
+  <div
+    class="d-none d-md-flex fw-semibold text-secondary bg-light rounded px-3 py-2 border border-warning mb-2"
+  >
     <div class="col text-center col-md-2">Account Status</div>
     <div class="col text-center col-md-3">Account Number</div>
     <div class="col text-center col-md-3">Account Name</div>
@@ -16,13 +17,14 @@
   <div class="accordion" id="accountsAccordion">
     <div class="accordion-item mb-2" *ngFor="let acc of accounts(); let i = index">
       <h2 class="accordion-header">
-
-        <button class="accordion-button collapsed bg-white" type="button"
+        <button
+          class="accordion-button collapsed bg-white"
+          type="button"
           data-bs-toggle="collapse"
           [attr.data-bs-target]="'#collapse' + i"
           aria-expanded="false"
-          [attr.aria-controls]="'collapse' + i">
-
+          [attr.aria-controls]="'collapse' + i"
+        >
           <div class="row w-100 align-items-center text-center">
             <div class="col-6 col-md-2 fw-semibold text-success">{{ acc.status }}</div>
             <div class="col-6 col-md-3">{{ acc.accountNumber }}</div>
@@ -37,10 +39,12 @@
         </button>
       </h2>
 
-      <div [id]="'collapse' + i" class="accordion-collapse collapse"
-        [attr.data-bs-parent]="'#accountsAccordion'">
+      <div
+        [id]="'collapse' + i"
+        class="accordion-collapse collapse"
+        [attr.data-bs-parent]="'#accountsAccordion'"
+      >
         <div class="accordion-body bg-white border-top border-warning rounded-bottom">
-
           <div class="table-responsive">
             <table class="table table-bordered table-sm align-middle product-table">
               <thead class="table-light">
@@ -60,7 +64,10 @@
                   <td>{{ item.campaignId ?? '-' }}</td>
                   <td class="text-wrap">{{ item.campaignName ?? '-' }}</td>
                   <td>
-                    <i class="bi bi-eye text-orange cursor-pointer" (click)="openDetailsModal(item)"></i>
+                    <i
+                      class="bi bi-eye text-orange cursor-pointer"
+                      (click)="openDetailsModal(item)"
+                    ></i>
                   </td>
                 </tr>
               </tbody>
@@ -88,14 +95,12 @@
 <!-- PRODUCT MODAL -->
 <dialog id="productModal" class="product-modal">
   <div class="modal-content-custom">
-
     <div class="modal-header-custom">
       <h5 class="fw-semibold text-orange mb-0">Product Details</h5>
       <i class="bi bi-x-lg close-icon" (click)="closeModal()"></i>
     </div>
 
     <div class="modal-body-custom">
-
       <div class="row mb-3">
         <div class="col">
           <label class="text-muted small">Product ID</label>
@@ -128,12 +133,10 @@
           {{ selectedProduct()?.addressText }}
         </div>
       </div>
-
     </div>
 
     <div class="modal-footer-custom">
       <button class="btn btn-outline-orange px-5 py-1" (click)="closeModal()">OKAY</button>
     </div>
-
   </div>
 </dialog>

@@ -55,34 +55,35 @@ export class UpdateBillingAccount implements OnInit {
   }
 
   loadProductsForAccount(billingAccountId: number) {
-  this.orderService.getOrders(billingAccountId).subscribe({
-    next: (orders) => {
-      const map = { ...this.productDetails() };
-      const list: ProductDetail[] = [];
+    this.orderService.getOrders(billingAccountId).subscribe({
+      next: (orders) => {
+        const map = { ...this.productDetails() };
+        const list: ProductDetail[] = [];
 
-      orders.forEach((order) => {
-        const a = order.address;
+        orders.forEach((order) => {
+          const a = order.address;
 
-        const addressText = 
-`Address: ${a.cityName}/${a.districtName}, ${a.street} ${a.houseNumber}, ${a.description ?? ''}`.trim();
+          const addressText = `Address: ${a.cityName}/${a.districtName}, ${a.street} ${
+            a.houseNumber
+          }, ${a.description ?? ''}`.trim();
 
-        order.createdOrderItem.forEach((item) =>
-          list.push({
-            productId: item.productId,
-            productName: item.productName,
-            campaignId: item.campaignId ?? null,
-            campaignName: item.campaignName ?? null,
-            addressText,
-          })
-        );
-      });
+          order.createdOrderItem.forEach((item) =>
+            list.push({
+              productId: item.productId,
+              productName: item.productName,
+              campaignId: item.campaignId ?? null,
+              campaignName: item.campaignName ?? null,
+              addressText,
+            })
+          );
+        });
 
-      map[billingAccountId] = list;
-      this.productDetails.set(map);
-    },
-    error: (err) => console.error('Failed to load order products', err),
-  });
-}
+        map[billingAccountId] = list;
+        this.productDetails.set(map);
+      },
+      error: (err) => console.error('Failed to load order products', err),
+    });
+  }
   createAccount(): void {
     const customerId = this.customerService.state().id;
     this.router.navigate([`/customers/update/${customerId}/create-billing-account`]);
@@ -103,13 +104,11 @@ export class UpdateBillingAccount implements OnInit {
   }
 
   nextPage(): void {
-    if (this.currentPage() < this.totalPages() - 1)
-      this.loadAccounts(this.currentPage() + 1);
+    if (this.currentPage() < this.totalPages() - 1) this.loadAccounts(this.currentPage() + 1);
   }
 
   prevPage(): void {
-    if (this.currentPage() > 0)
-      this.loadAccounts(this.currentPage() - 1);
+    if (this.currentPage() > 0) this.loadAccounts(this.currentPage() - 1);
   }
 
   openDetailsModal(item: ProductDetail) {

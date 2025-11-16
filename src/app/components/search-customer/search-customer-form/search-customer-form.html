@@ -1,11 +1,9 @@
-
 <form [formGroup]="form" class="search-form" (ngSubmit)="onSearch()">
-  
   <div class="row">
     <div class="form-header d-flex justify-content-between align-items-center mb-3">
-  <h5 class="text-white mb-0">Search Customer Filter</h5>
-  <i class="bi bi-person-plus-fill create-icon" (click)="onCreateCustomer()"></i>
-</div>
+      <h5 class="text-white mb-0">Search Customer Filter</h5>
+      <i class="bi bi-person-plus-fill create-icon" (click)="onCreateCustomer()"></i>
+    </div>
 
     <div class="form-group">
       <label>Nat ID</label>
@@ -17,12 +15,12 @@
       <label>Customer ID</label>
       <input formControlName="customerNumber" placeholder="" maxlength="17" />
     </div>
-    
+
     <div class="form-group">
       <label>Account Number</label>
       <input formControlName="accountNumber" placeholder="" maxlength="14" />
     </div>
-    
+
     <div class="form-group">
       <label>GSM Number</label>
       <input formControlName="value" placeholder="" maxlength="12" />
@@ -30,20 +28,20 @@
 
     <div class="form-group">
       <label>First Name</label>
-      <input formControlName="firstName" placeholder="" maxlength="30"/>
+      <input formControlName="firstName" placeholder="" maxlength="30" />
     </div>
-    
+
     <div class="form-group">
       <label>Last Name</label>
-      <input formControlName="lastName" placeholder="" maxlength="45"/>
+      <input formControlName="lastName" placeholder="" maxlength="45" />
     </div>
-    
+
     <div class="form-group">
       <label>Order Number</label>
-      <input formControlName="orderNumber" placeholder="" maxlength="9"/>
+      <input formControlName="orderNumber" placeholder="" maxlength="9" />
     </div>
   </div>
-  
+
   <div class="buttons">
     <button type="button" (click)="onClear()">Clear</button>
     <button type="submit" [disabled]="isSearchDisabled()">Search</button>

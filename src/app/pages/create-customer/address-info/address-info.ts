@@ -113,19 +113,17 @@ export class AddressInfo implements OnInit {
   private loadDistricts(cityId: number): void {
     this.isLoadingDistricts.set(true);
     this.districts = []; // Önce temizle
-    
-    this.createCustomerService
-      .getDistrictsByCityId(cityId)
-      .subscribe({
-        next: (data) => {
-          this.districts = data;
-          this.isLoadingDistricts.set(false);
-        },
-        error: (err) => {
-          console.error('Error loading districts:', err);
-          this.isLoadingDistricts.set(false);
-        }
-      });
+
+    this.createCustomerService.getDistrictsByCityId(cityId).subscribe({
+      next: (data) => {
+        this.districts = data;
+        this.isLoadingDistricts.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading districts:', err);
+        this.isLoadingDistricts.set(false);
+      },
+    });
   }
 
   onAddNewAddress(): void {
@@ -182,31 +180,29 @@ export class AddressInfo implements OnInit {
   onEditAddress(index: number): void {
     const addr = this.addresses()[index];
     this.editIndex = index;
-    
+
     // Önce district'leri yükle, sonra formu doldur
     this.isLoadingDistricts.set(true);
-    this.createCustomerService
-      .getDistrictsByCityId(addr.cityId)
-      .subscribe({
-        next: (data) => {
-          this.districts = data;
-          this.isLoadingDistricts.set(false);
-          
-          // District'ler yüklendikten sonra formu doldur
-          this.addressForm.patchValue({
-            cityId: addr.cityId,
-            districtId: addr.districtId,
-            street: addr.street,
-            houseNumber: addr.houseNumber,
-            description: addr.description,
-            isDefault: addr.isDefault,
-          });
-        },
-        error: (err) => {
-          console.error('Error loading districts:', err);
-          this.isLoadingDistricts.set(false);
-        }
-      });
+    this.createCustomerService.getDistrictsByCityId(addr.cityId).subscribe({
+      next: (data) => {
+        this.districts = data;
+        this.isLoadingDistricts.set(false);
+
+        // District'ler yüklendikten sonra formu doldur
+        this.addressForm.patchValue({
+          cityId: addr.cityId,
+          districtId: addr.districtId,
+          street: addr.street,
+          houseNumber: addr.houseNumber,
+          description: addr.description,
+          isDefault: addr.isDefault,
+        });
+      },
+      error: (err) => {
+        console.error('Error loading districts:', err);
+        this.isLoadingDistricts.set(false);
+      },
+    });
 
     this.showForm.set(true);
   }

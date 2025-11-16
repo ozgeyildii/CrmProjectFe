@@ -7,10 +7,9 @@ import { CreateOrderRequest } from '../models/requests/createOrderRequest';
 import { CreatedOrderResponse } from '../models/responses/createdOrderResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigurationService {
-
   private catalogServiceBaseUrl = 'http://localhost:8091/catalogservice/api';
   private salesServiceBaseUrl = 'http://localhost:8091/salesservice/api';
 
@@ -28,10 +27,6 @@ export class ConfigurationService {
   }
 
   createOrder(request: CreateOrderRequest): Observable<CreatedOrderResponse> {
-    return this.http.post<CreatedOrderResponse>(
-          `${this.salesServiceBaseUrl}/orders`,
-          request
-        );
+    return this.http.post<CreatedOrderResponse>(`${this.salesServiceBaseUrl}/orders`, request);
   }
-  
 }

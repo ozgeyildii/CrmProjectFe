@@ -37,7 +37,6 @@
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="row g-3">
-
             <div class="col-md-4">
               <label class="form-label">First Name *</label>
               <input
@@ -53,7 +52,11 @@
 
             <div class="col-md-4">
               <label class="form-label">Customer ID</label>
-              <input formControlName="customerNumber" class="form-control readonly-field" readonly />
+              <input
+                formControlName="customerNumber"
+                class="form-control readonly-field"
+                readonly
+              />
             </div>
 
             <div class="col-md-4">
@@ -84,11 +87,7 @@
 
             <div class="col-md-4">
               <label class="form-label">Account Number</label>
-              <input
-                formControlName="accountNumber"
-                class="form-control readonly-field"
-                readonly
-              />
+              <input formControlName="accountNumber" class="form-control readonly-field" readonly />
             </div>
 
             <div class="col-md-4">
@@ -99,7 +98,10 @@
                   type="date"
                   class="form-control"
                   [max]="today"
-                  [ngClass]="{ 'is-invalid': isInvalid('dateOfBirth'), 'readonly-field': !editMode() }"
+                  [ngClass]="{
+                    'is-invalid': isInvalid('dateOfBirth'),
+                    'readonly-field': !editMode()
+                  }"
                 />
                 <div *ngIf="isInvalid('dateOfBirth')" class="invalid-feedback d-block mt-1">
                   {{ getErrorMessage('dateOfBirth') }}

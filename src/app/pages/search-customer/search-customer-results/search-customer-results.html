@@ -41,7 +41,6 @@
               </ng-container>
             </div>
 
-            <!-- ⭐ küçük açılır liste tam altında -->
             <div class="billing-small-list" *ngIf="expandedCustomer === c">
               <div *ngFor="let a of c.billingAccounts; let i = index" class="billing-small-item">
                 <div *ngIf="i > 0">{{ a.accountNumber }}</div>

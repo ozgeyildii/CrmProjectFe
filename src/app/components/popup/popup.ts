@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./popup.scss'],
 })
 export class PopupComponent {
-  @Input() title: string = ''
+  @Input() title: string = '';
   @Input() message: string = '';
   @Input() type: 'success' | 'error' | 'warning' = 'success';
   @Input() visible: boolean = false;

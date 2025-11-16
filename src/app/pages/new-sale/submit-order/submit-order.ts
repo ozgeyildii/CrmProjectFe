@@ -39,17 +39,16 @@ export class SubmitOrder {
       orderId: state.id!,
       orderItems: state.createdOrderItem ?? [],
       serviceAddress: formattedAddr,
-      totalAmount: state.totalPrice ?? 0
+      totalAmount: state.totalPrice ?? 0,
     });
   }
 
   goPrevious() {
     const customerId = this.route.snapshot.paramMap.get('customerId');
     const billingAccountId = this.orderService.orderState().billingAccountId;
-    this.router.navigate(
-      [`/customers/update/${customerId}/configuration-product`],
-      { queryParams: { billingAccountId } }
-    );
+    this.router.navigate([`/customers/update/${customerId}/configuration-product`], {
+      queryParams: { billingAccountId },
+    });
   }
 
   submitOrder() {
@@ -73,7 +72,7 @@ export class SubmitOrder {
         this.loading.set(false);
         this.errorMsg.set('Order submit failed, try again.');
         console.error(err);
-      }
+      },
     });
   }
 

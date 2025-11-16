@@ -25,13 +25,11 @@ export class CustomerService {
 
   private baseUrl = 'http://localhost:8091/searchservice/api/customer-search';
   private serviceBaseUrl = 'http://localhost:8091/customerservice/api';
-  private catalogBaseUrl='http://localhost:8091/catalogservice/api';
+  private catalogBaseUrl = 'http://localhost:8091/catalogservice/api';
 
   constructor(private http: HttpClient) {}
 
-
   getCustomerById(id: string) {
-    console.log('Fetching customer with ID:', id);
     return this.http.get<GetCustomerResponse>(
       `${this.serviceBaseUrl}/individual-customers/full-customer/${id}`
     );
@@ -68,10 +66,7 @@ export class CustomerService {
   }
 
   createAddress(request: CreateAddressRequest): Observable<CreatedAddressResponse> {
-    return this.http.post<CreatedAddressResponse>(
-      `${this.serviceBaseUrl}/addresses`,
-      request
-    );
+    return this.http.post<CreatedAddressResponse>(`${this.serviceBaseUrl}/addresses`, request);
   }
 
   getAddressesByCustomerId(customerId: string): Observable<GetAddressListResponse[]> {
@@ -89,9 +84,7 @@ export class CustomerService {
   }
 
   getCities(): Observable<GetCityResponse[]> {
-    return this.http.get<GetCityResponse[]>(
-      `${this.serviceBaseUrl}/city/getListCityResponse`
-    );
+    return this.http.get<GetCityResponse[]>(`${this.serviceBaseUrl}/city/getListCityResponse`);
   }
 
   getDistrictsByCityId(cityId: number): Observable<GetDistrictResponse[]> {
@@ -102,9 +95,10 @@ export class CustomerService {
 
   getAccounts(customerId: string, page: number): Observable<PagedBillingAccountResponse> {
     return this.http.get<PagedBillingAccountResponse>(
-      `${this.serviceBaseUrl}/billingAccounts/getList/${customerId}`, {
-      params: { page:page, pageSize: '4'},
-    }
+      `${this.serviceBaseUrl}/billingAccounts/getList/${customerId}`,
+      {
+        params: { page: page, pageSize: '4' },
+      }
     );
   }
 
@@ -112,19 +106,16 @@ export class CustomerService {
     return this.http.delete<void>(`${this.serviceBaseUrl}/billingAccounts/${accountId}`);
   }
 
-  createBillingAccount(request: CreateBillingAccountRequest): Observable<CreatedBillingAccountResponse> {
+  createBillingAccount(
+    request: CreateBillingAccountRequest
+  ): Observable<CreatedBillingAccountResponse> {
     return this.http.post<CreatedBillingAccountResponse>(
-      `${this.serviceBaseUrl}/billingAccounts`,request
-    );
-  }
-
-  addAddress(request: CreateAddressRequest): Observable<CreatedAddressResponse> {
-    return this.http.post<CreatedAddressResponse>(
-      `${this.serviceBaseUrl}/addresses`,
+      `${this.serviceBaseUrl}/billingAccounts`,
       request
     );
   }
 
-
-
+  addAddress(request: CreateAddressRequest): Observable<CreatedAddressResponse> {
+    return this.http.post<CreatedAddressResponse>(`${this.serviceBaseUrl}/addresses`, request);
+  }
 }

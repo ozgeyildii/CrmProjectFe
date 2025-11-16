@@ -1,17 +1,10 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  signal
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormControl,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UpdateCustomerState, ContactMedium } from '../../../models/states/updateCustomerState';
@@ -24,7 +17,7 @@ import { UpdateContactMediumRequest } from '../../../models/requests/updateConta
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, PopupComponent],
   templateUrl: './update-contact-medium.html',
-  styleUrls: ['./update-contact-medium.scss']
+  styleUrls: ['./update-contact-medium.scss'],
 })
 export class UpdateContactMedium implements OnInit, OnChanges {
   @Input() customer!: UpdateCustomerState;
@@ -37,10 +30,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  constructor(
-    private fb: FormBuilder,
-    private customerService: CustomerService
-  ) {}
+  constructor(private fb: FormBuilder, private customerService: CustomerService) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -59,7 +49,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
       email: ['', [Validators.required, Validators.email]],
       homePhone: ['', [Validators.pattern(/^$|^[0-9]{10}$/)]],
       mobilePhone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10}$/)]],
-      fax: ['', [this.faxValidator]]
+      fax: ['', [this.faxValidator]],
     });
   }
 
@@ -82,10 +72,10 @@ export class UpdateContactMedium implements OnInit, OnChanges {
   private patchFormFromState(state: UpdateCustomerState): void {
     if (!state || !state.contactMediums) return;
 
-    const email = state.contactMediums.find(m => m.type === 'EMAIL')?.value || '';
-    const mobilePhone = state.contactMediums.find(m => m.type === 'PHONE')?.value || '';
-    const homePhone = state.contactMediums.find(m => m.type === 'HOME_PHONE')?.value || '';
-    const fax = state.contactMediums.find(m => m.type === 'FAX')?.value || '';
+    const email = state.contactMediums.find((m) => m.type === 'EMAIL')?.value || '';
+    const mobilePhone = state.contactMediums.find((m) => m.type === 'PHONE')?.value || '';
+    const homePhone = state.contactMediums.find((m) => m.type === 'HOME_PHONE')?.value || '';
+    const fax = state.contactMediums.find((m) => m.type === 'FAX')?.value || '';
 
     this.customer = state;
     this.form.patchValue({ email, homePhone, mobilePhone, fax });
@@ -109,15 +99,39 @@ export class UpdateContactMedium implements OnInit, OnChanges {
     const currentState = this.customerService.state();
 
     const updatedMediums: UpdateContactMediumRequest[] = [
-      { id: currentState.contactMediums!.find(m => m.type === 'EMAIL')?.id!, customerId: this.customer.id!, type: 'EMAIL', value: this.form.value.email, isPrimary: true },
-      { id: currentState.contactMediums!.find(m => m.type === 'PHONE')?.id!, customerId: this.customer.id!, type: 'PHONE', value: this.form.value.mobilePhone, isPrimary: true },
-      { id: currentState.contactMediums!.find(m => m.type === 'HOME_PHONE')?.id!, customerId: this.customer.id!, type: 'HOME_PHONE', value: this.form.value.homePhone, isPrimary: false },
-      { id: currentState.contactMediums!.find(m => m.type === 'FAX')?.id!, customerId: this.customer.id!, type: 'FAX', value: this.form.value.fax, isPrimary: false }
+      {
+        id: currentState.contactMediums!.find((m) => m.type === 'EMAIL')?.id!,
+        customerId: this.customer.id!,
+        type: 'EMAIL',
+        value: this.form.value.email,
+        isPrimary: true,
+      },
+      {
+        id: currentState.contactMediums!.find((m) => m.type === 'PHONE')?.id!,
+        customerId: this.customer.id!,
+        type: 'PHONE',
+        value: this.form.value.mobilePhone,
+        isPrimary: true,
+      },
+      {
+        id: currentState.contactMediums!.find((m) => m.type === 'HOME_PHONE')?.id!,
+        customerId: this.customer.id!,
+        type: 'HOME_PHONE',
+        value: this.form.value.homePhone,
+        isPrimary: false,
+      },
+      {
+        id: currentState.contactMediums!.find((m) => m.type === 'FAX')?.id!,
+        customerId: this.customer.id!,
+        type: 'FAX',
+        value: this.form.value.fax,
+        isPrimary: false,
+      },
     ];
 
     const updatedCustomer: UpdateCustomerState = {
       ...currentState,
-      contactMediums: updatedMediums
+      contactMediums: updatedMediums,
     };
 
     this.isSaving.set(true);
@@ -136,7 +150,7 @@ export class UpdateContactMedium implements OnInit, OnChanges {
         this.successMessage.set(null);
         this.title.set('Error');
         this.errorMessage.set('An error occurred while updating contact information.');
-      }
+      },
     });
   }
 

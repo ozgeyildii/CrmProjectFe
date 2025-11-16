@@ -12,7 +12,8 @@ import { GetCityResponse } from '../models/responses/getCityResponse';
 export class CreateCustomerService {
   public state = signal<CreateIndividualCustomerState>({});
 
-  private baseUrl = 'http://localhost:8091/customerservice/api/orchestrator/full-individual-customers';
+  private baseUrl =
+    'http://localhost:8091/customerservice/api/orchestrator/full-individual-customers';
   private serviceBaseUrl = 'http://localhost:8091/customerservice/api';
 
   constructor(private httpClient: HttpClient) {}
@@ -30,10 +31,14 @@ export class CreateCustomerService {
   }
 
   getCities(): Observable<GetCityResponse[]> {
-    return this.httpClient.get<GetCityResponse[]>(`${this.serviceBaseUrl}/city/getListCityResponse`);
+    return this.httpClient.get<GetCityResponse[]>(
+      `${this.serviceBaseUrl}/city/getListCityResponse`
+    );
   }
 
   getDistrictsByCityId(cityId: number): Observable<GetDistrictResponse[]> {
-    return this.httpClient.get<GetDistrictResponse[]>(`${this.serviceBaseUrl}/districts/getByCityId/${cityId}`);
+    return this.httpClient.get<GetDistrictResponse[]>(
+      `${this.serviceBaseUrl}/districts/getByCityId/${cityId}`
+    );
   }
 }

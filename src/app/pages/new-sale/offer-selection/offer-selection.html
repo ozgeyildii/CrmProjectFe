@@ -5,11 +5,9 @@
     </div>
 
     <div class="row g-3">
-
       <!-- SOL TARAF -->
       <div class="col-lg-7">
         <div class="bg-white p-3 rounded-4 shadow-sm">
-
           <!-- TAB SEÇİMİ -->
           <div class="d-flex mb-3">
             <button
@@ -69,7 +67,6 @@
 
           <!-- ====================== CAMPAIGN TAB ====================== -->
           <div *ngIf="activeTab() === 'campaign'">
-
             <label class="fw-semibold mb-2">Campaign Selection</label>
 
             <select
@@ -127,7 +124,6 @@
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
 
@@ -139,17 +135,13 @@
           (click)="addToBasket()"
         >
           <span *ngIf="!loading()">➜</span>
-          <div
-            *ngIf="loading()"
-            class="spinner-border spinner-border-sm text-orange"
-          ></div>
+          <div *ngIf="loading()" class="spinner-border spinner-border-sm text-orange"></div>
         </button>
       </div>
 
       <!-- SAĞ: BASKET -->
       <div class="col-lg-4">
         <div class="bg-white rounded-4 p-3 shadow-sm">
-
           <h5 class="text-orange fw-semibold mb-3">Basket</h5>
 
           <div *ngIf="basketService.basket().basketItems.length === 0" class="small">
@@ -165,9 +157,7 @@
               <div class="text-muted small">{{ b.productOfferId }}</div>
             </div>
 
-            <div class="fw-semibold">
-              {{ b.discountedPrice || b.price | number : '1.2-2' }} TL
-            </div>
+            <div class="fw-semibold">{{ b.discountedPrice || b.price | number : '1.2-2' }} TL</div>
           </div>
 
           <div class="d-flex justify-content-between mt-3 fw-bold border-top pt-2">
@@ -176,9 +166,7 @@
           </div>
 
           <div class="mt-3 d-flex justify-content-between">
-            <button class="btn btn-outline-orange btn-sm" (click)="clearBasket()">
-              Clear
-            </button>
+            <button class="btn btn-outline-orange btn-sm" (click)="clearBasket()">Clear</button>
 
             <button
               class="btn btn-orange btn-sm"
@@ -192,7 +180,6 @@
           <div class="text-danger small mt-2 text-center" *ngIf="errorMsg()">
             {{ errorMsg() }}
           </div>
-
         </div>
       </div>
     </div>

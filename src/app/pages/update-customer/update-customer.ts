@@ -78,7 +78,6 @@ export class UpdateCustomer {
           ...data,
         }));
         this.isLoading.set(false);
-        console.log('Customer loaded:', data);
       },
       error: (err) => {
         console.error('Error fetching customer:', err);
@@ -91,8 +90,6 @@ export class UpdateCustomer {
           ...state,
           billingAccounts: [...res.content],
         }));
-        console.log('Billing accounts loaded:', res.content);
-        console.log('Loading customer:', this.customerService.state());
         this.isLoading.set(false);
       },
       error: (err) => {
