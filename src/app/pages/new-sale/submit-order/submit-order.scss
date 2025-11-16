@@ -1,0 +1,149 @@
+/* === Submit Card === */
+.submit-card {
+  background: #fff;
+  border: 1px solid #f8d8b0;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.title {
+  color: #f58220;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.row-box {
+  margin-bottom: 1.2rem;
+
+  label {
+    font-weight: 600;
+    color: #242441;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .value {
+    background: #fffdfb;
+    border: 1px solid #f8d8b0;
+    padding: 0.6rem;
+    border-radius: 8px;
+
+    &.long {
+      min-height: 80px;
+    }
+  }
+}
+
+.items-box {
+  border: 1px solid #f8d8b0;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: #fffdfb;
+
+  .item-line {
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-bottom: 1px dashed #f0c79f;
+
+    &:last-child {
+      border: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .sub {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 0.3rem;
+    }
+  }
+}
+
+/* === Buttons === */
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.btn-orange,
+.success-box .btn-orange {
+  background: #f58220;
+  border: 1px solid #f58220;
+  border-radius: 8px;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+
+  &:hover {
+    background: #ff9f50;
+  }
+}
+
+.btn-outline {
+  border: 1px solid #f58220;
+  color: #f58220;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+
+  &:hover {
+    background: #f58220;
+    color: white;
+  }
+}
+
+/* === Modal Backdrop === */
+.success-modal::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+/* === Modal Backdrop === */
+.success-modal::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+/* === Modal === */
+.success-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+/* === Modal Content === */
+.success-box {
+  width: min(420px, 90vw);
+  background: white;
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+  border: 2px solid #28a745;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.22s ease-out;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.success-text {
+  color: #242441;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* === Animation === */
+@keyframes scaleIn {
+  from { transform: scale(0.75); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

@@ -25,6 +25,7 @@ export class CustomerService {
 
   private baseUrl = 'http://localhost:8091/searchservice/api/customer-search';
   private serviceBaseUrl = 'http://localhost:8091/customerservice/api';
+  private catalogBaseUrl='http://localhost:8091/catalogservice/api';
 
   constructor(private http: HttpClient) {}
 
@@ -123,5 +124,7 @@ export class CustomerService {
       request
     );
   }
+
+
 
 }

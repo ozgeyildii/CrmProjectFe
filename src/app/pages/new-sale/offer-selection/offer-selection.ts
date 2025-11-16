@@ -213,10 +213,10 @@ export class OfferSelection {
   }
 
   goNext() {
-    const cid = this.customerService.state().id;
+    const customerId = this.customerService.state().id;
 
     this.router.navigate(
-      [`/customers/update/${cid}/configuration-product`],
+      [`/customers/update/${customerId}/configuration-product`],
       { queryParams: { billingAccountId: this.billingAccountId } }
     );
   }

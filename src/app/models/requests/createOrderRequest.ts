@@ -1,12 +1,13 @@
 export interface CreateOrderRequest {
 
-    billingAccountId: number
+    billingAccountId: number;
+    addressId:number;
     items: CreateOrderItemRequest[];
 
 }
 
 export interface CreateOrderItemRequest {
-    basketItemId: string
+    basketItemId: string;
     charValues: CreateOrderItemCharValueRequest[];
 }
 

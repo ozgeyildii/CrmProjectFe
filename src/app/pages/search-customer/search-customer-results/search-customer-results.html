@@ -1,90 +1,70 @@
 <div *ngIf="customers.length > 0" class="search-result-container">
-<div class="results-wrapper">
- 
+  <div class="results-wrapper">
     <div class="customer-card" *ngFor="let c of customers">
-<div class="card-row">
-<!-- SOL ALAN -->
-<div class="card-column">
-<div class="card-field">
-<label>First Name</label>
-<div class="value">{{ c.firstName }}</div>
-</div>
- 
+      <div class="card-row">
+        <!-- SOL ALAN -->
+        <div class="card-column">
           <div class="card-field">
-<label>Last Name</label>
-<div class="value">{{ c.lastName }}</div>
-</div>
-</div>
- 
-        <!-- ORTA ALAN -->
-<div class="card-column">
-<div class="card-field" (click)="onClick(c)">
-<label>Customer ID</label>
-<div class="value link">{{ c.customerNumber }}</div>
-</div>
- 
-          <div class="card-field">
-<label>Account Number</label>
- 
-            <div class="value">
-<ng-container *ngIf="c.billingAccounts.length === 0">
-
-                -
-</ng-container>
- 
-              <ng-container *ngIf="c.billingAccounts.length > 0">
-
-                {{ c.billingAccounts[0].accountNumber }}
- 
-                <span
-
-                  *ngIf="c.billingAccounts.length > 1"
-
-                  class="extra-count link"
-
-                  (click)="toggleAccounts(c, $event)"
->
-
-                  +{{ c.billingAccounts.length - 1 }}
-</span>
-</ng-container>
-</div>
- 
-            <!-- ⭐ küçük açılır liste tam altında -->
-<div class="billing-small-list" *ngIf="expandedCustomer === c">
-<div
-
-                *ngFor="let a of c.billingAccounts; let i = index"
-
-                class="billing-small-item"
->
-<div *ngIf="i > 0">{{ a.accountNumber }}</div>
-</div>
-</div>
- 
+            <label>First Name</label>
+            <div class="value">{{ c.firstName }}</div>
           </div>
-</div>
- 
+
+          <div class="card-field">
+            <label>Last Name</label>
+            <div class="value">{{ c.lastName }}</div>
+          </div>
+        </div>
+
+        <!-- ORTA ALAN -->
+        <div class="card-column">
+          <div class="card-field" (click)="onClick(c)">
+            <label>Customer ID</label>
+            <div class="value link">{{ c.customerNumber }}</div>
+          </div>
+
+          <div class="card-field">
+            <label>Account Number</label>
+
+            <div class="value">
+              <ng-container *ngIf="c.billingAccounts.length === 0"> - </ng-container>
+
+              <ng-container *ngIf="c.billingAccounts.length > 0">
+                {{ c.billingAccounts[0].accountNumber }}
+
+                <span
+                  *ngIf="c.billingAccounts.length > 1"
+                  class="extra-count link"
+                  (click)="toggleAccounts(c, $event)"
+                >
+                  +{{ c.billingAccounts.length - 1 }}
+                </span>
+              </ng-container>
+            </div>
+
+            <!-- ⭐ küçük açılır liste tam altında -->
+            <div class="billing-small-list" *ngIf="expandedCustomer === c">
+              <div *ngFor="let a of c.billingAccounts; let i = index" class="billing-small-item">
+                <div *ngIf="i > 0">{{ a.accountNumber }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- SAĞ ALAN -->
-<div class="card-column">
-<div class="card-field">
-<label>Nat ID</label>
-<div class="value">{{ c.nationalId }}</div>
-</div>
-</div>
- 
+        <div class="card-column">
+          <div class="card-field">
+            <label>Nat ID</label>
+            <div class="value">{{ c.nationalId }}</div>
+          </div>
+        </div>
       </div>
- 
     </div>
- 
+
     <!-- pagination -->
-<div class="pagination">
-<button (click)="previousPage()" [disabled]="page === 0">&lt;</button>
-<span>Page {{ page + 1 }}</span>
-<button (click)="nextPage()" [disabled]="!hasMore">&gt;</button>
-</div>
- 
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="page === 0">&lt;</button>
+      <span>Page {{ page + 1 }}</span>
+      <button (click)="nextPage()" [disabled]="!hasMore">&gt;</button>
+    </div>
   </div>
 </div>
-
- 

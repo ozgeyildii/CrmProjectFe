@@ -1,12 +1,12 @@
-export interface CreatedOrderResponse {
+export interface OrderState {
   id: string;
   billingAccountId: number;
   totalPrice: number;
-  address: GetAddressResponse;
-  createdOrderItem:GetOrderItemResponse[]
+  address: Address;
+  createdOrderItem: OrderItem[];
 }
 
-export interface GetAddressResponse {
+export interface Address {
   id: number;
   street: string;
   houseNumber: string;
@@ -17,7 +17,7 @@ export interface GetAddressResponse {
   cityName: string;
 }
 
-export interface GetOrderItemResponse{
+export interface OrderItem{
  id: string;
  productOfferId: number;
  productOfferName: string;
@@ -27,6 +27,3 @@ export interface GetOrderItemResponse{
  sourceType: string;
  basketItemId: string;
 }
-
-
-

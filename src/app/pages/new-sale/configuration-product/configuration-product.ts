@@ -16,6 +16,7 @@ import { GetCharacteristicsByProductOffersResponse } from '../../../models/respo
 import { CreateAddressRequest } from '../../../models/requests/createAddressRequest';
 import { CreatedAddressResponse } from '../../../models/responses/createdAddressResponse';
 import { CreateOrderRequest } from '../../../models/requests/createOrderRequest';
+import { OrderService } from '@/src/app/services/order-service';
 
 @Component({
   selector: 'app-configuration-product',
@@ -30,22 +31,20 @@ export class ConfigurationProduct {
   private router = inject(Router);
   private basketService = inject(BasketService);
   private customerService = inject(CustomerService);
-  private configurationApi = inject(ConfigurationService);
+  private configurationService = inject(ConfigurationService);
+  private orderService= inject(OrderService);
 
 
   billingAccountId: number | null = null;
 
-  /* ==== signals ==== */
   loading = signal(false);
   error = signal<string | null>(null);
   productsData = signal<GetCharacteristicsByProductOffersResponse[]>([]);
   cities = signal<{ id: number; name: string }[]>([]);
   districts = signal<{ id: number; name: string }[]>([]);
 
-  // Adres listesi
   addresses = signal<{ id: number; displayText: string }[]>([]);
 
-  // Seçili adres
   selectedServiceAddress = signal<{ id: number; displayText: string } | null>(null);
 
   form = this.fb.group({
@@ -56,10 +55,8 @@ export class ConfigurationProduct {
     return this.form.get('products') as FormArray<FormGroup>;
   }
 
-  /* ===== lifecycle ===== */
   ngOnInit() {
-    // Query params
-    this.route.queryParams.subscribe((p) => {
+      this.route.queryParams.subscribe((p) => {
       this.billingAccountId = p['billingAccountId'] ? +p['billingAccountId'] : null;
     });
 
@@ -123,7 +120,7 @@ export class ConfigurationProduct {
   }
 
   private fetchCharacteristics(productOfferIds: number[]) {
-    this.configurationApi.getCharacteristicsByProductOfferIds(productOfferIds).subscribe({
+    this.configurationService.getCharacteristicsByProductOfferIds(productOfferIds).subscribe({
       next: (res: GetCharacteristicsByProductOffersResponse[]) => {
         this.productsData.set(res ?? []);
         this.seedForm(res ?? []);
@@ -158,7 +155,6 @@ export class ConfigurationProduct {
     });
   }
 
-  /* ===== address dropdowns & modal ===== */
 
   loadCities() {
     this.customerService.getCities().subscribe({
@@ -211,13 +207,11 @@ export class ConfigurationProduct {
           .filter(Boolean)
           .join(', ');
 
-        // Listeye ekle
         this.addresses.set([
           ...this.addresses(),
           { id: res.id!, displayText: text },
         ]);
 
-        // Seçili yap
         this.selectedServiceAddress.set({ id: res.id!, displayText: text });
 
         this.closeAddressModal();
@@ -231,7 +225,6 @@ export class ConfigurationProduct {
     if (modal) modal.close();
   }
 
-  /* ===== navigation ===== */
 
   goPrevious() {
     const customerId = this.customerService.state().id;
@@ -263,10 +256,8 @@ goNext() {
     return;
   }
  
-  // 1️⃣ Sepetteki tüm item'lar (zaten BasketItem[] tipinde)
   const basketItems = this.basketService.basket().basketItems;
  
-  // 2️⃣ Formdaki karakteristik değerlerini oku
   const productConfigs = this.productsFA.controls.map((group: FormGroup) => {
     const productOfferId = group.get('productOfferId')!.value as number;
     const characteristicsGroup = group.get('characteristics') as FormGroup;
@@ -284,17 +275,14 @@ goNext() {
     };
   });
  
-  // 3️⃣ Basket'taki ilgili item'larla eşleştir → CreateOrderItemRequest[]
   const orderItems = productConfigs.flatMap(config => {
  
-    // Bu productOfferId'ye ait tüm basketItem'ları bul
     const matchedBasketItems = basketItems.filter(
       item => item.productOfferId === config.productOfferId
     );
  
-    // Her basketItem için charValues ekle
     return matchedBasketItems.map(item => ({
-      basketItemId: item.basketItemId,   // ✔ artık string olduğu için hata yok
+      basketItemId: item.basketItemId,   
       charValues: config.charValues.map(char => ({
         characteristicName: String(this.findCharacteristicName(config.productOfferId, char.charId)),
         characteristicValue: String(char.value)
@@ -302,18 +290,27 @@ goNext() {
     }));
   });
  
-  // 4️⃣ Final request
   const request: CreateOrderRequest = {
     billingAccountId: this.billingAccountId!,
-    items: orderItems
+    items: orderItems,
+    addressId:this.selectedServiceAddress()?.id!
   };
  
-  console.log("FINAL ORDER REQUEST:", request);
  
-  this.configurationApi.createOrder(request).subscribe({
+  this.configurationService.createOrder(request).subscribe({
     next: (res) => {
-      console.log("ORDER CREATED:", res);
-      // navigate success page later
-    }
+      this.orderService.orderState.set(res);
+       const customerId = this.customerService.state().id;
+
+       this.router.navigate(
+      [`/customers/update/${customerId}/submit-order`],
+      { queryParams: { billingAccountId: this.billingAccountId } }
+    );
+
+    },
+    error: (err) => {
+    console.error("Order creation failed:", err);
+    this.error.set("Order could not be created. Please try again.");
+  },
   });
 }}

@@ -2,7 +2,8 @@
   <h5 class="text-orange fw-semibold mb-4">Create Billing Account</h5>
 
   <div class="row g-4">
-    <!-- SOL TARAF -->
+
+    <!-- LEFT -->
     <div class="col-md-6">
       <label class="form-label fw-medium">Account Name *</label>
       <input
@@ -19,98 +20,112 @@
       </div>
     </div>
 
-    <!-- SAĞ TARAF -->
+    <!-- RIGHT -->
     <div class="col-md-6">
       <h6 class="text-orange fw-semibold">Address Info</h6>
 
-      <div *ngIf="tempAddress(); else noAddress" class="border rounded p-3 mt-2 bg-light">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <p class="mb-1">
-              <strong>{{ tempAddress()?.street }}</strong> No:
-              {{ tempAddress()?.houseNumber }}
-            </p>
-            <p class="text-muted mb-0">{{ tempAddress()?.description }}</p>
-          </div>
-          <button class="btn btn-outline-danger btn-sm" type="button" (click)="deleteAddress()">
-            🗑 Delete
-          </button>
+      <!-- SELECTED ADDRESS DISPLAY -->
+      <div *ngIf="tempAddressDetailed(); else noAddress" class="addr-preview mt-2">
+        <div>
+          <p class="fw-semibold mb-1">{{ tempAddressDetailed()?.cityName }},
+            {{ tempAddressDetailed()?.districtName }}</p>
+
+          <p class="mb-1">
+            <strong>{{ tempAddressDetailed()?.street }}</strong> No:
+            {{ tempAddressDetailed()?.houseNumber }}
+          </p>
+
+          <p class="text-muted mb-0">{{ tempAddressDetailed()?.description }}</p>
+        </div>
+
+        <div class="addr-actions">
+          <button class="btn btn-outline-danger btn-sm" (click)="deleteAddress()">Delete</button>
         </div>
       </div>
 
       <ng-template #noAddress>
-        <p class="text-muted mt-2">No address added yet.</p>
+        <p class="text-muted mt-2 addr-empty">No address added yet.</p>
       </ng-template>
 
       <button
-        class="btn btn-outline-warning mt-3"
-        type="button"
+        class="btn btn-outline-orange mt-3"
         (click)="openModalForNew()"
-        [disabled]="tempAddress() !== null"
       >
         + Add New Address
       </button>
     </div>
   </div>
 
-  <div class="d-flex justify-content-end mt-4 gap-2">
-    <button class="btn btn-secondary" type="button" (click)="onCancel()">Cancel</button>
-    <button class="btn btn-warning text-white" type="button" (click)="onSubmit()">Create</button>
+  <!-- BUTTONS -->
+  <div class="form-actions mt-4">
+    <button class="btn btn-gray" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-orange" (click)="onSubmit()">Create</button>
   </div>
 
   <!-- MODAL -->
-  <div class="modal fade show d-block" *ngIf="showModal()" tabindex="-1" style="background: rgba(0, 0, 0, 0.45);">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-warning" [formGroup]="addressForm">
+  <div class="modal-backdrop-custom" *ngIf="showModal()"></div>
+
+  <div class="modal fade show d-block" *ngIf="showModal()" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom">
+      <div class="modal-content modal-content-custom" [formGroup]="addressForm">
+
         <div class="modal-header">
-          <h6 class="modal-title text-orange">Add Address</h6>
-          <button type="button" class="btn-close" (click)="showModal.set(false)"></button>
+          <h6 class="text-orange">Add Address</h6>
+          <button class="btn-close" (click)="showModal.set(false)"></button>
         </div>
 
         <div class="modal-body">
+
+          <!-- CITY & DISTRICT -->
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">City *</label>
               <select class="form-select" formControlName="cityId" (change)="onCityChange()">
                 <option value="">Select</option>
-                <option *ngFor="let city of cities()" [value]="city.id">{{ city.name }}</option>
+                <option *ngFor="let c of cities()" [value]="c.id">
+                  {{ c.name }}
+                </option>
               </select>
             </div>
+
             <div class="col-md-6">
               <label class="form-label">District *</label>
               <select class="form-select" formControlName="districtId">
                 <option value="">Select</option>
-                <option *ngFor="let dist of districts()" [value]="dist.id">{{ dist.name }}</option>
+                <option *ngFor="let d of districts()" [value]="d.id">
+                  {{ d.name }}
+                </option>
               </select>
             </div>
           </div>
 
+          <!-- STREET + HOUSE -->
           <div class="row g-3 mt-2">
             <div class="col-md-6">
               <label class="form-label">Street *</label>
-              <input class="form-control" formControlName="street" placeholder="Enter street" />
+              <input class="form-control" formControlName="street">
             </div>
+
             <div class="col-md-6">
-              <label class="form-label">House Number *</label>
-              <input class="form-control" formControlName="houseNumber" placeholder="Enter house no" />
+              <label class="form-label">House No *</label>
+              <input class="form-control" formControlName="houseNumber">
             </div>
           </div>
 
+          <!-- DESCRIPTION -->
           <label class="form-label mt-3">Description *</label>
-          <textarea class="form-control" formControlName="description" rows="3" placeholder="Enter address description"></textarea>
+          <textarea class="form-control" formControlName="description" rows="3"></textarea>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="showModal.set(false)">Cancel</button>
-          <button
-            type="button"
-            class="btn btn-warning text-white"
-            (click)="saveAddress()"
-            [disabled]="isLoading()"
-          >
-            {{ isLoading() ? 'Saving...' : 'Save' }}
+          <button class="btn btn-gray" (click)="showModal.set(false)">
+            Cancel
+          </button>
+          <button class="btn btn-orange" (click)="saveAddress()">
+            Save
           </button>
         </div>
+
       </div>
     </div>
   </div>

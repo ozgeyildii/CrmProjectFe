@@ -1,1 +1,59 @@
-<p>submit-order works!</p>
+<div class="submit-card" *ngIf="orderPreview() as o">
+  
+  <h4 class="title">Submit Order</h4>
+
+  <!-- Order ID -->
+  <div class="row-box">
+    <label>Order ID</label>
+    <div class="value">{{ o.orderId }}</div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="row-box">
+    <label>Order Items</label>
+
+    <div class="items-box">
+      <div *ngFor="let item of o.orderItems" class="item-line">
+        <strong>{{ item.productOfferName }}</strong>
+        <div class="sub">ID: {{ item.productOfferId }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Address -->
+  <div class="row-box">
+    <label>Service Address</label>
+    <div class="value long">{{ o.serviceAddress }}</div>
+  </div>
+
+  <!-- Total -->
+  <div class="row-box">
+    <label>Total Amount</label>
+    <div class="value">{{ o.totalAmount }} TL</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" type="button" (click)="goPrevious()">Previous</button>
+
+    <button class="btn-orange"
+            type="button"
+            [disabled]="loading()"
+            (click)="submitOrder()">
+        {{ loading() ? 'Submitting...' : 'Submit' }}
+    </button>
+  </div>
+
+  <div *ngIf="errorMsg()" class="error-text">{{ errorMsg() }}</div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<dialog id="successModal" class="success-modal">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <h3 class="success-text">Order Submitted Successfully</h3>
+
+    <button class="btn-orange mt-3" type="button" (click)="closeSuccess()">
+      OKAY
+    </button>
+  </div>
+</dialog>
