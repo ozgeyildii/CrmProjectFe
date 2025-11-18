@@ -49,7 +49,6 @@ export class AddressInfo implements OnInit {
       saved.forEach((addr: any) => this.addAddress(addr));
     }
 
-    // City değişince district'leri yükle
     this.addressForm.get('cityId')?.valueChanges.subscribe((cityId) => {
       if (cityId) {
         this.loadDistricts(cityId);
@@ -112,7 +111,7 @@ export class AddressInfo implements OnInit {
 
   private loadDistricts(cityId: number): void {
     this.isLoadingDistricts.set(true);
-    this.districts = []; // Önce temizle
+    this.districts = []; 
 
     this.createCustomerService.getDistrictsByCityId(cityId).subscribe({
       next: (data) => {
@@ -135,7 +134,7 @@ export class AddressInfo implements OnInit {
       description: '',
       isDefault: false,
     });
-    this.districts = []; // District'leri temizle
+    this.districts = []; 
     this.editIndex = null;
     this.showForm.set(true);
   }
@@ -158,7 +157,6 @@ export class AddressInfo implements OnInit {
 
     let updatedList = [...this.addresses()];
 
-    // Düzenleme modu
     if (this.editIndex !== null) {
       updatedList[this.editIndex] = newAddr;
     } else {
@@ -181,14 +179,12 @@ export class AddressInfo implements OnInit {
     const addr = this.addresses()[index];
     this.editIndex = index;
 
-    // Önce district'leri yükle, sonra formu doldur
     this.isLoadingDistricts.set(true);
     this.createCustomerService.getDistrictsByCityId(addr.cityId).subscribe({
       next: (data) => {
         this.districts = data;
         this.isLoadingDistricts.set(false);
 
-        // District'ler yüklendikten sonra formu doldur
         this.addressForm.patchValue({
           cityId: addr.cityId,
           districtId: addr.districtId,

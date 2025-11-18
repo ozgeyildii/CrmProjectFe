@@ -30,7 +30,6 @@ export class SearchCustomer {
   constructor(
     private searchCustomerService: SearchCustomerService,
     private router: Router,
-    private cdRef: ChangeDetectorRef,
     public loaderService: LoaderService
   ) {}
 

@@ -41,9 +41,9 @@ export class UpdatePersonalInfo implements OnInit, OnChanges {
  
   customerWatcher = effect(() => {
     const customer = this.customerService.state();
-    if (customer && customer.billingAccounts && customer.billingAccounts.length > 0) {
-      this.loadCustomerData();
-    }
+    if (!customer || Object.keys(customer).length === 0) return;
+ 
+    this.loadCustomerData();
   });
  
   constructor(private fb: FormBuilder, public customerService: CustomerService) {}

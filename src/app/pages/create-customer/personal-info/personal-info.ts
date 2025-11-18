@@ -31,7 +31,6 @@ export class PersonalInfo implements OnInit {
     private formBuilder: FormBuilder,
     private createCustomerService: CreateCustomerService,
     public router: Router,
-    private customerCreationService: CreateCustomerService
   ) {}
 
   ngOnInit(): void {
@@ -127,7 +126,6 @@ export class PersonalInfo implements OnInit {
             ...this.createPersonalInfoForm.value,
           };
           this.createCustomerService.state.set(newValue);
-
           this.router.navigate(['/customers/create/address-info']);
         }
       },
